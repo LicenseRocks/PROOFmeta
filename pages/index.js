@@ -1,10 +1,15 @@
-import styled from 'styled-components'
+import { ExplorerLayout, H4, OutlineButton } from 'rockskit'
 
-const Title = styled.h1`
-  font-size: 50px;
-  color: ${({ theme }) => theme.colors.primary};
-`
+const headerRight = (
+  <OutlineButton content="Action Button" color="secondary" size="sm" />
+);
+
+const sidebar = (
+  <>
+    <H4 mb={6}>Share this license</H4>
+  </>
+);
 
 export default function Home() {
-  return <Title>My page</Title>
+  return <ExplorerLayout headerRight={headerRight} sidebar={sidebar}>Welcome</ExplorerLayout>
 }

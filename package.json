@@ -10,6 +10,7 @@
     "next": "latest",
     "react": "^16.8.0",
     "react-dom": "^16.8.0",
+    "rockskit": "file:../rockskit/",
     "styled-components": "^5.0.0"
   },
   "devDependencies": {
