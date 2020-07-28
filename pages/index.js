@@ -1,15 +1,26 @@
-import { ExplorerLayout, H4, OutlineButton } from 'rockskit'
+import React from "react";
+import Head from "next/head";
+import { ExplorerLayout } from "rockskit";
 
-const headerRight = (
-  <OutlineButton content="Action Button" color="secondary" size="sm" />
-);
-
-const sidebar = (
-  <>
-    <H4 mb={6}>Share this license</H4>
-  </>
-);
+import {
+  IndexContent,
+  IndexExtraContent,
+  IndexExtraSidebar,
+  IndexSidebar,
+} from "components";
 
 export default function Home() {
-  return <ExplorerLayout headerRight={headerRight} sidebar={sidebar}>Welcome</ExplorerLayout>
+  return (
+    <>
+      <Head>
+        <title>license.rocks | MetaProof</title>
+      </Head>
+      <ExplorerLayout
+        content={IndexContent}
+        extraContent={IndexExtraContent()}
+        extraSidebar={IndexExtraSidebar}
+        sidebar={IndexSidebar}
+      />
+    </>
+  );
 }

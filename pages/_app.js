@@ -1,14 +1,15 @@
-import App from 'next/app'
-import { ThemeProvider } from "styled-components";
-import { theme } from 'rockskit'
+import React from "react";
+import App from "next/app";
+
+import { AppContainer, theme } from "rockskit";
 
 export default class MyApp extends App {
   render() {
-    const { Component, pageProps } = this.props
+    const { Component, pageProps } = this.props;
     return (
-        <ThemeProvider theme={theme}>
-          <Component {...pageProps} />
-        </ThemeProvider>
-    )
+      <AppContainer theme={theme}>
+        <Component {...pageProps} />
+      </AppContainer>
+    );
   }
 }
