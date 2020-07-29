@@ -8,7 +8,7 @@ import {
   IndexExtraSidebar,
   IndexSidebar,
 } from "components";
-import { getLicenseInfo } from "../utils/ethereum";
+import { getLicenseInfo } from "utils/ethereum";
 
 export async function getServerSideProps({ query }) {
   // Call smart contract to get files array on server side

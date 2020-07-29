@@ -13,7 +13,8 @@
         "root": ["./"],
         "alias": {
           "components": "./components",
-          "utils": "./utils"
+          "utils": "./utils",
+          "i18n": "./i18n.js"
         }
       }
     ]
