@@ -10,11 +10,10 @@
     [
       "module-resolver",
       {
-        "root": [
-          "./"
-        ],
+        "root": ["./"],
         "alias": {
-          "components": "./components"
+          "components": "./components",
+          "utils": "./utils"
         }
       }
     ]
