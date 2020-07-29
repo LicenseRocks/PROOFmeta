@@ -8,8 +8,23 @@ import {
   IndexExtraSidebar,
   IndexSidebar,
 } from "components";
+import { getLicenseInfo } from "utils/ethereum";
 
-export default function Home() {
+export async function getServerSideProps({ query }) {
+  // Call smart contract to get files array on server side
+  const { id } = query;
+  const licenseInfo = await getLicenseInfo(id);
+
+  return {
+    props: {
+      ...licenseInfo,
+      id,
+    },
+  };
+}
+
+export default (props) => {
+  console.log("props: ", props);
   return (
     <>
       <Head>
@@ -23,4 +38,4 @@ export default function Home() {
       />
     </>
   );
-}
+};

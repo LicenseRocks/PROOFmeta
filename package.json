@@ -9,6 +9,7 @@
   "dependencies": {
     "ethers": "^5.0.5",
     "next": "latest",
+    "next-i18next": "^5.1.0",
     "react": "^16.8.0",
     "react-dom": "^16.8.0",
     "rockskit": "https://github.com/LicenseRocks/rockskit.git",

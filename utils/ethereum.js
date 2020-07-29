@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import ERC1155 from "../contracts/ropsten/ERC1155.json";
 
 //
-// Test this file by running: http://localhost:3000/contract?id=123
+// Test this file by running: http://localhost:3000/?id=123
 // We need to have contract per each network as their addresses are different
 // I think we have to options:
 // - add built contracts to project as JSON
@@ -25,9 +25,9 @@ const getLicenseInfo = async (id) => {
     const response = await fetch(lastFileURI);
     const license = await response.json(); // parse DIN json
 
-    return { license, fileURIs, errMsg: null };
+    return { license, fileURIs, errorMessage: null };
   } catch (err) {
-    return { license: null, fileURIs: [], errMsg: err.message };
+    return { license: null, fileURIs: [], errorMessage: err.message };
   }
 };
 
