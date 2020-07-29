@@ -10,7 +10,20 @@ import {
 } from "components";
 import { getLicenseInfo } from "../utils/ethereum";
 
-export default function Index(props) {
+export async function getServerSideProps({ query }) {
+  // Call smart contract to get files array on server side
+  const { id } = query;
+  const licenseInfo = await getLicenseInfo(id);
+
+  return {
+    props: {
+      ...licenseInfo,
+      id,
+    },
+  };
+}
+
+export default (props) => {
   console.log("props: ", props);
   return (
     <>
@@ -25,17 +38,4 @@ export default function Index(props) {
       />
     </>
   );
-}
-
-export async function getServerSideProps({ query }) {
-  // Call smart contract to get files array on server side
-  const { id } = query;
-  const licenseInfo = await getLicenseInfo(id);
-
-  return {
-    props: {
-      ...licenseInfo,
-      id,
-    },
-  };
-}
+};
