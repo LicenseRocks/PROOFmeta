@@ -1,9 +1,17 @@
 import React from "react";
-import { ChipBadge, DetailsTable, H1, H3, OutlineButton, Text } from "rockskit";
+import PropTypes from "prop-types";
+import {
+  ChipBadge,
+  DetailsTable,
+  H1,
+  H3,
+  OutlineButton,
+  Text,
+} from "@licenserocks/kit";
 
-export const IndexContent = (
+export const IndexContent = ({ amount, title }) => (
   <>
-    <H1 content="Main content" />
+    <H1 content={title} />
     <Text color="textSecondary" mb={2}>
       Network:
       <Text color="textPrimary" content=" Mainnet" dInline fontWeight="bold" />
@@ -31,7 +39,7 @@ export const IndexContent = (
         },
         {
           label: "Amount",
-          value: <H3 content="140" />,
+          value: <H3 content={amount} />,
         },
         {
           label: "Unit Price",
@@ -41,3 +49,12 @@ export const IndexContent = (
     />
   </>
 );
+
+IndexContent.propTypes = {
+  amount: PropTypes.number,
+  title: PropTypes.string.isRequired,
+};
+
+IndexContent.defaultProps = {
+  amount: "-",
+};

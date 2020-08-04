@@ -7,12 +7,13 @@
     "start": "next start"
   },
   "dependencies": {
+    "@licenserocks/kit": "^1.0.1",
     "ethers": "^5.0.5",
     "next": "latest",
     "next-i18next": "^5.1.0",
+    "prop-types": "^15.7.2",
     "react": "^16.8.0",
     "react-dom": "^16.8.0",
-    "rockskit": "https://github.com/LicenseRocks/rockskit.git",
     "styled-components": "^5.0.0"
   },
   "devDependencies": {

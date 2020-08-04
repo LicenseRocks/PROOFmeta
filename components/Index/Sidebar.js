@@ -1,5 +1,5 @@
 import React from "react";
-import { H4, ShareModule } from "rockskit";
+import { H4, ShareModule } from "@licenserocks/kit";
 
 export const IndexSidebar = (
   <>

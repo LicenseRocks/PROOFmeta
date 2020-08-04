@@ -1,6 +1,7 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Head from "next/head";
-import { ExplorerLayout } from "rockskit";
+import { ExplorerLayout } from "@licenserocks/kit";
 
 import {
   IndexContent,
@@ -23,15 +24,16 @@ export async function getServerSideProps({ query }) {
   };
 }
 
-export default (props) => {
-  console.log("props: ", props);
+const Index = ({ license }) => {
   return (
     <>
       <Head>
-        <title>license.rocks | MetaProof</title>
+        <title>{license.spProduct} | MetaProof</title>
       </Head>
       <ExplorerLayout
-        content={IndexContent}
+        content={
+          <IndexContent amount={license.slCount} title={license.spProduct} />
+        }
         extraContent={IndexExtraContent()}
         extraSidebar={IndexExtraSidebar}
         sidebar={IndexSidebar}
@@ -39,3 +41,12 @@ export default (props) => {
     </>
   );
 };
+
+Index.propTypes = {
+  license: PropTypes.shape({
+    spProduct: PropTypes.string,
+    slCount: PropTypes.number,
+  }).isRequired,
+};
+
+export default Index;
