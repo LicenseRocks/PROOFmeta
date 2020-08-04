@@ -1,13 +1,13 @@
 import React from "react";
 import App from "next/app";
 
-import { AppContainer, theme } from "rockskit";
+import { AppContainer, RocksKitIcons, RocksKitTheme } from "@licenserocks/kit";
 
 export default class MyApp extends App {
   render() {
     const { Component, pageProps } = this.props;
     return (
-      <AppContainer theme={theme}>
+      <AppContainer icons={RocksKitIcons} theme={RocksKitTheme}>
         <Component {...pageProps} />
       </AppContainer>
     );

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FileManager, History, Tab, Text } from "rockskit";
+import { FileManager, History, Tab, Text } from "@licenserocks/kit";
 
 const TABS = [
   {
