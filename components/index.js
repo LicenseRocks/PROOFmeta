@@ -1,1 +1,1 @@
-export * from "./Index";
+export * from "./IndexPage";
