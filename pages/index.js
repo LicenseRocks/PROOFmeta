@@ -13,18 +13,25 @@ import { getLicenseInfo } from "utils/ethereum";
 
 export async function getServerSideProps({ query }) {
   // Call smart contract to get files array on server side
-  const { id } = query;
-  const licenseInfo = await getLicenseInfo(id);
+  const { id, contractAddr, network } = query;
+  const licenseInfo = await getLicenseInfo(id, contractAddr, network);
 
   return {
     props: {
       ...licenseInfo,
-      id,
+      id: id || null,
     },
   };
 }
 
-const Index = ({ license }) => {
+const Index = ({ license, fileURIs }) => {
+  console.log('fileURIs', fileURIs)
+  console.log('license', license)
+
+  if (!license) {
+    return <div><b>Cannot fetch this license</b></div>
+  }
+
   return (
     <>
       <Head>
