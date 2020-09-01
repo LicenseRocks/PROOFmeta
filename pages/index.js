@@ -20,28 +20,41 @@ export async function getServerSideProps({ query }) {
     props: {
       ...licenseInfo,
       id: id || null,
+      network,
     },
   };
 }
 
-const Index = ({ license, fileURIs }) => {
-  console.log('fileURIs', fileURIs)
-  console.log('license', license)
+const Index = ({ license, network }) => {
+  const { amount, title, price, documents, histories, ...rest } = license;
 
   if (!license) {
-    return <div><b>Cannot fetch this license</b></div>
+    return (
+      <div>
+        <b>Cannot fetch this license</b>
+      </div>
+    );
   }
 
   return (
     <>
       <Head>
-        <title>{license.spProduct} | MetaProof</title>
+        <title>{license.title} | MetaProof</title>
       </Head>
       <ExplorerLayout
         content={
-          <IndexContent amount={license.slCount} title={license.spProduct} />
+          <IndexContent
+            amount={amount}
+            title={title}
+            price={price}
+            network={network}
+            {...rest}
+          />
         }
-        extraContent={IndexExtraContent()}
+        extraContent={IndexExtraContent({
+          histories,
+          documents,
+        })}
         extraSidebar={IndexExtraSidebar}
         sidebar={IndexSidebar}
       />
@@ -51,9 +64,13 @@ const Index = ({ license, fileURIs }) => {
 
 Index.propTypes = {
   license: PropTypes.shape({
-    spProduct: PropTypes.string,
-    slCount: PropTypes.number,
+    histories: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+    documents: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+    amount: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    price: PropTypes.string.isRequired,
   }).isRequired,
+  network: PropTypes.string.isRequired,
 };
 
 export default Index;
