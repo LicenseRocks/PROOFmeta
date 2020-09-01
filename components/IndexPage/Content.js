@@ -9,12 +9,26 @@ import {
   Text,
 } from "@licenserocks/kit";
 
-export const IndexContent = ({ amount, title }) => (
+import date from "utils/date";
+
+export const IndexContent = ({
+  amount,
+  title,
+  creator,
+  price,
+  network,
+  updatedAt,
+}) => (
   <>
     <H1 content={title} />
     <Text color="textSecondary" mb={2}>
       Network:
-      <Text color="textPrimary" content=" Mainnet" dInline fontWeight="bold" />
+      <Text
+        color="textPrimary"
+        content={" ".concat(network)}
+        dInline
+        fontWeight="bold"
+      />
     </Text>
     <OutlineButton
       color="secondary"
@@ -27,11 +41,11 @@ export const IndexContent = ({ amount, title }) => (
       rows={[
         {
           label: "Last updated",
-          value: "4 Feb 2020",
+          value: date.format(updatedAt),
         },
         {
           label: "Creator",
-          value: "Majid Amiri",
+          value: creator,
         },
         {
           label: "Status",
@@ -43,7 +57,7 @@ export const IndexContent = ({ amount, title }) => (
         },
         {
           label: "Unit Price",
-          value: <H3 content="100,00" color="primary" />,
+          value: <H3 content={price} color="primary" />,
         },
       ]}
     />
@@ -51,10 +65,10 @@ export const IndexContent = ({ amount, title }) => (
 );
 
 IndexContent.propTypes = {
-  amount: PropTypes.number,
-  title: PropTypes.string.isRequired,
-};
-
-IndexContent.defaultProps = {
-  amount: "-",
+  amount: PropTypes.number.isRequired,
+  title: PropTypes.number.isRequired,
+  creator: PropTypes.string.isRequired,
+  network: PropTypes.string.isRequired,
+  price: PropTypes.string.isRequired,
+  updatedAt: PropTypes.string.isRequired,
 };

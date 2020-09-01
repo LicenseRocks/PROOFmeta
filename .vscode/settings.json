@@ -2,7 +2,7 @@
   // CSS
   "css.validate": false,
   // Editor
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
   "editor.rulers": [100],
   "editor.tabSize": 2,
   // Files

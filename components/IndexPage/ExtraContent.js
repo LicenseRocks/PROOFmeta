@@ -1,5 +1,36 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import { FileManager, History, Tab, Text } from "@licenserocks/kit";
+import date from "utils/date";
+
+const getHistoryIconProps = (historyName) => {
+  let icon;
+  let iconColor;
+
+  switch (historyName) {
+    case "created":
+      icon = "plus";
+      iconColor = "secondary";
+      break;
+    case "verified":
+      icon = "check-circle";
+      iconColor = "success";
+      break;
+    case "published":
+      icon = "copy";
+      iconColor = "warning";
+      break;
+    default:
+      icon = "check-circle";
+      iconColor = "success";
+      break;
+  }
+
+  return {
+    icon,
+    iconColor,
+  };
+};
 
 const TABS = [
   {
@@ -8,53 +39,17 @@ const TABS = [
     label: "Item History",
     showTab: true,
     showContent: true,
-    render: () => (
+    render: ({ histories }) => (
       <History
-        rows={[
-          {
-            id: 1,
-            description: "Description",
-            moreInfo: "2020-06-20",
-            title: "Test",
-            icon: "check-circle",
-            iconColor: "success",
-            collapsible: true,
-            collapseContent: (
-              <Text>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut
-                tincidunt suscipit purus, et ultrices ante sagittis sit amet.
-                Nulla in scelerisque erat. Phasellus molestie turpis vel nisi
-                commodo lacinia. Etiam vitae lectus lectus. Etiam et diam ex.
-                Cras tellus dolor, congue sed libero cursus, dictum dapibus
-                nisl. Nam efficitur ante non nibh efficitur, sed porttitor nisi
-                tristique. Duis pellentesque eu dolor sit amet tristique. Ut id
-                ligula aliquet, suscipit erat eget, commodo nisi. Sed ut diam
-                non turpis pretium ultricies nec non purus. Pellentesque
-                habitant morbi tristique senectus et netus et malesuada fames ac
-                turpis egestas. Cras sagittis nisl sit amet mollis blandit.
-                Fusce hendrerit lacus nec cursus scelerisque. Nullam mollis eu
-                ante in pharetra. In aliquam sapien eu rutrum vestibulum. Aenean
-                facilisis leo vitae odio laoreet ultrices.
-              </Text>
-            ),
-          },
-          {
-            id: 2,
-            description: "Some description",
-            moreInfo: "2020-02-10",
-            title: "Test 2",
-            icon: "plus",
-            iconColor: "secondary",
-          },
-          {
-            id: 3,
-            description: "",
-            moreInfo: "2020-01-23",
-            title: "Test 3",
-            icon: "copy",
-            iconColor: "warning",
-          },
-        ]}
+        rows={histories.map((history) => ({
+          id: history.id,
+          description: history.description,
+          moreInfo: date.format(history.timestamp),
+          title: history.title,
+          ...getHistoryIconProps(history.name),
+          collapsible: history.description !== "-",
+          collapseContent: <Text>{history.description}</Text>,
+        }))}
       />
     ),
   },
@@ -64,51 +59,53 @@ const TABS = [
     label: "Files",
     showTab: true,
     showContent: true,
-    render: () => (
-      <FileManager
-        data={[
-          {
-            label: "Proof documents",
-            files: [
-              {
-                id: 1,
-                name: "license_273.pdf",
-                date: "01/03/2020",
-                description: "Certificate with QR Code",
-                previewUrl: "https://via.placeholder.com/500",
-              },
-            ],
-          },
-          {
-            label: "Contracts",
-            files: [
-              {
-                id: 2,
-                name: "license_273.pdf",
-                date: "01/03/2020",
-                description: "Certificate with QR Code",
-              },
-              {
-                id: 3,
-                name: "denys-nevozhai-6OAWj_ZvSxx-unsplash.jpg",
-                date: "01/03/2019",
-                description: "Enterprise contract",
-              },
-            ],
-          },
-        ]}
-      />
-    ),
+    render: ({ documents }) => {
+      const documentData = (document) => ({
+        id: document.id,
+        name: document.name,
+        data: date.format(document.createdAt),
+        description: document.documentType,
+        previewUrl: document.url,
+      });
+
+      return (
+        <FileManager
+          data={[
+            {
+              label: "Proof documents",
+              files: documents.proofs.map(doc => documentData(doc))
+            },
+            {
+              label: "Contracts",
+              files: documents.contracts.map(doc => documentData(doc))
+            },
+            {
+              label: "Transfer documents",
+              files: documents.transfer.map(doc => documentData(doc))
+            },
+          ]}
+        />
+      );
+    },
   },
 ];
 
-export const IndexExtraContent = () => {
+export const IndexExtraContent = ({ histories, documents }) => {
   const [currentTab, setCurrentTab] = useState(0);
 
   return (
     <>
       <Tab currentTab={currentTab} onChange={setCurrentTab} tabs={TABS} />
-      {TABS[currentTab].render()}
+      {TABS[currentTab].render({ histories, documents })}
     </>
   );
+};
+
+IndexExtraContent.propTypes = {
+  histories: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  documents: PropTypes.shape({
+    contracts: PropTypes.arrayOf(PropTypes.shape({})),
+    proofs: PropTypes.arrayOf(PropTypes.shape({})),
+    transfer: PropTypes.arrayOf(PropTypes.shape({})),
+  }).isRequired,
 };
