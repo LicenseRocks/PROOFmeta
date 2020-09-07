@@ -26,9 +26,16 @@ export async function getServerSideProps({ query }) {
 }
 
 const Index = ({ license, network }) => {
-  const { amount, title, price, documents, histories, ...rest } = license;
+  const {
+    amount = 100,
+    title = "No name",
+    price,
+    documents = [],
+    histories = [],
+    ...rest
+  } = license;
 
-  if (!license) {
+  if (!license || Object.keys(license).length === 0) {
     return (
       <div>
         <b>Cannot fetch this license</b>
