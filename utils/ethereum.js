@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import ERC1155 from "../contracts/ropsten/ERC1155.json";
+import ERC1155abi from "../contractsABI/ERC1155.json";
 
 //
 // Test this file by running: http://localhost:3000/?id=123
@@ -11,8 +11,8 @@ import ERC1155 from "../contracts/ropsten/ERC1155.json";
 // const ethereumNetworkId = process.env.NEXT_PUBLIC_ETHEREUM_NETWORK_ID;
 // const contractAddr = ERC1155.networks[ethereumNetworkId].address;
 const providerUrls = {
-  ropsten:
-    "https://eth-ropsten.alchemyapi.io/v2/mxlKqKI5tfDXjwlJLQDgP90fUJWXnJ4L"
+  ropsten: "https://eth-ropsten.alchemyapi.io/v2/mxlKqKI5tfDXjwlJLQDgP90fUJWXnJ4L",
+  maticTestnet: "https://rpc-mumbai.matic.today",
 };
 
 // const contractAddr = "0x1710Da7B9F57F599C7e9a8E0Ca3e011B3a504Cf7"; // get from params or JSON
@@ -22,16 +22,16 @@ const getLicenseInfo = async (id, contractAddr, network) => {
     const provider = new ethers.providers.JsonRpcProvider(
       providerUrls[network]
     );
-    const contract = new ethers.Contract(contractAddr, ERC1155.abi, provider);
-    const fileURIs = await contract.getFiles(parseInt(id, 10));
-    const lastFileURI = fileURIs[fileURIs.length - 1];
+    const contract = new ethers.Contract(contractAddr, ERC1155abi, provider);
+    const fileURIs = await contract.getPublicFileUrls(parseInt(id, 10));
+    const lastFileURI = fileURIs[0];
     const response = await fetch(lastFileURI);
     const license = await response.json(); // parse DIN json
 
     return { license, fileURIs, errorMessage: null };
   } catch (err) {
-    console.log('error here', err)
-    return { license: null, fileURIs: [], errorMessage: err.message };
+    console.log("error here", err);
+    return { license: {}, fileURIs: [], errorMessage: err.message };
   }
 };
 
