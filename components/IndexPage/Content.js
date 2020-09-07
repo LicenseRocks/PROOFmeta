@@ -9,12 +9,45 @@ import {
   Text,
 } from "@licenserocks/kit";
 
-export const IndexContent = ({ amount, title }) => (
+import date from "utils/date";
+
+const renderRest = (rest) => {
+  if (typeof rest === "object") {
+    const res = Object.keys(rest)
+      .map((key) => {
+        if (typeof rest[key] === "string" && date.isValid(rest[key]))
+          return { label: key, value: date.format(rest[key]) };
+        if (typeof rest[key] === "string")
+          return { label: key, value: rest[key] };
+        if (rest[key]?.label)
+          return { label: rest[key].label, value: rest[key].value };
+        return false;
+      })
+      .filter((obj) => obj);
+    return res;
+  }
+  return [];
+};
+
+export const IndexContent = ({
+  amount,
+  title,
+  price,
+  network,
+  _documents,
+  _histories,
+  ...rest
+}) => (
   <>
     <H1 content={title} />
     <Text color="textSecondary" mb={2}>
       Network:
-      <Text color="textPrimary" content=" Mainnet" dInline fontWeight="bold" />
+      <Text
+        color="textPrimary"
+        content={" ".concat(network)}
+        dInline
+        fontWeight="bold"
+      />
     </Text>
     <OutlineButton
       color="secondary"
@@ -26,14 +59,6 @@ export const IndexContent = ({ amount, title }) => (
       my={10}
       rows={[
         {
-          label: "Last updated",
-          value: "4 Feb 2020",
-        },
-        {
-          label: "Creator",
-          value: "Majid Amiri",
-        },
-        {
           label: "Status",
           value: <ChipBadge icon="check-circle" label="Verified" />,
         },
@@ -43,18 +68,18 @@ export const IndexContent = ({ amount, title }) => (
         },
         {
           label: "Unit Price",
-          value: <H3 content="100,00" color="primary" />,
+          value: <H3 content={price} color="primary" />,
         },
-      ]}
+      ].concat(renderRest(rest))}
     />
   </>
 );
 
 IndexContent.propTypes = {
-  amount: PropTypes.number,
+  amount: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
-};
-
-IndexContent.defaultProps = {
-  amount: "-",
+  price: PropTypes.string.isRequired,
+  network: PropTypes.string.isRequired,
+  _documents: PropTypes.arrayOf().isRequired,
+  _histories: PropTypes.arrayOf().isRequired,
 };

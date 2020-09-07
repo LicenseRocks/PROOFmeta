@@ -21,6 +21,14 @@
     ],
     "import/prefer-default-export": "off",
     "react/jsx-props-no-spreading": "off",
+    "react/jsx-wrap-multilines": "off",
+    "react/jsx-one-expression-per-line": "off",
+    "no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_"
+      }
+    ],
     "prettier/prettier": "error"
   },
   "settings": {
