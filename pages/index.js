@@ -28,7 +28,7 @@ export async function getServerSideProps({ query }) {
 
 const Index = ({ license, network }) => {
   const router = useRouter();
-  const url = `https://meta-proof-mu.vercel.app/${router.asPath}`;
+  const url = `https://explorer.license.rocks/${router.asPath}`;
 
   const {
     amount = 100,
