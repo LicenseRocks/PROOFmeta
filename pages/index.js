@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Head from "next/head";
 import { ExplorerLayout } from "@licenserocks/kit";
+import { useRouter } from "next/router";
 
 import {
   IndexContent,
@@ -26,6 +27,9 @@ export async function getServerSideProps({ query }) {
 }
 
 const Index = ({ license, network }) => {
+  const router = useRouter();
+  const url = `https://meta-proof-mu.vercel.app/${router.asPath}`;
+
   const {
     amount = 100,
     title = "No name",
@@ -62,8 +66,8 @@ const Index = ({ license, network }) => {
           histories,
           documents,
         })}
-        extraSidebar={IndexExtraSidebar}
-        sidebar={IndexSidebar}
+        extraSidebar={IndexExtraSidebar({ url })}
+        sidebar={IndexSidebar({ url })}
       />
     </>
   );
