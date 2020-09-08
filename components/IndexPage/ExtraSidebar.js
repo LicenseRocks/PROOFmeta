@@ -1,4 +1,6 @@
 import React from "react";
 import { DownloadModule } from "@licenserocks/kit";
 
-export const IndexExtraSidebar = <DownloadModule mb={6} />;
+export const IndexExtraSidebar = ({ url }) => (
+  <DownloadModule mb={6} qrCodeValue={url} />
+);

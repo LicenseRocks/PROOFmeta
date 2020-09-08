@@ -58,7 +58,7 @@ const TABS = [
     showContent: true,
     render: ({ documents }) => {
       const documentData = (document) => ({
-        name: document.filename,
+        name: document.filename || document.path,
         data: "-",
         description: "-",
         previewUrl: document.url,
