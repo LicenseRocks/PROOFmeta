@@ -22,6 +22,7 @@ export async function getServerSideProps({ query }) {
       ...licenseInfo,
       id: id || null,
       network,
+      namespacesRequired: ["index", "common"],
     },
   };
 }

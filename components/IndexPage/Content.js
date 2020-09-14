@@ -10,6 +10,7 @@ import {
 } from "@licenserocks/kit";
 
 import date from "utils/date";
+import { withTranslation } from "i18n";
 
 const renderRest = (rest) => {
   if (typeof rest === "object") {
@@ -29,50 +30,42 @@ const renderRest = (rest) => {
   return [];
 };
 
-export const IndexContent = ({
-  amount,
-  title,
-  price,
-  network,
-  _documents,
-  _histories,
-  ...rest
-}) => (
-  <>
-    <H1 content={title} />
-    <Text color="textSecondary" mb={2}>
-      Network:
-      <Text
-        color="textPrimary"
-        content={" ".concat(network)}
-        dInline
-        fontWeight="bold"
-      />
-    </Text>
-    <OutlineButton
-      color="secondary"
-      content="Visit Website of License"
-      size="sm"
-    />
+export const IndexContent = withTranslation("index")(
+  ({ amount, title, price, network, _documents, _histories, t, ...rest }) => (
+    <>
+      <H1 content={title} />
+      <Text color="textSecondary" mb={2}>
+        {t("network")}:
+        <Text
+          color="textPrimary"
+          content={` ${network}`}
+          dInline
+          fontWeight="bold"
+        />
+      </Text>
 
-    <DetailsTable
-      my={10}
-      rows={[
-        {
-          label: "Status",
-          value: <ChipBadge icon="check-circle" label="Verified" />,
-        },
-        {
-          label: "Amount",
-          value: <H3 content={amount} />,
-        },
-        {
-          label: "Unit Price",
-          value: <H3 content={price} color="primary" />,
-        },
-      ].concat(renderRest(rest))}
-    />
-  </>
+      <OutlineButton color="secondary" content={t("visitWebsite")} size="sm" />
+
+      <DetailsTable
+        labelTextTransform="capitalize"
+        my={10}
+        rows={[
+          {
+            label: t("status"),
+            value: <ChipBadge icon="check-circle" label="Verified" />,
+          },
+          {
+            label: t("amount"),
+            value: <H3 content={amount} />,
+          },
+          {
+            label: t("price"),
+            value: <H3 content={price} color="primary" />,
+          },
+        ].concat(renderRest(rest))}
+      />
+    </>
+  )
 );
 
 IndexContent.propTypes = {

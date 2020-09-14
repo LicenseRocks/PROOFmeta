@@ -1,3 +1,9 @@
 {
-  "main-content": "Main Content"
+  "amount": "Amount",
+  "files": "Files",
+  "itemHistory": "Item History",
+  "network": "Network",
+  "price": "Price",
+  "status": "Status",
+  "visitWebsite": "Visit Website of License"
 }

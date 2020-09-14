@@ -1,9 +1,11 @@
 import React from "react";
 import { H4, ShareModule } from "@licenserocks/kit";
 
-export const IndexSidebar = ({ url }) => (
+import { withTranslation } from "i18n";
+
+export const IndexSidebar = withTranslation("common")(({ url, t }) => (
   <>
-    <H4 mb={6}>Share this license</H4>
-    <ShareModule mb={6} url={url} />
+    <H4 mb={6}>{t("shareThisLicense")}</H4>
+    <ShareModule copyText={t("copyLink")} mb={6} url={url} />
   </>
-);
+));

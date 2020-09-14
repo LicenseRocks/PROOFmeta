@@ -1,1 +1,7 @@
-{}
+{
+  "copyLink": "Oder kopieren Sie den Link",
+  "downloadAsPdf": "Als PDF herunterladen",
+  "downloadQrCodeDesc": "Oder laden Sie einfach den QR-Lizenzcode herunter",
+  "downloadQrCodeText": "Laden Sie den QR-Code herunter",
+  "shareThisLicense": "Teilen Sie diese Lizenz"
+}

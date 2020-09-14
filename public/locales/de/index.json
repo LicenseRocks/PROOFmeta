@@ -1,3 +1,9 @@
 {
-  "main-content": "Hauptinhalt"
+  "amount": "Menge",
+  "files": "Dateien",
+  "itemHistory": "Geschichte",
+  "network": "Netzwerk",
+  "price": "Preis",
+  "status": "Status",
+  "visitWebsite": "Besuchen Sie die Website der Lizenz"
 }

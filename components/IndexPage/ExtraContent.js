@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import { FileManager, History, Tab } from "@licenserocks/kit";
 import date from "utils/date";
 
+import { withTranslation } from "i18n";
+
 const getHistoryIconProps = (historyName) => {
   let icon;
   let iconColor;
@@ -33,11 +35,11 @@ const getHistoryIconProps = (historyName) => {
 };
 
 /* eslint-disable react/prop-types */
-const TABS = [
+const getTabs = ({ t }) => [
   {
     index: 0,
     value: "itemHistory",
-    label: "Item History",
+    label: t("itemHistory"),
     showTab: true,
     showContent: true,
     render: ({ histories }) => (
@@ -53,7 +55,7 @@ const TABS = [
   {
     index: 1,
     value: "files",
-    label: "Files",
+    label: t("files"),
     showTab: true,
     showContent: true,
     render: ({ documents }) => {
@@ -79,16 +81,19 @@ const TABS = [
 ];
 /* eslint-enable react/prop-types */
 
-export const IndexExtraContent = ({ histories, documents }) => {
-  const [currentTab, setCurrentTab] = useState(0);
+export const IndexExtraContent = withTranslation("index")(
+  ({ histories, documents, t }) => {
+    const [currentTab, setCurrentTab] = useState(0);
+    const tabs = getTabs({ t });
 
-  return (
-    <>
-      <Tab currentTab={currentTab} onChange={setCurrentTab} tabs={TABS} />
-      {TABS[currentTab].render({ histories, documents })}
-    </>
-  );
-};
+    return (
+      <>
+        <Tab currentTab={currentTab} onChange={setCurrentTab} tabs={tabs} />
+        {tabs[currentTab].render({ histories, documents })}
+      </>
+    );
+  }
+);
 
 IndexExtraContent.propTypes = {
   histories: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
