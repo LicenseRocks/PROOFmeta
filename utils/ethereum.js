@@ -25,10 +25,11 @@ const getLicenseInfo = async (id, contractAddr, network) => {
     const contract = new ethers.Contract(contractAddr, ERC1155abi, provider);
     const fileURIs = await contract.getPublicFileUrls(parseInt(id, 10));
     const lastFileURI = fileURIs[0];
+    const checksums = await contract.getChecksums(parseInt(id, 10));
     const response = await fetch(lastFileURI);
     const license = await response.json(); // parse DIN json
 
-    return { license, fileURIs, errorMessage: null };
+    return { license, fileURIs, checksums, errorMessage: null };
   } catch (err) {
     console.log("error here", err);
     return { license: {}, fileURIs: [], errorMessage: err.message };

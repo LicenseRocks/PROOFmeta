@@ -58,12 +58,26 @@ const getTabs = ({ t }) => [
     label: t("files"),
     showTab: true,
     showContent: true,
-    render: ({ documents }) => {
+    render: ({ documents, fileURIs, checksums }) => {
       const documentData = (document) => ({
         name: document.filename || document.path,
         data: "-",
         description: "-",
         previewUrl: document.url,
+      });
+
+      const publicUrlData = (uri) => ({
+        name: uri,
+        data: "-",
+        description: "-",
+        previewUrl: uri,
+      });
+
+      const checksumData = (checksum) => ({
+        name: checksum,
+        data: "-",
+        description: "-",
+        previewUrl: "#",
       });
 
       return (
@@ -72,6 +86,14 @@ const getTabs = ({ t }) => [
             {
               label: "Documents",
               files: documents.map((doc) => documentData(doc)),
+            },
+            {
+              label: "Public URLs",
+              files: fileURIs.map((uri) => publicUrlData(uri)),
+            },
+            {
+              label: "File checksums",
+              files: checksums.map((checksum) => checksumData(checksum)),
             },
           ]}
         />
@@ -82,14 +104,14 @@ const getTabs = ({ t }) => [
 /* eslint-enable react/prop-types */
 
 export const IndexExtraContent = withTranslation("index")(
-  ({ histories, documents, t }) => {
+  ({ histories, documents, checksums, fileURIs, t }) => {
     const [currentTab, setCurrentTab] = useState(0);
     const tabs = getTabs({ t });
 
     return (
       <>
         <Tab currentTab={currentTab} onChange={setCurrentTab} tabs={tabs} />
-        {tabs[currentTab].render({ histories, documents })}
+        {tabs[currentTab].render({ histories, documents, checksums, fileURIs })}
       </>
     );
   }
