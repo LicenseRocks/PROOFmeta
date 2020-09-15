@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import Head from "next/head";
 import { ExplorerLayout, Meta } from "@licenserocks/kit";
-import { useRouter } from "next/router";
 
 import {
   IndexContent,
@@ -21,16 +20,15 @@ export async function getServerSideProps({ query }) {
     props: {
       ...licenseInfo,
       id: id || null,
+      url: `${process.env.NEXT_APP_DOMAIN}?id=${id}&network=${network}&contractAddr=${contractAddr}`,
       network,
       namespacesRequired: ["index", "common"],
     },
   };
 }
 
-const Index = ({ license, network }) => {
-  const router = useRouter();
+const Index = ({ license, network, url }) => {
   const pageTitle = `${license.title} | MetaProof`;
-  const url = `https://meta-proof-mu.vercel.app/${router.asPath}`;
 
   const {
     amount = 100,
@@ -90,6 +88,7 @@ Index.propTypes = {
     price: PropTypes.string.isRequired,
   }).isRequired,
   network: PropTypes.string.isRequired,
+  url: PropTypes.string.isRequired,
 };
 
 export default Index;
