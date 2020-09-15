@@ -1,9 +1,9 @@
 {
   "amount": "Menge",
-  "files": "Dateien",
-  "itemHistory": "Geschichte",
+  "files": "Lizenz Dokumente",
+  "itemHistory": "Lizenz Änderungen",
   "network": "Netzwerk",
   "price": "Preis",
   "status": "Status",
-  "visitWebsite": "Besuchen Sie die Website der Lizenz"
+  "visitWebsite": "Zur Lizenz Webseite"
 }
