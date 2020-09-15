@@ -22,6 +22,16 @@ const renderRest = (rest) => {
           return { label: key, value: rest[key] };
         if (rest[key]?.label)
           return { label: rest[key].label, value: rest[key].value };
+        if (typeof rest[key] === "object" && typeof rest[key][0] === "string")
+          return { label: rest[key].label, value: rest[key].join(", ") };
+        if (
+          typeof rest[key] === "object" &&
+          typeof rest[key][0]?.label === "string"
+        )
+          return {
+            label: key,
+            value: rest[key].map((item) => item.label).join(", "),
+          };
         return false;
       })
       .filter((obj) => obj);
