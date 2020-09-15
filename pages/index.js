@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Head from "next/head";
-import { ExplorerLayout } from "@licenserocks/kit";
+import { ExplorerLayout, Meta } from "@licenserocks/kit";
 import { useRouter } from "next/router";
 
 import {
@@ -29,6 +29,7 @@ export async function getServerSideProps({ query }) {
 
 const Index = ({ license, network }) => {
   const router = useRouter();
+  const pageTitle = `${license.title} | MetaProof`;
   const url = `https://meta-proof-mu.vercel.app/${router.asPath}`;
 
   const {
@@ -51,7 +52,13 @@ const Index = ({ license, network }) => {
   return (
     <>
       <Head>
-        <title>{license.title} | MetaProof</title>
+        <title>{pageTitle}</title>
+        <Meta
+          description="MetaProof is an explorer to extract the metadata of NFTs that are secured with their JSON files on the Arweave permanent storage"
+          imgSrc="/images/lr-placeholder.jpg"
+          title={pageTitle}
+          url={url}
+        />
       </Head>
       <ExplorerLayout
         content={
