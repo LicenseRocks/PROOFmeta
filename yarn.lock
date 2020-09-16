@@ -1473,10 +1473,10 @@
   dependencies:
     prop-types "^15.7.2"
 
-"@licenserocks/kit@^1.1.11":
-  version "1.1.11"
-  resolved "https://registry.yarnpkg.com/@licenserocks/kit/-/kit-1.1.11.tgz#9bc9d9d6f719fd0280524f67ca6ecd880f2eba2c"
-  integrity sha512-W/lVyGO7LtB90uXfvRVlPt5+fTV5996T/iod31gB0ZBUh8HNu0XoEW4AUJEiEo9PmVekNYSO+2pbG9sKVOcmOQ==
+"@licenserocks/kit@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@licenserocks/kit/-/kit-1.2.1.tgz#a50168a171c8669eaa5d8ce8b527f36cb09cfacb"
+  integrity sha512-GJrOr0WeitXW5+dtMo65R90KbsEfjbdCIQHEwo3B+XHwYwAXHP5qBYKvni0X7Xq3OKsdfQlic66rHDkgBUE8Eg==
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^1.2.30"
     "@fortawesome/free-brands-svg-icons" "^5.14.0"

@@ -1,8 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Head from "next/head";
-import { ExplorerLayout } from "@licenserocks/kit";
-import { useRouter } from "next/router";
+import { ExplorerLayout, Meta } from "@licenserocks/kit";
 
 import {
   IndexContent,
@@ -21,15 +20,15 @@ export async function getServerSideProps({ query }) {
     props: {
       ...licenseInfo,
       id: id || null,
+      url: `${process.env.NEXT_APP_DOMAIN}?id=${id}&network=${network}&contractAddr=${contractAddr}`,
       network,
       namespacesRequired: ["index", "common"],
     },
   };
 }
 
-const Index = ({ license, network }) => {
-  const router = useRouter();
-  const url = `https://meta-proof-mu.vercel.app/${router.asPath}`;
+const Index = ({ license, network, url }) => {
+  const pageTitle = `${license.title} | MetaProof`;
 
   const {
     amount = 100,
@@ -51,7 +50,13 @@ const Index = ({ license, network }) => {
   return (
     <>
       <Head>
-        <title>{license.title} | MetaProof</title>
+        <title>{pageTitle}</title>
+        <Meta
+          description="MetaProof is an explorer to extract the metadata of NFTs that are secured with their JSON files on the Arweave permanent storage"
+          imgSrc="/images/lr-placeholder.jpg"
+          title={pageTitle}
+          url={url}
+        />
       </Head>
       <ExplorerLayout
         content={
@@ -83,6 +88,7 @@ Index.propTypes = {
     price: PropTypes.string.isRequired,
   }).isRequired,
   network: PropTypes.string.isRequired,
+  url: PropTypes.string.isRequired,
 };
 
 export default Index;
