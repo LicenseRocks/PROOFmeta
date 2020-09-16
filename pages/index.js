@@ -27,7 +27,7 @@ export async function getServerSideProps({ query }) {
   };
 }
 
-const Index = ({ license, network, url }) => {
+const Index = ({ license, network, url, fileURIs, checksums }) => {
   const pageTitle = `${license.title} | MetaProof`;
 
   const {
@@ -71,6 +71,8 @@ const Index = ({ license, network, url }) => {
         extraContent={IndexExtraContent({
           histories,
           documents,
+          fileURIs,
+          checksums,
         })}
         extraSidebar={IndexExtraSidebar({ url })}
         sidebar={IndexSidebar({ url })}
@@ -89,6 +91,8 @@ Index.propTypes = {
   }).isRequired,
   network: PropTypes.string.isRequired,
   url: PropTypes.string.isRequired,
+  fileURIs: PropTypes.arrayOf(PropTypes.string).isRequired,
+  checksums: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default Index;
