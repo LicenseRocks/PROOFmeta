@@ -16,6 +16,7 @@ const renderRest = (rest) => {
   if (typeof rest === "object") {
     const res = Object.keys(rest)
       .map((key) => {
+        if (!rest[key]) return false; // null is also an object
         if (typeof rest[key] === "string" && date.isValid(rest[key]))
           return { label: key, value: date.format(rest[key]) };
         if (typeof rest[key] === "string")
