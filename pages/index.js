@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import Head from "next/head";
 import { ExplorerLayout, Meta } from "@licenserocks/kit";
@@ -9,7 +9,7 @@ import {
   IndexExtraSidebar,
   IndexSidebar,
 } from "components";
-import { getLicenseInfo } from "utils/ethereum";
+import { getLicenseInfo, fetchMetaDataFile } from "utils/ethereum";
 
 export async function getServerSideProps({ query }) {
   // Call smart contract to get files array on server side
@@ -28,6 +28,7 @@ export async function getServerSideProps({ query }) {
 }
 
 const Index = ({ license, network, url, fileURIs, checksums }) => {
+  const [licenseData, setLicenseData] = useState(license);
   const pageTitle = `${license.title} | MetaProof`;
 
   const {
@@ -37,7 +38,7 @@ const Index = ({ license, network, url, fileURIs, checksums }) => {
     documents = [],
     histories = [],
     ...rest
-  } = license;
+  } = licenseData;
 
   if (!license || Object.keys(license).length === 0) {
     return (
@@ -65,6 +66,10 @@ const Index = ({ license, network, url, fileURIs, checksums }) => {
             title={title}
             price={price}
             network={network}
+            fileURIs={fileURIs}
+            onMetaDataChange={(fileUrl) =>
+              fetchMetaDataFile(fileUrl).then((data) => setLicenseData(data))
+            }
             {...rest}
           />
         }
