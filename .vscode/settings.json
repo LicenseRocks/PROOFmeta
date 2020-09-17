@@ -8,5 +8,7 @@
   // Files
   "files.trimTrailingWhitespace": true,
   // Javascript
-  "javascript.validate.enable": false
+  "javascript.validate.enable": false,
+  "files.insertFinalNewline": true,
+  "files.eol": "\n"
 }

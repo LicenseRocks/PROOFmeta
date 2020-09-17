@@ -7,15 +7,24 @@ import {
   H3,
   OutlineButton,
   Text,
+  Select,
 } from "@licenserocks/kit";
+import styled from "styled-components";
 
 import date from "utils/date";
 import { withTranslation } from "i18n";
+
+const HeaderContainer = styled.div`
+  display: grid;
+  grid-template-columns: 5fr 1fr;
+  padding-right: ${({ theme }) => theme.spacing(5)};
+`;
 
 const renderRest = (rest) => {
   if (typeof rest === "object") {
     const res = Object.keys(rest)
       .map((key) => {
+        if (!rest[key]) return false; // null is also an object
         if (typeof rest[key] === "string" && date.isValid(rest[key]))
           return { label: key, value: date.format(rest[key]) };
         if (typeof rest[key] === "string")
@@ -41,9 +50,29 @@ const renderRest = (rest) => {
 };
 
 export const IndexContent = withTranslation("index")(
-  ({ amount, title, price, network, _documents, _histories, t, ...rest }) => (
+  ({
+    amount,
+    title,
+    price,
+    network,
+    fileURIs,
+    onMetaDataChange,
+    _documents,
+    _histories,
+    t,
+    ...rest
+  }) => (
     <>
-      <H1 content={title} />
+      <HeaderContainer>
+        <H1 content={title} />
+        <Select
+          options={fileURIs.map((fileURI, index) => ({
+            value: fileURI,
+            label: `Version ${fileURIs.length - index}`,
+          }))}
+          onChange={(e) => onMetaDataChange(e.target.value)}
+        />
+      </HeaderContainer>
       <Text color="textSecondary" mb={2}>
         {t("network")}:
         <Text
@@ -53,7 +82,6 @@ export const IndexContent = withTranslation("index")(
           fontWeight="bold"
         />
       </Text>
-
       <OutlineButton color="secondary" content={t("visitWebsite")} size="sm" />
 
       <DetailsTable
@@ -83,6 +111,8 @@ IndexContent.propTypes = {
   title: PropTypes.string.isRequired,
   price: PropTypes.string.isRequired,
   network: PropTypes.string.isRequired,
+  fileURIs: PropTypes.arrayOf(PropTypes.string).isRequired,
+  onMetaDataChange: PropTypes.func.isRequired,
   _documents: PropTypes.arrayOf().isRequired,
   _histories: PropTypes.arrayOf().isRequired,
 };

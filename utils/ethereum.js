@@ -11,11 +11,16 @@ import ERC1155abi from "../contractsABI/ERC1155.json";
 // const ethereumNetworkId = process.env.NEXT_PUBLIC_ETHEREUM_NETWORK_ID;
 // const contractAddr = ERC1155.networks[ethereumNetworkId].address;
 const providerUrls = {
-  ropsten: "https://eth-ropsten.alchemyapi.io/v2/mxlKqKI5tfDXjwlJLQDgP90fUJWXnJ4L",
+  ropsten:
+    "https://eth-ropsten.alchemyapi.io/v2/mxlKqKI5tfDXjwlJLQDgP90fUJWXnJ4L",
   maticTestnet: "https://rpc-mumbai.matic.today",
 };
 
-// const contractAddr = "0x1710Da7B9F57F599C7e9a8E0Ca3e011B3a504Cf7"; // get from params or JSON
+const fetchMetaDataFile = async (url) => {
+  const response = await fetch(url);
+  const license = await response.json(); // parse DIN json
+  return license;
+};
 
 const getLicenseInfo = async (id, contractAddr, network) => {
   try {
@@ -23,11 +28,11 @@ const getLicenseInfo = async (id, contractAddr, network) => {
       providerUrls[network]
     );
     const contract = new ethers.Contract(contractAddr, ERC1155abi, provider);
-    const fileURIs = await contract.getPublicFileUrls(parseInt(id, 10));
+    let fileURIs = await contract.getPublicFileUrls(parseInt(id, 10));
+    fileURIs = fileURIs.slice().reverse(); // Move the newest file at the beginning of the array
     const lastFileURI = fileURIs[0];
     const checksums = await contract.getChecksums(parseInt(id, 10));
-    const response = await fetch(lastFileURI);
-    const license = await response.json(); // parse DIN json
+    const license = await fetchMetaDataFile(lastFileURI);
 
     return { license, fileURIs, checksums, errorMessage: null };
   } catch (err) {
@@ -36,4 +41,4 @@ const getLicenseInfo = async (id, contractAddr, network) => {
   }
 };
 
-export { ethers, getLicenseInfo };
+export { ethers, getLicenseInfo, fetchMetaDataFile };
