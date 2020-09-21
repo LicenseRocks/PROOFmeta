@@ -8,6 +8,7 @@ import {
   IndexExtraContent,
   IndexExtraSidebar,
   IndexSidebar,
+  MiningInProgress,
 } from "components";
 import { getLicenseInfo, fetchMetaDataFile } from "utils/ethereum";
 
@@ -41,11 +42,7 @@ const Index = ({ license, network, url, fileURIs, checksums }) => {
   } = licenseData;
 
   if (!license || Object.keys(license).length === 0) {
-    return (
-      <div>
-        <b>Cannot fetch this license</b>
-      </div>
-    );
+    return <MiningInProgress />;
   }
 
   return (
