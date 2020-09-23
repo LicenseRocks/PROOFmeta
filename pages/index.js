@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import Head from "next/head";
-import { ExplorerLayout, Meta } from "@licenserocks/kit";
+import { ExplorerLayout, PageMeta } from "@licenserocks/kit";
 
 import {
   IndexContent,
@@ -14,21 +14,27 @@ import { getLicenseInfo, fetchMetaDataFile } from "utils/ethereum";
 
 export async function getServerSideProps({ query }) {
   // Call smart contract to get files array on server side
-  const { id, contractAddr, network } = query;
+  const { coverKey, id, contractAddr, network } = query;
+  const { BUCKET_URL, NEXT_APP_DOMAIN } = process.env;
   const licenseInfo = await getLicenseInfo(id, contractAddr, network);
 
   return {
     props: {
       ...licenseInfo,
+      coverSrc: coverKey
+        ? `${BUCKET_URL}/${coverKey}`
+        : "/images/lr-placeholder.jpg",
       id: id || null,
-      url: `${process.env.NEXT_APP_DOMAIN}?id=${id}&network=${network}&contractAddr=${contractAddr}`,
+      url: `${NEXT_APP_DOMAIN}?id=${id}&network=${network}&contractAddr=${contractAddr}${
+        coverKey ? `&coverKey=${coverKey}` : null
+      }`,
       network,
       namespacesRequired: ["index", "common"],
     },
   };
 }
 
-const Index = ({ license, network, url, fileURIs, checksums }) => {
+const Index = ({ coverSrc, license, network, url, fileURIs, checksums }) => {
   const [licenseData, setLicenseData] = useState(license);
   const pageTitle = `${license.title} | MetaProof`;
 
@@ -47,15 +53,13 @@ const Index = ({ license, network, url, fileURIs, checksums }) => {
 
   return (
     <>
-      <Head>
-        <title>{pageTitle}</title>
-        <Meta
-          description="MetaProof is an explorer to extract the metadata of NFTs that are secured with their JSON files on the Arweave permanent storage"
-          imgSrc="/images/lr-placeholder.jpg"
-          title={pageTitle}
-          url={url}
-        />
-      </Head>
+      <PageMeta
+        description="MetaProof is an explorer to extract the metadata of NFTs that are secured with their JSON files on the Arweave permanent storage"
+        imgSrc={coverSrc}
+        title={pageTitle}
+        url={url}
+        Wrapper={(props) => <Head {...props} />}
+      />
       <ExplorerLayout
         content={
           <IndexContent
@@ -84,6 +88,7 @@ const Index = ({ license, network, url, fileURIs, checksums }) => {
 };
 
 Index.propTypes = {
+  coverSrc: PropTypes.string,
   license: PropTypes.shape({
     histories: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
     documents: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
@@ -95,6 +100,10 @@ Index.propTypes = {
   url: PropTypes.string.isRequired,
   fileURIs: PropTypes.arrayOf(PropTypes.string).isRequired,
   checksums: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
+
+Index.defaultProps = {
+  coverSrc: null,
 };
 
 export default Index;

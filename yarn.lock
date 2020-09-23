@@ -1473,10 +1473,10 @@
   dependencies:
     prop-types "^15.7.2"
 
-"@licenserocks/kit@^1.2.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@licenserocks/kit/-/kit-1.2.1.tgz#a50168a171c8669eaa5d8ce8b527f36cb09cfacb"
-  integrity sha512-GJrOr0WeitXW5+dtMo65R90KbsEfjbdCIQHEwo3B+XHwYwAXHP5qBYKvni0X7Xq3OKsdfQlic66rHDkgBUE8Eg==
+"@licenserocks/kit@^1.2.3":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@licenserocks/kit/-/kit-1.2.3.tgz#3bc08daa5faf85e5049894a813876494cc6d56ab"
+  integrity sha512-KcOZ7rccB61hYKkrcyp5VbVZXi/Z87eWDOI8a6BfHh7KI07mli4cdL8KG1QLKPgMk3nFllECqG8MtJJYCh6r4w==
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^1.2.30"
     "@fortawesome/free-brands-svg-icons" "^5.14.0"
@@ -1485,7 +1485,6 @@
     "@material-ui/core" "^4.11.0"
     "@material-ui/lab" "^4.0.0-alpha.56"
     "@tanem/react-nprogress" "^3.0.41"
-    add "^2.0.6"
     axios "^0.19.2"
     copy-to-clipboard "^3.3.1"
     filepond "^4.20.1"
@@ -1499,7 +1498,6 @@
     react-select "^3.1.0"
     react-transition-group "^4.4.1"
     styled-components "^5.1.1"
-    yarn "^1.22.5"
 
 "@material-ui/core@^4.11.0":
   version "4.11.0"
@@ -1900,11 +1898,6 @@ acorn@^7.3.1:
   version "7.4.0"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-7.4.0.tgz#e1ad486e6c54501634c6c397c5c121daa383607c"
   integrity sha512-+G7P8jJmCHr+S+cLfQxygbWhXy+8YTVGzAkpEbcLo2mLoL7tij/VG41QSHACSf5QgYRhMZYHuNc6drJaO0Da+w==
-
-add@^2.0.6:
-  version "2.0.6"
-  resolved "https://registry.yarnpkg.com/add/-/add-2.0.6.tgz#248f0a9f6e5a528ef2295dbeec30532130ae2235"
-  integrity sha1-JI8Kn25aUo7yKV2+7DBTITCuIjU=
 
 adjust-sourcemap-loader@2.0.0:
   version "2.0.0"
@@ -7806,8 +7799,3 @@ yaml@^1.7.2:
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/yaml/-/yaml-1.10.0.tgz#3b593add944876077d4d683fee01081bd9fff31e"
   integrity sha512-yr2icI4glYaNG+KWONODapy2/jDdMSDnrONSjblABjD9B4Z5LgiircSt8m8sRZFNi08kG9Sm0uSHtEmP3zaEGg==
-
-yarn@^1.22.5:
-  version "1.22.5"
-  resolved "https://registry.yarnpkg.com/yarn/-/yarn-1.22.5.tgz#1933b7635429ca00847222dd9d38f05646e2df23"
-  integrity sha512-5uzKXwdMc++mYktXqkfpNYT9tY8ViWegU58Hgbo+KXzrzzhEyP1Ip+BTtXloLrXNcNlxFJbLiFKGaS9vK9ym6Q==
