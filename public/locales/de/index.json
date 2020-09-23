@@ -5,5 +5,10 @@
   "network": "Netzwerk",
   "price": "Preis",
   "status": "Status",
-  "visitWebsite": "Zur Lizenz Webseite"
+  "buyLicense": "Buy this license",
+  "versionHistory": "Version history",
+  "creatorPublicKey": "Creator Public Key",
+  "transactionId": "Transaction ID",
+  "publicLicenseDetails": "Public License Details",
+  "cryptoProofs": "Crypto proofs"
 }
