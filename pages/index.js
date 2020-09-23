@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import Head from "next/head";
-import { ExplorerLayout, PageMeta } from "@licenserocks/kit";
+import { ExplorerLayout, PageMeta, Button } from "@licenserocks/kit";
+import { withTranslation } from "i18n";
 
 import {
   IndexContent,
@@ -34,58 +35,71 @@ export async function getServerSideProps({ query }) {
   };
 }
 
-const Index = ({ coverSrc, license, network, url, fileURIs, checksums }) => {
-  const [licenseData, setLicenseData] = useState(license);
-  const pageTitle = `${license.title} | MetaProof`;
+const Index = withTranslation("index")(
+  ({ id, coverSrc, license, network, url, fileURIs, checksums, t }) => {
+    const [licenseData, setLicenseData] = useState(license);
+    const pageTitle = `${license.title} | MetaProof`;
 
-  const {
-    amount = 100,
-    title = "No name",
-    price,
-    documents = [],
-    histories = [],
-    ...rest
-  } = licenseData;
+    const {
+      amount = 100,
+      title = "No name",
+      price,
+      documents = [],
+      histories = [],
+      ...rest
+    } = licenseData;
 
-  if (!license || Object.keys(license).length === 0) {
-    return <MiningInProgress />;
+    if (!license || Object.keys(license).length === 0) {
+      return <MiningInProgress />;
+    }
+
+    return (
+      <>
+        <PageMeta
+          description="MetaProof is an explorer to extract the metadata of NFTs that are secured with their JSON files on the Arweave permanent storage"
+          imgSrc={coverSrc}
+          title={pageTitle}
+          url={url}
+          Wrapper={(props) => <Head {...props} />}
+        />
+        <ExplorerLayout
+          headerRight={
+            <Button
+              content={t("buyLicense")}
+              size="sm"
+              // NOTE: buy URL should be added to JSON metadata file.
+              href={`https://creators-hub.vercel.app/nft/${id}`}
+              target="_blank"
+            />
+          }
+          content={
+            <IndexContent
+              coverSrc={coverSrc}
+              amount={amount}
+              title={title}
+              price={price}
+              network={network}
+              fileURIs={fileURIs}
+              histories={histories}
+              onMetaDataChange={(fileUrl) =>
+                fetchMetaDataFile(fileUrl).then((data) => setLicenseData(data))
+              }
+              {...rest}
+            />
+          }
+          extraContent={IndexExtraContent({
+            histories,
+            documents,
+            fileURIs,
+            checksums,
+          })}
+          extraSidebar={IndexExtraSidebar({ url })}
+          sidebar={IndexSidebar({ url })}
+        />
+      </>
+    );
   }
-
-  return (
-    <>
-      <PageMeta
-        description="MetaProof is an explorer to extract the metadata of NFTs that are secured with their JSON files on the Arweave permanent storage"
-        imgSrc={coverSrc}
-        title={pageTitle}
-        url={url}
-        Wrapper={(props) => <Head {...props} />}
-      />
-      <ExplorerLayout
-        content={
-          <IndexContent
-            amount={amount}
-            title={title}
-            price={price}
-            network={network}
-            fileURIs={fileURIs}
-            onMetaDataChange={(fileUrl) =>
-              fetchMetaDataFile(fileUrl).then((data) => setLicenseData(data))
-            }
-            {...rest}
-          />
-        }
-        extraContent={IndexExtraContent({
-          histories,
-          documents,
-          fileURIs,
-          checksums,
-        })}
-        extraSidebar={IndexExtraSidebar({ url })}
-        sidebar={IndexSidebar({ url })}
-      />
-    </>
-  );
-};
+);
 
 Index.propTypes = {
   coverSrc: PropTypes.string,

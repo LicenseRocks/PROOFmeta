@@ -5,5 +5,11 @@
   "network": "Network",
   "price": "Price",
   "status": "Status",
-  "visitWebsite": "Visit Website of License"
+  "buyLicense": "Buy this license",
+  "permanentStorageProvider": "Permanent storage by",
+  "versionHistory": "Version history",
+  "creatorPublicKey": "Creator Public Key",
+  "transactionId": "Transaction ID",
+  "publicLicenseDetails": "Public License Details",
+  "cryptoProofs": "Crypto proofs"
 }
