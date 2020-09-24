@@ -26,7 +26,7 @@ export async function getServerSideProps({ query }) {
         : "/images/lr-placeholder.jpg",
       id: id || null,
       url: `${NEXT_APP_DOMAIN}?id=${id}&network=${network}&contractAddr=${contractAddr}${
-        coverKey ? `&coverKey=${coverKey}` : null
+        coverKey ? `&coverKey=${coverKey}` : ""
       }`,
       network,
       namespacesRequired: ["index", "common"],
