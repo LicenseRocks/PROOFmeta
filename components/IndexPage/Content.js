@@ -132,17 +132,13 @@ export const IndexContent = withTranslation("index")(
     const getTransactionInfo = () => {
       setTxLoading(true);
       setTxInfo(null);
-      getTransaction(
-        // NOTE: must be replaced with activeHistory.txId after adding txId id to histories
-        "0x6f6f37e972b53a78498e0389c8074652cef2b7bba69b8f273e5e965317c9a3e9",
-        "ropsten"
-      )
+      getTransaction(activeHistory.txHash, network)
         .then((tx) => setTxInfo(tx))
         .finally(() => setTxLoading(false));
     };
 
     useEffect(() => {
-      getTransactionInfo();
+      if (activeHistory.txHash) getTransactionInfo();
     }, []);
 
     return (
@@ -190,26 +186,32 @@ export const IndexContent = withTranslation("index")(
             },
           ]
             .concat(renderRest(rest))
-            .concat([
-              {
-                label: t("creatorPublicKey"),
-                value: <CryptoProof value={txInfo?.from} />,
-                expandable: true,
-              },
-              {
-                label: t("transactionId"),
-                value: <CryptoProof value={txInfo?.hash} />,
-                expandable: true,
-              },
-            ])}
+            .concat(
+              activeHistory.txHash
+                ? [
+                    {
+                      label: t("creatorPublicKey"),
+                      value: <CryptoProof value={txInfo?.from} />,
+                      expandable: true,
+                    },
+                    {
+                      label: t("transactionId"),
+                      value: <CryptoProof value={txInfo?.hash} />,
+                      expandable: true,
+                    },
+                  ]
+                : []
+            )}
         />
-        <VersionHistory
-          onChange={(item) => {
-            setActiveHistory(item);
-            getTransactionInfo();
-          }}
-          histories={orderedHistories}
-        />
+        {activeHistory.txHash && (
+          <VersionHistory
+            onChange={(item) => {
+              setActiveHistory(item);
+              getTransactionInfo();
+            }}
+            histories={orderedHistories}
+          />
+        )}
       </>
     );
   }
