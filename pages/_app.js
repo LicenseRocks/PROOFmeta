@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
-import { AppContainer, RocksKitIcons, RocksKitTheme } from "@licenserocks/kit";
+import { AppContainer, RocksKitTheme } from "@licenserocks/kit";
 
+import { Icons } from "theme/icons";
 import { appWithTranslation } from "i18n";
 
 function MyApp({ Component, pageProps }) {
@@ -14,7 +15,7 @@ function MyApp({ Component, pageProps }) {
   }, []);
 
   return (
-    <AppContainer icons={RocksKitIcons} theme={RocksKitTheme}>
+    <AppContainer icons={Icons} theme={RocksKitTheme}>
       <Component {...pageProps} />
     </AppContainer>
   );

@@ -3,5 +3,6 @@
   "downloadAsPdf": "PDF Herunterladen",
   "downloadQrCodeDesc": "Oder nutze den QR-Lizenzcode",
   "downloadQrCodeText": "QR-Code Herunterladen",
-  "shareThisLicense": "Lizenzinformation Teilen"
+  "shareThisLicense": "Lizenzinformation Teilen",
+  "permanentStorageProvider": "Permanent storage by"
 }
