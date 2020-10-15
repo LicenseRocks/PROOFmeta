@@ -41,4 +41,12 @@ const getLicenseInfo = async (id, contractAddr, network) => {
   }
 };
 
-export { ethers, getLicenseInfo, fetchMetaDataFile };
+const getTransaction = async (txHash, network) => {
+  const provider = new ethers.providers.JsonRpcProvider(providerUrls[network]);
+
+  const transaction = await provider.getTransaction(txHash);
+
+  return transaction;
+};
+
+export { ethers, getLicenseInfo, fetchMetaDataFile, getTransaction };
