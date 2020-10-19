@@ -28,16 +28,14 @@ const getLicenseInfo = async (id, contractAddr, network) => {
       providerUrls[network]
     );
     const contract = new ethers.Contract(contractAddr, ERC1155abi, provider);
-    let fileURIs = await contract.getPublicFileUrls(parseInt(id, 10));
-    fileURIs = fileURIs.slice().reverse(); // Move the newest file at the beginning of the array
-    const lastFileURI = fileURIs[0];
+    const fileURI = await contract.getMetaFileUrl(parseInt(id, 10));
     const checksums = await contract.getChecksums(parseInt(id, 10));
-    const license = await fetchMetaDataFile(lastFileURI);
+    const license = await fetchMetaDataFile(fileURI);
 
-    return { license, fileURIs, checksums, errorMessage: null };
+    return { license, fileURI, checksums, errorMessage: null };
   } catch (err) {
     console.log("error here", err);
-    return { license: {}, fileURIs: [], errorMessage: err.message };
+    return { license: {}, fileURI: [], errorMessage: err.message };
   }
 };
 

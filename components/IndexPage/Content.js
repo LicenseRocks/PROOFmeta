@@ -115,7 +115,7 @@ export const IndexContent = withTranslation("index")(
     coverSrc,
     abstract,
     t,
-    fileURIs: _fileURIs,
+    fileURI: _fileURI,
     _documents,
     ...rest
   }) => {
@@ -222,7 +222,7 @@ IndexContent.propTypes = {
   title: PropTypes.string.isRequired,
   price: PropTypes.string.isRequired,
   network: PropTypes.string.isRequired,
-  fileURIs: PropTypes.arrayOf(PropTypes.string).isRequired,
+  fileURI: PropTypes.arrayOf(PropTypes.string).isRequired,
   onMetaDataChange: PropTypes.func.isRequired,
   histories: PropTypes.arrayOf(PropTypes.shape()),
   _documents: PropTypes.arrayOf().isRequired,
