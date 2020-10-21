@@ -36,11 +36,12 @@ export async function getServerSideProps({ query }) {
 }
 
 const Index = withTranslation("index")(
-  ({ id, coverSrc, license, network, url, fileURIs, checksums, t }) => {
+  ({ id, coverSrc, license, network, url, fileURI, checksums, t }) => {
     const [licenseData, setLicenseData] = useState(license);
     const pageTitle = `${license.title} | MetaProof`;
 
     const {
+      amountOfThisGood = 0,
       amount = 0,
       title = "No name",
       price,
@@ -75,11 +76,11 @@ const Index = withTranslation("index")(
           content={
             <IndexContent
               coverSrc={coverSrc}
-              amount={amount}
+              amount={amountOfThisGood || amount}
               title={title}
               price={price}
               network={network}
-              fileURIs={fileURIs}
+              fileURI={fileURI}
               histories={histories}
               onMetaDataChange={(fileUrl) =>
                 fetchMetaDataFile(fileUrl).then((data) => setLicenseData(data))
@@ -90,7 +91,7 @@ const Index = withTranslation("index")(
           extraContent={IndexExtraContent({
             histories,
             documents,
-            fileURIs,
+            fileURI,
             checksums,
           })}
           extraSidebar={IndexExtraSidebar({ url })}
@@ -112,7 +113,7 @@ Index.propTypes = {
   }).isRequired,
   network: PropTypes.string.isRequired,
   url: PropTypes.string.isRequired,
-  fileURIs: PropTypes.arrayOf(PropTypes.string).isRequired,
+  fileURI: PropTypes.string.isRequired,
   checksums: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
