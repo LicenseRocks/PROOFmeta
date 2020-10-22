@@ -45,7 +45,7 @@ const getTabs = ({ t }) => [
     render: ({ histories }) => (
       <History
         rows={histories.map((history) => ({
-          moreInfo: date.format(history.createdAt),
+          moreInfo: date.format(history.created_at),
           title: history.title,
           ...getHistoryIconProps(history.name),
         }))}
@@ -67,7 +67,11 @@ const getTabs = ({ t }) => [
       });
 
       const publicUrlData = (uri) => ({
-        name: uri,
+        name: (
+          <a href={uri} target="_blank" rel="noreferrer">
+            {uri}
+          </a>
+        ),
         data: "-",
         description: "-",
         previewUrl: uri,
