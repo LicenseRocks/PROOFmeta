@@ -18,6 +18,7 @@ import { VersionHistory } from "components/IndexPage/ItemHistory";
 import date from "utils/date";
 import { getTransaction } from "utils/ethereum";
 import { withTranslation } from "i18n";
+import iconMapper from "./iconMapper";
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -80,13 +81,25 @@ const renderRest = (rest) => {
       .map((key) => {
         if (!rest[key]) return false; // null is also an object
         if (typeof rest[key] === "string" && date.isValid(rest[key]))
-          return { label: key, value: date.format(rest[key]) };
+          return {
+            label: key,
+            value: date.format(rest[key]),
+            icon: iconMapper(key),
+          };
         if (typeof rest[key] === "string")
-          return { label: key, value: rest[key] };
+          return { label: key, value: rest[key], icon: iconMapper(key) };
         if (rest[key]?.label)
-          return { label: rest[key].label, value: rest[key].value };
+          return {
+            label: rest[key].label,
+            value: rest[key].value,
+            icon: iconMapper(key),
+          };
         if (typeof rest[key] === "object" && typeof rest[key][0] === "string")
-          return { label: rest[key].label, value: rest[key].join(", ") };
+          return {
+            label: rest[key].label,
+            value: rest[key].join(", "),
+            icon: iconMapper(key),
+          };
         if (
           typeof rest[key] === "object" &&
           typeof rest[key][0]?.label === "string"
@@ -94,6 +107,7 @@ const renderRest = (rest) => {
           return {
             label: key,
             value: rest[key].map((item) => item.label).join(", "),
+            icon: iconMapper(key)
           };
         return false;
       })
@@ -179,10 +193,12 @@ export const IndexContent = withTranslation("index")(
             {
               label: t("amount"),
               value: <H3 content={amount} />,
+              icon: iconMapper("amount"),
             },
             {
               label: t("price"),
               value: <H3 content={price} color="primary" />,
+              icon: iconMapper("price"),
             },
           ]
             .concat(renderRest(rest))
@@ -193,11 +209,13 @@ export const IndexContent = withTranslation("index")(
                       label: t("creatorPublicKey"),
                       value: <CryptoProof value={txInfo?.from} />,
                       expandable: true,
+                      icon: iconMapper("creatorPublicKey"),
                     },
                     {
                       label: t("transactionId"),
                       value: <CryptoProof value={txInfo?.hash} />,
                       expandable: true,
+                      icon: iconMapper("transactionId"),
                     },
                   ]
                 : []

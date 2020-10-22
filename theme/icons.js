@@ -4,6 +4,9 @@ import {
   faAngleDown,
   faAngleUp,
   faFile,
+  faFolder,
+  faCheckDouble,
+  faInfoCircle,
 } from "@fortawesome/free-solid-svg-icons";
 
 export const Icons = {
@@ -11,4 +14,7 @@ export const Icons = {
   faAngleDown,
   faAngleUp,
   faFile,
+  faFolder,
+  faCheckDouble,
+  faInfoCircle,
 };
