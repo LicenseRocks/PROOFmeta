@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://license.rocks/wp-content/uploads/2020/10/MetaProof.jpg">
+  <img src="https://license.rocks/wp-content/uploads/2020/10/MetaProof.jpg" width="250">
 </p>
 
 <h1 align="center">MetaProof</h1>
