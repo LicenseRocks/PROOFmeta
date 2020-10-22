@@ -46,7 +46,7 @@ const getTabs = ({ t }) => [
       <History
         rows={histories.map((history) => ({
           moreInfo: date.format(history.created_at),
-          title: history.title,
+          title: history.title || history.name,
           ...getHistoryIconProps(history.name),
         }))}
       />
@@ -58,7 +58,7 @@ const getTabs = ({ t }) => [
     label: t("files"),
     showTab: true,
     showContent: true,
-    render: ({ documents, fileURIs, checksums }) => {
+    render: ({ documents, fileURI, checksums }) => {
       const documentData = (document) => ({
         name: document.filename || document.path,
         data: "-",
@@ -93,7 +93,7 @@ const getTabs = ({ t }) => [
             },
             {
               label: "Public URLs",
-              files: fileURIs.map((uri) => publicUrlData(uri)),
+              files: [publicUrlData(fileURI)],
             },
             {
               label: "File checksums",
@@ -108,14 +108,14 @@ const getTabs = ({ t }) => [
 /* eslint-enable react/prop-types */
 
 export const IndexExtraContent = withTranslation("index")(
-  ({ histories, documents, checksums, fileURIs, t }) => {
+  ({ histories, documents, checksums, fileURI, t }) => {
     const [currentTab, setCurrentTab] = useState(0);
     const tabs = getTabs({ t });
 
     return (
       <>
         <Tab currentTab={currentTab} onChange={setCurrentTab} tabs={tabs} />
-        {tabs[currentTab].render({ histories, documents, checksums, fileURIs })}
+        {tabs[currentTab].render({ histories, documents, checksums, fileURI })}
       </>
     );
   }

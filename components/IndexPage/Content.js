@@ -1,24 +1,78 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import {
   ChipBadge,
+  TinyBadge,
   DetailsTable,
   H1,
   H3,
-  OutlineButton,
   Text,
-  Select,
+  Icon,
+  Image,
+  Paragraph,
 } from "@licenserocks/kit";
 import styled from "styled-components";
 
+import { VersionHistory } from "components/IndexPage/ItemHistory";
+
 import date from "utils/date";
+import { getTransaction } from "utils/ethereum";
 import { withTranslation } from "i18n";
 
 const HeaderContainer = styled.div`
-  display: grid;
-  grid-template-columns: 5fr 1fr;
-  padding-right: ${({ theme }) => theme.spacing(5)};
+  display: flex;
+  align-items: center;
+  & > h1 {
+    margin-right: 8px;
+  }
+  & > * {
+    margin-right: 4px;
+  }
 `;
+
+const StyledDetailsTable = styled(DetailsTable)``;
+
+const StyledImage = styled(Image).attrs(() => ({
+  width: "100%",
+}))`
+  max-height: 150px;
+`;
+
+const CryptoIcon = styled(Icon).attrs({
+  icon: "file",
+  color: "secondary",
+  squared: true,
+})`
+  width: 32px;
+  height: 32px;
+`;
+
+const CryptoProofContainer = styled.div`
+  display: flex;
+  align-items: center;
+
+  & > * {
+    margin-right: 8px;
+  }
+`;
+
+const CryptoProof = ({ value, url }) => {
+  return (
+    <CryptoProofContainer>
+      <CryptoIcon squared />
+      <a href={url}>{value}</a>
+    </CryptoProofContainer>
+  );
+};
+
+CryptoProof.propTypes = {
+  value: PropTypes.string.isRequired,
+  url: PropTypes.string,
+};
+
+CryptoProof.defaultProps = {
+  url: "#",
+};
 
 const renderRest = (rest) => {
   if (typeof rest === "object") {
@@ -54,56 +108,113 @@ export const IndexContent = withTranslation("index")(
     amount,
     title,
     price,
+    unique,
+    exclusive,
     network,
-    fileURIs,
-    onMetaDataChange,
-    _documents,
-    _histories,
+    histories,
+    coverSrc,
+    abstract,
     t,
+    fileURI: _fileURI,
+    _documents,
     ...rest
-  }) => (
-    <>
-      <HeaderContainer>
-        <H1 content={title} />
-        <Select
-          options={fileURIs.map((fileURI, index) => ({
-            value: fileURI,
-            label: `Version ${fileURIs.length - index}`,
-          }))}
-          onChange={(e) => onMetaDataChange(e.target.value)}
-        />
-      </HeaderContainer>
-      <Text color="textSecondary" mb={2}>
-        {t("network")}:
-        <Text
-          color="textPrimary"
-          content={` ${network}`}
-          dInline
-          fontWeight="bold"
-        />
-      </Text>
-      <OutlineButton color="secondary" content={t("visitWebsite")} size="sm" />
+  }) => {
+    // Order histories by created_at in descending way
+    const orderedHistories = histories.sort(
+      (first, second) =>
+        Date.parse(second.created_at || first.createdAt) -
+        Date.parse(first.created_at || first.createdAt)
+    );
+    const [activeHistory, setActiveHistory] = useState(orderedHistories[0]);
+    const [txInfo, setTxInfo] = useState(null);
+    const [txLoading, setTxLoading] = useState(false);
 
-      <DetailsTable
-        labelTextTransform="capitalize"
-        my={10}
-        rows={[
-          {
-            label: t("status"),
-            value: <ChipBadge icon="check-circle" label="Verified" />,
-          },
-          {
-            label: t("amount"),
-            value: <H3 content={amount} />,
-          },
-          {
-            label: t("price"),
-            value: <H3 content={price} color="primary" />,
-          },
-        ].concat(renderRest(rest))}
-      />
-    </>
-  )
+    const getTransactionInfo = () => {
+      setTxLoading(true);
+      setTxInfo(null);
+      getTransaction(activeHistory.txHash, network)
+        .then((tx) => setTxInfo(tx))
+        .finally(() => setTxLoading(false));
+    };
+
+    useEffect(() => {
+      if (activeHistory.txHash) getTransactionInfo();
+    }, []);
+
+    return (
+      <>
+        <HeaderContainer>
+          <H1 content={title} />
+          {exclusive && <TinyBadge label={t("exclusive")} color="warning" />}
+          {unique && <TinyBadge label={t("unique")} color="success" />}
+        </HeaderContainer>
+        <Text color="textSecondary" mb={2}>
+          {t("network")}:
+          <Text
+            color="textPrimary"
+            content={` ${network}`}
+            dInline
+            fontWeight="bold"
+          />
+        </Text>
+
+        <ChipBadge color="success" label="Updated" icon="check-circle" />
+
+        <StyledDetailsTable
+          labelTextTransform="capitalize"
+          my={10}
+          labelWidth={220}
+          expandButtonProps={{ loading: txLoading }}
+          rows={[
+            {
+              columnSm: true,
+              divider: true,
+              renderLabel: () => <StyledImage src={coverSrc} />,
+              value: <Paragraph content={abstract} />,
+            },
+            {
+              label: t("status"),
+              value: <ChipBadge icon="check-circle" label="Verified" />,
+            },
+            {
+              label: t("amount"),
+              value: <H3 content={amount} />,
+            },
+            {
+              label: t("price"),
+              value: <H3 content={price} color="primary" />,
+            },
+          ]
+            .concat(renderRest(rest))
+            .concat(
+              activeHistory.txHash
+                ? [
+                    {
+                      label: t("creatorPublicKey"),
+                      value: <CryptoProof value={txInfo?.from} />,
+                      expandable: true,
+                    },
+                    {
+                      label: t("transactionId"),
+                      value: <CryptoProof value={txInfo?.hash} />,
+                      expandable: true,
+                    },
+                  ]
+                : []
+            )}
+        />
+        {activeHistory.txHash && (
+          <VersionHistory
+            onChange={(item) => {
+              setActiveHistory(item);
+              getTransactionInfo();
+            }}
+            histories={orderedHistories}
+          />
+        )}
+      </>
+    );
+  }
 );
 
 IndexContent.propTypes = {
@@ -111,8 +222,12 @@ IndexContent.propTypes = {
   title: PropTypes.string.isRequired,
   price: PropTypes.string.isRequired,
   network: PropTypes.string.isRequired,
-  fileURIs: PropTypes.arrayOf(PropTypes.string).isRequired,
+  fileURI: PropTypes.arrayOf(PropTypes.string).isRequired,
   onMetaDataChange: PropTypes.func.isRequired,
+  histories: PropTypes.arrayOf(PropTypes.shape()),
   _documents: PropTypes.arrayOf().isRequired,
-  _histories: PropTypes.arrayOf().isRequired,
+};
+
+IndexContent.defaultProps = {
+  histories: [],
 };
