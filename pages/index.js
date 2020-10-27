@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Head from "next/head";
 import { ExplorerLayout, PageMeta, Button } from "@licenserocks/kit";
@@ -38,6 +38,7 @@ export async function getServerSideProps({ query }) {
 const Index = withTranslation("index")(
   ({ id, coverSrc, license, network, url, fileURI, checksums, t }) => {
     const [licenseData, setLicenseData] = useState(license);
+    const [purchaseURL, setPurchaseURL] = useState("#");
     const pageTitle = `${license.title} | MetaProof`;
 
     const {
@@ -54,6 +55,13 @@ const Index = withTranslation("index")(
       return <MiningInProgress />;
     }
 
+    useEffect(() => {
+      const queryParams = new URLSearchParams(document.location.search);
+      setPurchaseURL(`https://staging.license.rocks/licenses/${id}`);
+      if (queryParams.get("createdWith") === "creatorshub")
+        setPurchaseURL(`https://creators-hub.vercel.app/nft/${id}`);
+    }, []);
+
     return (
       <>
         <PageMeta
@@ -69,7 +77,7 @@ const Index = withTranslation("index")(
               content={t("buyLicense")}
               size="sm"
               // NOTE: buy URL should be added to JSON metadata file.
-              href={`https://creators-hub.vercel.app/nft/${id}`}
+              href={purchaseURL}
               target="_blank"
             />
           }
