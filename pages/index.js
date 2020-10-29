@@ -12,12 +12,23 @@ import {
   MiningInProgress,
 } from "components";
 import { getLicenseInfo, fetchMetaDataFile } from "utils/ethereum";
+import absoluteUrl from "utils/absoluteUrl";
 
-export async function getServerSideProps({ query }) {
+export async function getServerSideProps({ query, req }) {
   // Call smart contract to get files array on server side
-  const { coverKey, id, contractAddr, network } = query;
-  const { BUCKET_URL, NEXT_APP_DOMAIN } = process.env;
+  const { coverKey, id, contractAddr, network, createdWith } = query;
+  const {
+    BUCKET_URL,
+    NEXT_CREATORS_HUB_URL,
+    NEXT_LICENSE_CORE_URL,
+  } = process.env;
   const licenseInfo = await getLicenseInfo(id, contractAddr, network);
+  const { fullPath } = absoluteUrl(req);
+
+  const creatorUrl =
+    createdWith && createdWith === "creatorshub"
+      ? `${NEXT_CREATORS_HUB_URL}/nft/${id}`
+      : `${NEXT_LICENSE_CORE_URL}/licenses/${id}`;
 
   return {
     props: {
@@ -25,10 +36,9 @@ export async function getServerSideProps({ query }) {
       coverSrc: coverKey
         ? `${BUCKET_URL}/${coverKey}`
         : "/images/lr-placeholder.jpg",
+      creatorUrl,
       id: id || null,
-      url: `${NEXT_APP_DOMAIN}?id=${id}&network=${network}&contractAddr=${contractAddr}${
-        coverKey ? `&coverKey=${coverKey}` : ""
-      }`,
+      url: fullPath,
       network,
       namespacesRequired: ["index", "common"],
     },
@@ -36,7 +46,7 @@ export async function getServerSideProps({ query }) {
 }
 
 const Index = withTranslation("index")(
-  ({ id, coverSrc, license, network, url, fileURI, checksums, t }) => {
+  ({ creatorUrl, coverSrc, license, network, url, fileURI, checksums, t }) => {
     const [licenseData, setLicenseData] = useState(license);
     const pageTitle = `${license.title} | MetaProof`;
 
@@ -69,7 +79,7 @@ const Index = withTranslation("index")(
               content={t("buyLicense")}
               size="sm"
               // NOTE: buy URL should be added to JSON metadata file.
-              href={`https://creators-hub.vercel.app/nft/${id}`}
+              href={creatorUrl}
               target="_blank"
             />
           }
