@@ -20,14 +20,15 @@ const PoweredByArweave = styled(Text).attrs(() => ({
   }
 `;
 
-export const IndexExtraSidebar = withTranslation("common")(({ url, t }) => (
+export const IndexExtraSidebar = withTranslation("common")(({ pdfUrl, t }) => (
   <>
     <DownloadModule
       downloadPdfText={t("downloadAsPdf")}
       downloadQrCodeDesc={t("downloadQrCodeDesc")}
       downloadQrCodeText={t("downloadQrCodeText")}
       mb={6}
-      qrCodeValue={url}
+      qrCodeValue={pdfUrl}
+      downloadPdfUrl={pdfUrl}
     />
     <PoweredByArweave>
       {t("permanentStorageProvider")}

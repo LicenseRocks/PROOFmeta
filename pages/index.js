@@ -19,6 +19,7 @@ export async function getServerSideProps({ query, req }) {
   const { coverKey, id, contractAddr, network, createdWith } = query;
   const {
     BUCKET_URL,
+    NEXT_APP_DOMAIN,
     NEXT_CREATORS_HUB_URL,
     NEXT_LICENSE_CORE_URL,
   } = process.env;
@@ -39,6 +40,9 @@ export async function getServerSideProps({ query, req }) {
       creatorUrl,
       id: id || null,
       url: fullPath,
+      pdfUrl: `${NEXT_APP_DOMAIN}/api/export?id=${id}&network=${network}&contractAddr=${contractAddr}${
+        coverKey ? `&coverKey=${coverKey}` : ""
+      }`,
       network,
       namespacesRequired: ["index", "common"],
     },
@@ -46,7 +50,18 @@ export async function getServerSideProps({ query, req }) {
 }
 
 const Index = withTranslation("index")(
-  ({ childId, creatorUrl, coverSrc, license, network, url, fileURI, checksums, t }) => {
+  ({
+    childId,
+    checksums,
+    coverSrc,
+    creatorUrl,
+    fileURI,
+    license,
+    network,
+    pdfUrl,
+    t,
+    url,
+  }) => {
     const [licenseData, setLicenseData] = useState(license);
     const pageTitle = `${license.title} | MetaProof`;
 
@@ -106,7 +121,7 @@ const Index = withTranslation("index")(
             fileURI,
             checksums,
           })}
-          extraSidebar={IndexExtraSidebar({ url })}
+          extraSidebar={IndexExtraSidebar({ pdfUrl })}
           sidebar={IndexSidebar({ url })}
         />
       </>
@@ -125,6 +140,7 @@ Index.propTypes = {
   }).isRequired,
   network: PropTypes.string.isRequired,
   url: PropTypes.string.isRequired,
+  pdfUrl: PropTypes.string.isRequired,
   fileURI: PropTypes.string.isRequired,
   checksums: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
