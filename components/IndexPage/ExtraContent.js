@@ -45,7 +45,7 @@ const getTabs = ({ t }) => [
     render: ({ histories }) => (
       <History
         rows={histories.map((history) => ({
-          moreInfo: date.format(history.created_at),
+          moreInfo: date.format(history.createdAt || history.created_at),
           title: history.title || history.name,
           ...getHistoryIconProps(history.name),
         }))}
