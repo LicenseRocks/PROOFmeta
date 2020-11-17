@@ -56,6 +56,7 @@ const Index = withTranslation("index")(
       title = "No name",
       price,
       documents = [],
+      cover = [],
       histories = [],
       ...rest
     } = licenseData;
@@ -100,7 +101,7 @@ const Index = withTranslation("index")(
           }
           extraContent={IndexExtraContent({
             histories,
-            documents,
+            documents: [...documents, ...cover],
             fileURI,
             checksums,
           })}
