@@ -24,15 +24,27 @@ const fetchMetaDataFile = async (url) => {
 
 const getLicenseInfo = async (id, contractAddr, network) => {
   try {
+    const tokenId = parseInt(id, 10);
     const provider = new ethers.providers.JsonRpcProvider(
       providerUrls[network]
     );
     const contract = new ethers.Contract(contractAddr, ERC1155abi, provider);
-    const fileURI = await contract.getMetaFileUrl(parseInt(id, 10));
-    const checksums = await contract.getChecksums(parseInt(id, 10));
+    const fileURI = await contract.getMetaFileUrl(tokenId);
+    const checksums = await contract.getChecksums(tokenId);
     const license = await fetchMetaDataFile(fileURI);
+    const isUpgradable = await contract.isUpgradable(tokenId);
+    const childId = await contract.getChildId(tokenId);
+    const rootId = await contract.getRootId(tokenId);
 
-    return { license, fileURI, checksums, errorMessage: null };
+    return {
+      license,
+      fileURI,
+      checksums,
+      isUpgradable,
+      rootId,
+      childId,
+      errorMessage: null,
+    };
   } catch (err) {
     console.log("error here", err);
     return { license: {}, fileURI: [], errorMessage: err.message };

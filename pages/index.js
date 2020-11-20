@@ -23,6 +23,7 @@ export async function getServerSideProps({ query, req }) {
     NEXT_LICENSE_CORE_URL,
   } = process.env;
   const licenseInfo = await getLicenseInfo(id, contractAddr, network);
+  console.log(licenseInfo)
   const { fullPath } = absoluteUrl(req);
 
   const creatorUrl =
