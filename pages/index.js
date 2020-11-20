@@ -23,7 +23,6 @@ export async function getServerSideProps({ query, req }) {
     NEXT_LICENSE_CORE_URL,
   } = process.env;
   const licenseInfo = await getLicenseInfo(id, contractAddr, network);
-  console.log(licenseInfo)
   const { fullPath } = absoluteUrl(req);
 
   const creatorUrl =
@@ -47,7 +46,7 @@ export async function getServerSideProps({ query, req }) {
 }
 
 const Index = withTranslation("index")(
-  ({ creatorUrl, coverSrc, license, network, url, fileURI, checksums, t }) => {
+  ({ childId, creatorUrl, coverSrc, license, network, url, fileURI, checksums, t }) => {
     const [licenseData, setLicenseData] = useState(license);
     const pageTitle = `${license.title} | MetaProof`;
 
@@ -87,6 +86,7 @@ const Index = withTranslation("index")(
           }
           content={
             <IndexContent
+              childId={childId}
               coverSrc={coverSrc}
               amount={amountOfThisGood || amount}
               title={title}

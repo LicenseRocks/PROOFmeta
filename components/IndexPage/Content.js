@@ -18,6 +18,7 @@ import { VersionHistory } from "components/IndexPage/ItemHistory";
 import date from "utils/date";
 import { getTransaction } from "utils/ethereum";
 import { withTranslation } from "i18n";
+import Link from "next/link";
 import iconMapper from "./iconMapper";
 
 const HeaderContainer = styled.div`
@@ -54,6 +55,23 @@ const CryptoProofContainer = styled.div`
 
   & > * {
     margin-right: 8px;
+  }
+`;
+
+const Row = styled.div`
+  display: flex;
+  align-items: center;
+
+  a {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 10px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    margin-left: 16px;
+    text-decoration: none;
+    color: ${({ theme }) => theme.palette.primary.main};
   }
 `;
 
@@ -117,9 +135,17 @@ const renderRest = (rest) => {
   return [];
 };
 
+const getChildLink = (childId) => {
+  const currentUrl = new URL(window.location.href);
+  currentUrl.searchParams.set("id", childId);
+
+  return currentUrl.toString();
+};
+
 export const IndexContent = withTranslation("index")(
   ({
     amount,
+    childId,
     title,
     price,
     unique,
@@ -172,7 +198,16 @@ export const IndexContent = withTranslation("index")(
           />
         </Text>
 
-        <ChipBadge color="success" label="Updated" icon="check-circle" />
+        {childId === "0" && (
+          <ChipBadge color="success" label="Updated" icon="check-circle" />
+        )}
+
+        {childId !== "0" && (
+          <Row>
+            <ChipBadge color="error" label="Outdated" />
+            <Link href={getChildLink(childId)}>See latest version</Link>
+          </Row>
+        )}
 
         <StyledDetailsTable
           labelTextTransform="capitalize"
@@ -205,19 +240,19 @@ export const IndexContent = withTranslation("index")(
             .concat(
               activeHistory.txHash
                 ? [
-                    {
-                      label: t("creatorPublicKey"),
-                      value: <CryptoProof value={txInfo?.from} />,
-                      expandable: true,
-                      icon: iconMapper("creatorPublicKey"),
-                    },
-                    {
-                      label: t("transactionId"),
-                      value: <CryptoProof value={txInfo?.hash} />,
-                      expandable: true,
-                      icon: iconMapper("transactionId"),
-                    },
-                  ]
+                  {
+                    label: t("creatorPublicKey"),
+                    value: <CryptoProof value={txInfo?.from} />,
+                    expandable: true,
+                    icon: iconMapper("creatorPublicKey"),
+                  },
+                  {
+                    label: t("transactionId"),
+                    value: <CryptoProof value={txInfo?.hash} />,
+                    expandable: true,
+                    icon: iconMapper("transactionId"),
+                  },
+                ]
                 : []
             )}
         />
