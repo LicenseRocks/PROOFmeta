@@ -10,7 +10,7 @@ function MyApp({ Component, pageProps }) {
   useEffect(() => {
     // Load Hotjar
     hotjar.initialize(
-      process.env.NEXT_PUBLIC_HOTJAR_ID,
+      process.env.NEXT_PUBLIC_HOTJAR_APP_ID,
       process.env.NEXT_PUBLIC_HOTJAR_SNIPPET_VERSION
     );
 
