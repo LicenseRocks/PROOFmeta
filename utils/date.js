@@ -1,10 +1,12 @@
 export default {
-  format: (dateString, locale = "en-US") => {
+  format: (dateString, { locale = "en-US", withTime = true }) => {
     const date = new Date(dateString);
-    return date
-      .toLocaleDateString(locale)
-      .concat(" ")
-      .concat(date.toLocaleTimeString(locale));
+    const outcome = date.toLocaleDateString(locale);
+
+    if (withTime)
+      return outcome.concat(" ").concat(date.toLocaleTimeString(locale));
+
+    return outcome;
   },
   isValid: (dateString) => {
     // Validates date formats like:

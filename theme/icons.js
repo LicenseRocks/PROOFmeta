@@ -10,6 +10,7 @@ import {
   faGlobe,
   faPhone,
   faEnvelope,
+  faTree,
 } from "@fortawesome/free-solid-svg-icons";
 
 export const Icons = {
@@ -23,4 +24,5 @@ export const Icons = {
   faGlobe,
   faPhone,
   faEnvelope,
+  faTree,
 };
