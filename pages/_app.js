@@ -9,10 +9,12 @@ import { appWithTranslation } from "i18n";
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
     // Load Hotjar
-    hotjar.initialize(
-      process.env.NEXT_PUBLIC_HOTJAR_APP_ID,
-      process.env.NEXT_PUBLIC_HOTJAR_SNIPPET_VERSION
-    );
+    if (process.env.NODE_ENV === "production") {
+      hotjar.initialize(
+        process.env.NEXT_PUBLIC_HOTJAR_APP_ID,
+        process.env.NEXT_PUBLIC_HOTJAR_SNIPPET_VERSION
+      );
+    }
 
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector("#jss-server-side");
