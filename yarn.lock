@@ -1586,10 +1586,10 @@
   resolved "https://registry.yarnpkg.com/@hapi/hoek/-/hoek-9.1.0.tgz#6c9eafc78c1529248f8f4d92b0799a712b6052c6"
   integrity sha512-i9YbZPN3QgfighY/1X1Pu118VUz2Fmmhd6b2n0/O8YVgGGfw0FbUYoA97k7FkpGJ+pLCFEDLUmAPPV4D1kpeFw==
 
-"@licenserocks/kit@^1.6.4":
-  version "1.6.4"
-  resolved "https://registry.yarnpkg.com/@licenserocks/kit/-/kit-1.6.4.tgz#fe5b123f02a1300b786807a678350383baafe82b"
-  integrity sha512-ecU89RbHRH6cSLUlY4HUnxQpICnYQ6rJgdz45dYdfXSzMPS9s4/ABvSaO5pUxLr+AT0AvBr0ROO3SxRsBpz3/g==
+"@licenserocks/kit@^1.16.0":
+  version "1.16.0"
+  resolved "https://registry.yarnpkg.com/@licenserocks/kit/-/kit-1.16.0.tgz#fc357ccee990c63f4abd6ccc107377a2f87f4af6"
+  integrity sha512-Uz56ACPzdmQYERJF73cIW8Gy9KW1QbHwNOdO99yT/2jmfYtlrvg3gSI3QRQTy0qZ/AMaRl3qswPFJWiAp5+QSA==
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^1.2.32"
     "@fortawesome/free-brands-svg-icons" "^5.15.1"
@@ -1602,7 +1602,7 @@
     copy-to-clipboard "^3.3.1"
     filepond "^4.20.1"
     lodash "^4.17.20"
-    notistack "^0.9.17"
+    notistack "^1.0.2"
     qrcode.react "^1.0.0"
     react-collapse "^5.0.1"
     react-content-loader "^5.1.0"
@@ -5331,10 +5331,10 @@ normalize-path@^3.0.0, normalize-path@~3.0.0:
   resolved "https://registry.yarnpkg.com/normalize-path/-/normalize-path-3.0.0.tgz#0dcd69ff23a1c9b11fd0978316644a0388216a65"
   integrity sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==
 
-notistack@^0.9.17:
-  version "0.9.17"
-  resolved "https://registry.yarnpkg.com/notistack/-/notistack-0.9.17.tgz#dcb827f268013356f198ee7143ffda9f48a0f06f"
-  integrity sha512-nypTN6sEe+q98wMaxF/UwatA1yAq948+bZOo9JKYR+tU65DW0ipWyx8DseJ3UJYvb6VDD+Fqo83qwayQ46bEEA==
+notistack@^1.0.2:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/notistack/-/notistack-1.0.3.tgz#ce86a5e8c2b192d713d655c0778347beb3ebead3"
+  integrity sha512-bRGF/eg2qNQ8BwagPLkHiqrz+W00PYtGY5Xl33I0Of1BTm7arksZO1JxssPTlti0qw127CxuWxm637ipn0eZ9g==
   dependencies:
     clsx "^1.1.0"
     hoist-non-react-statics "^3.3.0"

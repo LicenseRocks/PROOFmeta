@@ -17,20 +17,9 @@ export default class MyDocument extends Document {
             rel="stylesheet"
           />
 
-          <style
-            dangerouslySetInnerHTML={{
-              __html: `
-            @import url('//hello.myfonts.net/count/37ac34');
-            @font-face {
-              font-family: 'GalanoGrotesque-Bold';
-              src: url('/fonts/galano/37AC34_0_0.eot');
-              src: url('/fonts/galano/37AC34_0_0.eot?#iefix') format('embedded-opentype'),
-                url('/fonts/galano/37AC34_0_0.woff2') format('woff2'),
-                url('/fonts/galano/37AC34_0_0.woff') format('woff'),
-                url('/fonts/galano/37AC34_0_0.ttf') format('truetype');
-            }
-          `,
-            }}
+          <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap"
+            rel="stylesheet"
           />
         </Head>
 
