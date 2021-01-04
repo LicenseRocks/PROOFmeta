@@ -27,6 +27,5 @@ export default function absoluteUrl(req, localhostAddress = "localhost:3000") {
     protocol,
     host,
     origin,
-    path: req?.url,
   };
 }

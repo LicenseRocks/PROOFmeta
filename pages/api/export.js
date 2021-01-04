@@ -11,6 +11,7 @@ import { AppContainer } from "@licenserocks/kit";
 import { Icons } from "theme/icons";
 import { config } from "config";
 import { getLicenseInfo } from "utils/ethereum";
+import { withServerTranslation } from "utils/translations";
 import { CertificatePDF } from "components";
 
 function renderFullPage(html, muiStyleTags, scStyleTags) {
@@ -37,10 +38,11 @@ function renderFullPage(html, muiStyleTags, scStyleTags) {
   `;
 }
 
-export default async function user(req, res) {
-  const { id, network, contractAddr } = req.query;
+export default async function downloadPDF(req, res) {
+  const { id, network, contractAddr, locale } = req.query;
   const licenseInfo = await getLicenseInfo(id, contractAddr, network);
   const { license } = licenseInfo;
+  const t = withServerTranslation(locale, "pdfs");
 
   const { theme } = config;
 
@@ -52,6 +54,7 @@ export default async function user(req, res) {
         <AppContainer appConfig={config} theme={theme} icons={Icons}>
           <CertificatePDF
             amount={license.amount}
+            locale={locale}
             price={license.price}
             createdAt={
               license.histories
@@ -59,6 +62,7 @@ export default async function user(req, res) {
                 .shift().createdAt
             }
             linkToExplorer="https://google.com"
+            t={t}
             {...license}
           />
         </AppContainer>

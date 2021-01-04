@@ -10,7 +10,6 @@ import {
   Paragraph,
   Text,
 } from "@licenserocks/kit";
-import { withTranslation } from "i18n";
 
 import { PDFTemplate } from "./template";
 
@@ -81,74 +80,68 @@ const Value = styled(Label).attrs(() => ({
   color: "textPrimary",
 }))``;
 
-export const CertificatePDF = withTranslation("pdfs")(
-  ({
-    coverSrc,
-    linkToExplorer,
-    createdAt,
-    creator,
-    amount,
-    price,
-    abstract,
-    unique,
-    exclusive,
-    t,
-  }) => {
-    return (
-      <PDFTemplate
-        qrcodeValue={linkToExplorer}
-        qrcodeHint={t("certificate.scanHint")}
-      >
-        <Container>
-          <DocumentTitle>{t("certificate.title")}</DocumentTitle>
-          <DocumentTypeContainer>
-            <DocumentType>software license</DocumentType>
-            {exclusive && (
-              <StyledBadge label={t("certificate.exclusive")} color="warning" />
-            )}
-            {unique && (
-              <StyledBadge label={t("certificate.unique")} color="success" />
-            )}
-          </DocumentTypeContainer>
-          <StyledDetailsTable
-            labelWidth={200}
-            rows={[
-              {
-                renderLabel: () => coverSrc && <StyledImage src={coverSrc} />,
-                value: (
-                  <StyledParagraph
-                    fontWeight="light"
-                    mb={0}
-                    content={abstract}
-                  />
-                ),
-                divider: true,
-              },
-              {
-                renderLabel: () => <Label>{t("certificate.createdAt")}</Label>,
-                value: <Value>{new Date(createdAt).toDateString()}</Value>,
-              },
-              {
-                renderLabel: () => (
-                  <Label>{t("certificate.publicAddress")}</Label>
-                ),
-                value: <Value>{creator?.ethereumPublicAddr}</Value>,
-              },
-              {
-                renderLabel: () => <Label>{t("certificate.amount")}</Label>,
-                value: <Value>{amount}</Value>,
-              },
-              {
-                renderLabel: () => <Label>{t("certificate.price")}</Label>,
-                value: <Value>{price}</Value>,
-              },
-            ]}
-          />
-        </Container>
-      </PDFTemplate>
-    );
-  }
-);
+export const CertificatePDF = ({
+  coverSrc,
+  linkToExplorer,
+  createdAt,
+  creator,
+  amount,
+  price,
+  abstract,
+  unique,
+  exclusive,
+  t,
+}) => {
+  return (
+    <PDFTemplate
+      qrcodeValue={linkToExplorer}
+      qrcodeHint={t("certificate.scanHint")}
+    >
+      <Container>
+        <DocumentTitle>{t("certificate.title")}</DocumentTitle>
+        <DocumentTypeContainer>
+          <DocumentType>software license</DocumentType>
+          {exclusive && (
+            <StyledBadge label={t("certificate.exclusive")} color="warning" />
+          )}
+          {unique && (
+            <StyledBadge label={t("certificate.unique")} color="success" />
+          )}
+        </DocumentTypeContainer>
+        <StyledDetailsTable
+          labelWidth={200}
+          rows={[
+            {
+              renderLabel: () => coverSrc && <StyledImage src={coverSrc} />,
+              value: (
+                <StyledParagraph fontWeight="light" mb={0} content={abstract} />
+              ),
+              divider: true,
+            },
+            {
+              renderLabel: () => <Label>{t("certificate.createdAt")}</Label>,
+              value: <Value>{new Date(createdAt).toDateString()}</Value>,
+            },
+            {
+              renderLabel: () => (
+                <Label>{t("certificate.publicAddress")}</Label>
+              ),
+              value: <Value>{creator?.ethereumPublicAddr}</Value>,
+            },
+            {
+              renderLabel: () => <Label>{t("certificate.amount")}</Label>,
+              value: <Value>{amount}</Value>,
+            },
+            {
+              renderLabel: () => <Label>{t("certificate.price")}</Label>,
+              value: <Value>{price}</Value>,
+            },
+          ]}
+        />
+      </Container>
+    </PDFTemplate>
+  );
+};
 
 CertificatePDF.propTypes = {
   createdAt: PropTypes.string.isRequired,
@@ -162,6 +155,7 @@ CertificatePDF.propTypes = {
   abstract: PropTypes.string,
   unique: PropTypes.bool,
   exclusive: PropTypes.bool,
+  t: PropTypes.func.isRequired,
 };
 
 CertificatePDF.defaultProps = {

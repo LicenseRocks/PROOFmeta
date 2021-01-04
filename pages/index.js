@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import Head from "next/head";
 import { ExplorerLayout, PageMeta, Button } from "@licenserocks/kit";
-import { withTranslation } from "i18n";
 
+import { i18n, withTranslation } from "i18n";
 import {
   IndexContent,
   IndexExtraContent,
@@ -23,7 +23,7 @@ export async function getServerSideProps({ query, req }) {
     NEXT_LICENSE_CORE_URL,
   } = process.env;
   const licenseInfo = await getLicenseInfo(id, contractAddr, network);
-  const { fullPath, path } = absoluteUrl(req);
+  const { fullPath } = absoluteUrl(req);
 
   const creatorUrl =
     createdWith && createdWith === "creatorshub"
@@ -39,7 +39,6 @@ export async function getServerSideProps({ query, req }) {
       creatorUrl,
       id: id || null,
       url: fullPath,
-      pdfUrl: `api/export${path}`,
       network,
       namespacesRequired: ["index", "common"],
     },
@@ -55,12 +54,15 @@ const Index = withTranslation("index")(
     fileURI,
     license,
     network,
-    pdfUrl,
     t,
     url,
   }) => {
     const [licenseData, setLicenseData] = useState(license);
     const pageTitle = `${license.title} | MetaProof`;
+    const pdfUrl =
+      typeof window !== "undefined"
+        ? `api/export${window?.location?.search}&locale=${i18n.language}`
+        : "";
 
     const {
       amountOfThisGood = 0,
@@ -118,7 +120,9 @@ const Index = withTranslation("index")(
             fileURI,
             checksums,
           })}
-          extraSidebar={IndexExtraSidebar({ pdfUrl })}
+          extraSidebar={IndexExtraSidebar({
+            pdfUrl,
+          })}
           sidebar={IndexSidebar({ url })}
         />
       </>
