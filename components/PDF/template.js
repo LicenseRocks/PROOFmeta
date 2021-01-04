@@ -129,7 +129,7 @@ export const PDFTemplate = ({ qrcodeValue, qrcodeHint, children }) => {
             <img src={branding.logoType} alt="logotype" height="28" />
           </LogoContainer>
           <QRCodeContainer>
-            <StyledQRCode value={qrcodeValue} />
+            <StyledQRCode renderAs="svg" value={qrcodeValue} />
             <QRCodeHint>{qrcodeHint}</QRCodeHint>
           </QRCodeContainer>
         </Header>

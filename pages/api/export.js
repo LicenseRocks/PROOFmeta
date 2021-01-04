@@ -1,16 +1,11 @@
 import React from "react";
 import { renderToString } from "react-dom/server";
 import pdf from "html-pdf";
+import { ServerStyleSheets as MuiServerStyleSheet } from "@material-ui/core/styles";
 import {
-  ThemeProvider as MuiThemeProvider,
-  ServerStyleSheets as MuiServerStyleSheet,
-} from "@material-ui/core/styles";
-import {
-  ThemeProvider as StyledThemeProvider,
   ServerStyleSheet as StyledServerStyleSheet,
   StyleSheetManager,
 } from "styled-components";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import { AppContainer } from "@licenserocks/kit";
 
 import { Icons } from "theme/icons";
@@ -24,6 +19,14 @@ function renderFullPage(html, muiStyleTags, scStyleTags) {
     <html>
       <head>
         <title>My page</title>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap"
+          rel="stylesheet"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap"
+          rel="stylesheet"
+        />
         ${muiStyleTags}
         ${scStyleTags}
       </head>
@@ -46,24 +49,19 @@ export default async function user(req, res) {
   const markup = renderToString(
     muiSheets.collect(
       <StyleSheetManager sheet={styledSheets.instance}>
-        <MuiThemeProvider theme={theme}>
-          <StyledThemeProvider theme={theme}>
-            <CssBaseline />
-            <AppContainer appConfig={config} theme={theme} icons={Icons}>
-              <CertificatePDF
-                amount={license.amount}
-                price={license.price}
-                createdAt={
-                  license.histories
-                    .filter((history) => history.name === "minted")
-                    .shift().createdAt
-                }
-                linkToExplorer="https://google.com"
-                {...license}
-              />
-            </AppContainer>
-          </StyledThemeProvider>
-        </MuiThemeProvider>
+        <AppContainer appConfig={config} theme={theme} icons={Icons}>
+          <CertificatePDF
+            amount={license.amount}
+            price={license.price}
+            createdAt={
+              license.histories
+                .filter((history) => history.name === "minted")
+                .shift().createdAt
+            }
+            linkToExplorer="https://google.com"
+            {...license}
+          />
+        </AppContainer>
       </StyleSheetManager>
     )
   );

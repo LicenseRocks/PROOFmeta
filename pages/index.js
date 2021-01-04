@@ -19,12 +19,11 @@ export async function getServerSideProps({ query, req }) {
   const { coverKey, id, contractAddr, network, createdWith } = query;
   const {
     BUCKET_URL,
-    NEXT_APP_DOMAIN,
     NEXT_CREATORS_HUB_URL,
     NEXT_LICENSE_CORE_URL,
   } = process.env;
   const licenseInfo = await getLicenseInfo(id, contractAddr, network);
-  const { fullPath } = absoluteUrl(req);
+  const { fullPath, path } = absoluteUrl(req);
 
   const creatorUrl =
     createdWith && createdWith === "creatorshub"
@@ -40,9 +39,7 @@ export async function getServerSideProps({ query, req }) {
       creatorUrl,
       id: id || null,
       url: fullPath,
-      pdfUrl: `${NEXT_APP_DOMAIN}/api/export?id=${id}&network=${network}&contractAddr=${contractAddr}${
-        coverKey ? `&coverKey=${coverKey}` : ""
-      }`,
+      pdfUrl: `api/export${path}`,
       network,
       namespacesRequired: ["index", "common"],
     },
