@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import ERC1155abi from "../contractsABI/ERC1155.json";
-
+import AuctionableERC1155abi from "../contractsABI/AuctionableERC1155.json";
 //
 // Test this file by running: http://localhost:3000/?id=123
 // We need to have contract per each network as their addresses are different
@@ -28,11 +28,17 @@ const getLicenseInfo = async (id, contractAddr, network) => {
     const provider = new ethers.providers.JsonRpcProvider(
       providerUrls[network]
     );
-    const contract = new ethers.Contract(contractAddr, ERC1155abi, provider);
+    // TODO: hotifx for new contracts
+    const abi = contractAddr === "0x7c72F31DEa8C7E24858a7165D7D7d941a1E8C344"
+      ? AuctionableERC1155abi
+      : ERC1155abi;
+    const contract = new ethers.Contract(contractAddr, abi, provider);
     const fileURI = await contract.getMetaFileUrl(tokenId);
     const checksums = await contract.getChecksums(tokenId);
     const license = await fetchMetaDataFile(fileURI);
-    const isUpgradable = await contract.isUpgradable(tokenId);
+    const isUpgradable = contract.isUpgradable
+      ? await contract.isUpgradable(tokenId)
+      : false;
     let childId;
     try {
       childId = await contract.getChildId(tokenId);
