@@ -22,16 +22,17 @@ const fetchMetaDataFile = async (url) => {
   return license;
 };
 
-const getLicenseInfo = async (id, contractAddr, network) => {
+const getLicenseInfo = async (id, contractAddr, contractName, network) => {
   try {
     const tokenId = parseInt(id, 10);
     const provider = new ethers.providers.JsonRpcProvider(
       providerUrls[network]
     );
-    // TODO: hotifx for new contracts
-    const abi = contractAddr === "0x7c72F31DEa8C7E24858a7165D7D7d941a1E8C344"
-      ? AuctionableERC1155abi
-      : ERC1155abi;
+
+    const abi =
+      contractName === "AuctionableERC1155"
+        ? AuctionableERC1155abi
+        : ERC1155abi;
     const contract = new ethers.Contract(contractAddr, abi, provider);
     const fileURI = await contract.getMetaFileUrl(tokenId);
     const checksums = await contract.getChecksums(tokenId);
