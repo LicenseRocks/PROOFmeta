@@ -16,13 +16,25 @@ import absoluteUrl from "utils/absoluteUrl";
 
 export async function getServerSideProps({ query, req }) {
   // Call smart contract to get files array on server side
-  const { coverKey, id, contractAddr, network, createdWith } = query;
+  const {
+    coverKey,
+    id,
+    contractAddr,
+    network,
+    createdWith,
+    contractName,
+  } = query;
   const {
     BUCKET_URL,
     NEXT_CREATORS_HUB_URL,
     NEXT_LICENSE_CORE_URL,
   } = process.env;
-  const licenseInfo = await getLicenseInfo(id, contractAddr, network);
+  const licenseInfo = await getLicenseInfo(
+    id,
+    contractAddr,
+    contractName,
+    network
+  );
   const { fullPath } = absoluteUrl(req);
 
   const creatorUrl =
