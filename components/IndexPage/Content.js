@@ -10,11 +10,11 @@ import {
   Icon,
   Image,
   Paragraph,
+  HistoryTree,
 } from "@licenserocks/kit";
 import styled from "styled-components";
 
-import { VersionHistory } from "components/IndexPage/ItemHistory";
-
+import { HistoryPicker } from "components/HistoryPicker";
 import date from "utils/date";
 import { getTransaction } from "utils/ethereum";
 import { withTranslation } from "i18n";
@@ -34,10 +34,27 @@ const HeaderContainer = styled.div`
 
 const StyledDetailsTable = styled(DetailsTable)``;
 
-const StyledImage = styled(Image).attrs(() => ({
-  width: "100%",
-}))`
-  max-height: 150px;
+const AbstractContentContainer = styled.div`
+  display: flex;
+  margin-right: 32px;
+  padding: 24px 0;
+  border-bottom: 1px solid ${({ theme }) => theme.palette.secondary.light};
+`;
+
+const StyledImage = styled(Image)`
+  max-width: 200px;
+  margin-right: 24px;
+  box-sizing: border-box;
+`;
+
+const MainContentContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  margin-right: 32px;
+`;
+
+const HistoryTreeContainer = styled.div`
+  margin-top: 40px;
 `;
 
 const CryptoIcon = styled(Icon).attrs({
@@ -125,7 +142,7 @@ const renderRest = (rest) => {
           return {
             label: key,
             value: rest[key].map((item) => item.label).join(", "),
-            icon: iconMapper(key)
+            icon: iconMapper(key),
           };
         return false;
       })
@@ -209,62 +226,90 @@ export const IndexContent = withTranslation("index")(
           </Row>
         )}
 
-        <StyledDetailsTable
-          labelTextTransform="capitalize"
-          my={10}
-          labelWidth={220}
-          expandButtonProps={{ loading: txLoading }}
-          rows={[
-            {
-              columnSm: true,
-              divider: true,
-              renderLabel: () => <StyledImage src={coverSrc} />,
-              value: <Paragraph content={abstract} />,
-            },
-            {
-              label: t("status"),
-              value: <ChipBadge icon="check-circle" label="Verified" />,
-            },
-            {
-              label: t("amount"),
-              value: <H3 content={amount} />,
-              icon: iconMapper("amount"),
-            },
-            {
-              label: t("price"),
-              value: <H3 content={price} color="primary" />,
-              icon: iconMapper("price"),
-            },
-          ]
-            .concat(renderRest(rest))
-            .concat(
-              activeHistory.txHash
-                ? [
-                  {
-                    label: t("creatorPublicKey"),
-                    value: <CryptoProof value={txInfo?.from} />,
-                    expandable: true,
-                    icon: iconMapper("creatorPublicKey"),
-                  },
-                  {
-                    label: t("transactionId"),
-                    value: <CryptoProof value={txInfo?.hash} />,
-                    expandable: true,
-                    icon: iconMapper("transactionId"),
-                  },
-                ]
-                : []
-            )}
-        />
-        {activeHistory.txHash && (
-          <VersionHistory
-            onChange={(item) => {
-              setActiveHistory(item);
-              getTransactionInfo();
-            }}
-            histories={orderedHistories}
+        <AbstractContentContainer>
+          <StyledImage src={coverSrc} />
+          <Paragraph content={abstract} />
+        </AbstractContentContainer>
+
+        <MainContentContainer>
+          <StyledDetailsTable
+            labelTextTransform="capitalize"
+            my={10}
+            labelWidth={220}
+            expandButtonProps={{ loading: txLoading }}
+            rows={[
+              {
+                label: t("status"),
+                value: <ChipBadge icon="check-circle" label="Verified" />,
+              },
+              {
+                label: t("amount"),
+                value: <H3 content={amount} />,
+                icon: iconMapper("amount"),
+              },
+              {
+                label: t("price"),
+                value: <H3 content={price} color="primary" />,
+                icon: iconMapper("price"),
+              },
+            ]
+              .concat(renderRest(rest))
+              .concat(
+                activeHistory.txHash
+                  ? [
+                      {
+                        label: t("creatorPublicKey"),
+                        value: <CryptoProof value={txInfo?.from} />,
+                        expandable: true,
+                        icon: iconMapper("creatorPublicKey"),
+                      },
+                      {
+                        label: t("transactionId"),
+                        value: <CryptoProof value={txInfo?.hash} />,
+                        expandable: true,
+                        icon: iconMapper("transactionId"),
+                      },
+                    ]
+                  : []
+              )}
           />
-        )}
+          <HistoryTreeContainer>
+            <HistoryPicker
+              historyItems={orderedHistories}
+              activeHistory={activeHistory}
+              onSelect={(item) => setActiveHistory(item)}
+            />
+            <HistoryTree
+              activeNodeId={3}
+              data={[
+                {
+                  key: 1,
+                  description: "2020-12-20",
+                  nodes: [
+                    {
+                      id: 1,
+                      label: "NFT created",
+                    },
+                  ],
+                },
+                {
+                  key: 2,
+                  description: "2020-12-22",
+                  nodes: [
+                    {
+                      id: 2,
+                      label: "NFT re-created",
+                    },
+                    {
+                      id: 3,
+                      label: "Documents added",
+                    },
+                  ],
+                },
+              ]}
+            />
+          </HistoryTreeContainer>
+        </MainContentContainer>
       </>
     );
   }

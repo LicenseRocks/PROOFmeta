@@ -10,5 +10,20 @@
   "creatorPublicKey": "Creator Public Key",
   "transactionId": "Transaction ID",
   "publicLicenseDetails": "Public License Details",
-  "cryptoProofs": "Crypto proofs"
+  "cryptoProofs": "Crypto proofs",
+  "transactions": {
+    "label": "Transactions",
+    "all": "All transactions",
+    "id": "Transaction ID",
+    "date": "Date",
+    "amount": "Amount",
+    "to": "To (Public Key)",
+    "status": "Status"
+  },
+  "documents": {
+    "public": "Public",
+    "private": "Private",
+    "label": "Documents",
+    "view": "View"
+  }
 }
