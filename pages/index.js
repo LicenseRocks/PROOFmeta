@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import Head from "next/head";
 import { ExplorerLayout, PageMeta, Button } from "@licenserocks/kit";
+import qs from "qs";
 
 import { i18n, withTranslation } from "i18n";
 import {
@@ -60,9 +61,12 @@ const Index = withTranslation("index")(
     const [licenseData, setLicenseData] = useState(license);
     const pageTitle = `${license.title} | MetaProof`;
     const pdfUrl =
-      typeof window !== "undefined"
-        ? `api/export${window?.location?.search}&locale=${i18n.language}`
-        : "";
+      typeof window === "undefined"
+        ? ""
+        : `api/export?${qs.stringify({
+            ...qs.parse(window.location.search.slice(1)),
+            locale: i18n.language,
+          })}`;
 
     const {
       amountOfThisGood = 0,
