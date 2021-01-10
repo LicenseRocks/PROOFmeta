@@ -46,6 +46,15 @@ export async function getServerSideProps({ query, req }) {
   };
 }
 
+const generateUrl = (path) => {
+  if (typeof window === "undefined") return "";
+
+  return `${path}?${qs.stringify({
+    ...qs.parse(window.location.search.slice(1)),
+    locale: i18n.language,
+  })}`;
+};
+
 const Index = withTranslation("index")(
   ({
     childId,
@@ -60,13 +69,6 @@ const Index = withTranslation("index")(
   }) => {
     const [licenseData, setLicenseData] = useState(license);
     const pageTitle = `${license.title} | MetaProof`;
-    const pdfUrl =
-      typeof window === "undefined"
-        ? ""
-        : `api/export?${qs.stringify({
-            ...qs.parse(window.location.search.slice(1)),
-            locale: i18n.language,
-          })}`;
 
     const {
       amountOfThisGood = 0,
@@ -125,7 +127,9 @@ const Index = withTranslation("index")(
             checksums,
           })}
           extraSidebar={IndexExtraSidebar({
-            pdfUrl,
+            pdfUrl: generateUrl("api/export/pdf"),
+            qrcodeUrl: generateUrl("api/export/qrcode"),
+            qrcodeValue: generateUrl("https://https://explorer.license.rocks/"),
           })}
           sidebar={IndexSidebar({ url })}
         />

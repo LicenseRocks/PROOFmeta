@@ -20,23 +20,26 @@ const PoweredByArweave = styled(Text).attrs(() => ({
   }
 `;
 
-export const IndexExtraSidebar = withTranslation("common")(({ pdfUrl, t }) => (
-  <>
-    <DownloadModule
-      downloadPdfText={t("downloadAsPdf")}
-      downloadQrCodeDesc={t("downloadQrCodeDesc")}
-      downloadQrCodeText={t("downloadQrCodeText")}
-      mb={6}
-      qrCodeValue={pdfUrl}
-      downloadPdfUrl={pdfUrl}
-    />
-    <PoweredByArweave>
-      {t("permanentStorageProvider")}
-      &nbsp;
-      <a href="https://arweave.org">
-        <img src={arweaveLogo} alt="arweave.org" title="arweave.org" />
-      </a>
-    </PoweredByArweave>
-    <Language onChange={i18n.changeLanguage} value={i18n.language} mb={6} />
-  </>
-));
+export const IndexExtraSidebar = withTranslation("common")(
+  ({ pdfUrl, qrCodeUrl, qrCodeValue, t }) => (
+    <>
+      <DownloadModule
+        downloadPdfText={t("downloadAsPdf")}
+        downloadQrCodeDesc={t("downloadQrCodeDesc")}
+        downloadQrCodeText={t("downloadQrCodeText")}
+        mb={6}
+        qrCodeValue={qrCodeValue}
+        qrCodeUrl={qrCodeUrl}
+        downloadPdfUrl={pdfUrl}
+      />
+      <PoweredByArweave>
+        {t("permanentStorageProvider")}
+        &nbsp;
+        <a href="https://arweave.org">
+          <img src={arweaveLogo} alt="arweave.org" title="arweave.org" />
+        </a>
+      </PoweredByArweave>
+      <Language onChange={i18n.changeLanguage} value={i18n.language} mb={6} />
+    </>
+  )
+);

@@ -8,6 +8,7 @@ import {
 } from "styled-components";
 import { AppContainer } from "@licenserocks/kit";
 
+import absoluteUrl from "utils/absoluteUrl";
 import { Icons } from "theme/icons";
 import { config } from "config";
 import { getLicenseInfo } from "utils/ethereum";
@@ -61,7 +62,7 @@ export default async function downloadPDF(req, res) {
                 .filter((history) => history.name === "minted")
                 .shift().createdAt
             }
-            linkToExplorer="https://google.com"
+            linkToExplorer={absoluteUrl(req).fullPath}
             t={t}
             {...license}
           />
