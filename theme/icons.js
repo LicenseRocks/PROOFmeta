@@ -7,6 +7,9 @@ import {
   faFolder,
   faCheckDouble,
   faInfoCircle,
+  faGlobe,
+  faPhone,
+  faEnvelope,
 } from "@fortawesome/free-solid-svg-icons";
 
 export const Icons = {
@@ -17,4 +20,7 @@ export const Icons = {
   faFolder,
   faCheckDouble,
   faInfoCircle,
+  faGlobe,
+  faPhone,
+  faEnvelope,
 };

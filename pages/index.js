@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import Head from "next/head";
 import { ExplorerLayout, PageMeta, Button } from "@licenserocks/kit";
-import { withTranslation } from "i18n";
+import qs from "qs";
 
+import { i18n, withTranslation } from "i18n";
 import {
   IndexContent,
   IndexExtraContent,
@@ -57,8 +58,27 @@ export async function getServerSideProps({ query, req }) {
   };
 }
 
+const generateUrl = (path) => {
+  if (typeof window === "undefined") return "";
+
+  return `${path}?${qs.stringify({
+    ...qs.parse(window.location.search.slice(1)),
+    locale: i18n.language,
+  })}`;
+};
+
 const Index = withTranslation("index")(
-  ({ childId, creatorUrl, coverSrc, license, network, url, fileURI, checksums, t }) => {
+  ({
+    childId,
+    checksums,
+    coverSrc,
+    creatorUrl,
+    fileURI,
+    license,
+    network,
+    t,
+    url,
+  }) => {
     const [licenseData, setLicenseData] = useState(license);
     const pageTitle = `${license.title} | MetaProof`;
 
@@ -118,7 +138,11 @@ const Index = withTranslation("index")(
             fileURI,
             checksums,
           })}
-          extraSidebar={IndexExtraSidebar({ url })}
+          extraSidebar={IndexExtraSidebar({
+            pdfUrl: generateUrl("api/export/pdf"),
+            qrcodeUrl: generateUrl("api/export/qrcode"),
+            qrcodeValue: generateUrl("https://https://explorer.license.rocks/"),
+          })}
           sidebar={IndexSidebar({ url })}
         />
       </>
@@ -137,6 +161,7 @@ Index.propTypes = {
   }).isRequired,
   network: PropTypes.string.isRequired,
   url: PropTypes.string.isRequired,
+  pdfUrl: PropTypes.string.isRequired,
   fileURI: PropTypes.string.isRequired,
   checksums: PropTypes.arrayOf(PropTypes.string).isRequired,
 };

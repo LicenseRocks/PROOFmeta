@@ -1,0 +1,12 @@
+{
+  "certificate": {
+    "title": "Proof of Certificate",
+    "scanHint": "Scan to view the token",
+    "exclusive": "Exclusive",
+    "unique": "Unique",
+    "createdAt": "Created at",
+    "publicAddress": "Creator public address",
+    "amount": "Amount",
+    "price": "Price"
+  }
+}
