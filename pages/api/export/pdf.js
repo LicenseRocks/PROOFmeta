@@ -40,8 +40,13 @@ function renderFullPage(html, muiStyleTags, scStyleTags) {
 }
 
 export default async function downloadPDF(req, res) {
-  const { id, network, contractAddr, locale } = req.query;
-  const licenseInfo = await getLicenseInfo(id, contractAddr, network);
+  const { id, network, contractAddr, locale, contractName } = req.query;
+  const licenseInfo = await getLicenseInfo(
+    id,
+    contractAddr,
+    contractName,
+    network
+  );
   const { license } = licenseInfo;
   const t = withServerTranslation(locale, "pdfs");
 
