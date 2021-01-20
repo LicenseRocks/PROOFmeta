@@ -37,7 +37,7 @@ const StyledImage = styled(Image)`
   width: 50%;
   height: auto;
   max-height: 250px;
-  object-fit: fill;
+  object-fit: cover;
   border-radius: 16px;
   margin-top: ${({ theme }) => theme.spacing(4)};
 
