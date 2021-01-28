@@ -149,7 +149,7 @@ const getChildLink = (childId) => {
   return currentUrl.toString();
 };
 
-export const DetailsContent = withTranslation("index")(
+export const DetailsContent = withTranslation("details")(
   ({
     amount,
     childId,

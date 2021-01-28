@@ -66,7 +66,7 @@ const getBadgeColor = (isPublic) => {
   return "warning";
 };
 
-export const DocumentsTable = withTranslation("index")(({ data, t }) => {
+export const DocumentsTable = withTranslation("details")(({ data, t }) => {
   return data.map((document) => (
     <DocumentItem>
       <IconContainer>

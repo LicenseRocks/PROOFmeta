@@ -19,7 +19,7 @@ const SectionLink = styled(Link)`
   }
 `;
 
-export const DetailsExtraContent = withTranslation("index")(
+export const DetailsExtraContent = withTranslation("details")(
   ({ histories, documents, checksums, fileURI, t }) => {
     const transactionsData = [
       {

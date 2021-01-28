@@ -67,7 +67,7 @@ const generateUrl = (path) => {
   })}`;
 };
 
-const DetailsPage = withTranslation("index")(
+const DetailsPage = withTranslation("details")(
   ({
     childId,
     checksums,
