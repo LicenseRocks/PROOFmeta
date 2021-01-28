@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import Head from "next/head";
-import { ExplorerLayout, PageMeta, Button } from "@licenserocks/kit";
+import { PageMeta, Button } from "@licenserocks/kit";
 import qs from "qs";
 
 import { i18n, withTranslation } from "i18n";
@@ -10,8 +10,10 @@ import {
   DetailsExtraContent,
   DetailsExtraSidebar,
   DetailsSidebar,
+  DetailsShow,
   MiningInProgress,
 } from "components/details";
+import { ExplorerLayout } from "components/layout"
 import { getLicenseInfo, fetchMetaDataFile } from "utils/ethereum";
 import absoluteUrl from "utils/absoluteUrl";
 
@@ -53,7 +55,7 @@ export async function getServerSideProps({ query, req }) {
       id: id || null,
       url: fullPath,
       network,
-      namespacesRequired: ["index", "common"],
+      namespacesRequired: ["details", "common"],
     },
   };
 }
@@ -68,17 +70,7 @@ const generateUrl = (path) => {
 };
 
 const DetailsPage = withTranslation("details")(
-  ({
-    childId,
-    checksums,
-    coverSrc,
-    creatorUrl,
-    fileURI,
-    license,
-    network,
-    t,
-    url,
-  }) => {
+  ({ childId, checksums, coverSrc, fileURI, license, network, url }) => {
     const [licenseData, setLicenseData] = useState(license);
     const pageTitle = `${license.title} | MetaProof`;
 
@@ -106,16 +98,7 @@ const DetailsPage = withTranslation("details")(
           url={url}
           Wrapper={(props) => <Head {...props} />}
         />
-        <ExplorerLayout
-          headerRight={
-            <Button
-              content={t("buyLicense")}
-              size="sm"
-              // NOTE: buy URL should be added to JSON metadata file.
-              href={creatorUrl}
-              target="_blank"
-            />
-          }
+        <DetailsShow
           content={
             <DetailsContent
               childId={childId}
@@ -141,7 +124,7 @@ const DetailsPage = withTranslation("details")(
           extraSidebar={DetailsExtraSidebar({
             pdfUrl: generateUrl("api/export/pdf"),
             qrcodeUrl: generateUrl("api/export/qrcode"),
-            qrcodeValue: generateUrl("https://https://explorer.license.rocks/"),
+            qrcodeValue: generateUrl("https://explorer.license.rocks/"),
           })}
           sidebar={DetailsSidebar({ url })}
         />
@@ -149,6 +132,29 @@ const DetailsPage = withTranslation("details")(
     );
   }
 );
+
+DetailsPage.Layout = withTranslation("details")(({ t, ...props }) => {
+  const {
+    children: {
+      props: { creatorUrl },
+    },
+  } = props;
+
+  return (
+    <ExplorerLayout
+      headerRight={
+        <Button
+          content={t("buyLicense")}
+          size="sm"
+          // NOTE: buy URL should be added to JSON metadata file.
+          href={creatorUrl}
+          target="_blank"
+        />
+      }
+      {...props}
+    />
+  );
+});
 
 DetailsPage.propTypes = {
   coverSrc: PropTypes.string,
