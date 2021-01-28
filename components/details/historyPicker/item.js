@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import { Icon, Text } from "@licenserocks/kit";
 
 import date from "utils/date";
-import { Icon, Text } from "@licenserocks/kit";
 
 const Container = styled.div`
   height: 51px;

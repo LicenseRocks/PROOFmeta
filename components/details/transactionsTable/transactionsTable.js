@@ -11,6 +11,7 @@ import {
 
 import { withTranslation } from "i18n";
 
+
 const Table = styled(RKTable)`
   tr {
     background: transparent;

@@ -1,8 +1,8 @@
 import React from "react";
 import { DownloadModule, Language, Text } from "@licenserocks/kit";
 import styled from "styled-components";
-import { i18n, withTranslation } from "i18n";
 
+import { i18n, withTranslation } from "i18n";
 import arweaveLogo from "./arweave-logo.svg";
 
 const PoweredByArweave = styled(Text).attrs(() => ({
