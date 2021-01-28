@@ -1,12 +1,21 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { Button, Flex, H1, H2, H5, Paragraph } from "@licenserocks/kit";
+import {
+  Button,
+  Flex,
+  H1,
+  H2,
+  H5,
+  PageFigure,
+  Paragraph,
+} from "@licenserocks/kit";
 
 import { withTranslation } from "i18n";
 import { HomeCharts } from "./charts";
 import { TransactionsTable } from "./transactionsTable";
 import { NftGrid } from "./nft";
+import { HomeCreators } from "./creators";
 
 const NFTS = [
   {
@@ -236,9 +245,22 @@ export const ShowHome = withTranslation("home")(({ t }) => {
 
       <NftGrid items={NFTS} />
 
-      <ContentContainer mb={12}>
+      <ContentContainer mb={20}>
         <Button content="See More" endIcon="arrow-right" size="lg" />
       </ContentContainer>
+
+      <ContentContainer mb={12}>
+        <H2 align="center" content="Creators are here!" />
+
+        <Paragraph
+          content="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut netus proin sociis dolor netus Convallis vestibulum mattis."
+          fontWeight="light"
+        />
+      </ContentContainer>
+
+      <PageFigure>
+        <HomeCreators />
+      </PageFigure>
 
       <ContentContainer mt={20}>
         <div className="bg">
