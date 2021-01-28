@@ -3,11 +3,11 @@ import PropTypes from "prop-types";
 import Head from "next/head";
 import { PageMeta } from "@licenserocks/kit";
 
-import { ExplorerLayout } from "components/layout"
+import { ExplorerLayout, ShowHome } from "components";
 import { withTranslation } from "i18n";
 import absoluteUrl from "utils/absoluteUrl";
 
-export async function getServerSideProps({ query, req }) {
+export async function getServerSideProps({ req }) {
   const { fullPath } = absoluteUrl(req);
 
   return {
@@ -28,7 +28,7 @@ const IndexPage = withTranslation("details")(({ t, url }) => {
         Wrapper={(props) => <Head {...props} />}
       />
 
-      Content
+      <ShowHome />
     </>
   );
 });
