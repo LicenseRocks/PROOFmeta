@@ -84,7 +84,8 @@ export const HomeCreators = withTranslation("home")(({ t }) => {
               />
 
               <Text color="textSecondary" fontSize="sm" mt={10}>
-                <H4 content="65" color="textPrimary" dInline /> NFTs
+                <H4 content="65" color="textPrimary" dInline />{" "}
+                {t("creators.nfts")}
               </Text>
             </div>
           </Slide>

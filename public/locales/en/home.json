@@ -1,0 +1,49 @@
+{
+  "charts": {
+    "all": "All",
+    "createdNfts": "Created NFTs",
+    "limited": "Limited",
+    "nfts": "NFTs",
+    "others": "Others",
+    "unique": "Unique"
+  },
+  "creators": {
+    "nfts": "NFTs"
+  },
+  "creatorsHeading": "Creators are here!",
+  "creatorsDesc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut netus proin sociis dolor netus Convallis vestibulum mattis.",
+  "descOne": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut netus proin sociis dolor netus. Adipiscing consequat maecenas non tortor. Velit cursus at blandit eu senectus. Convallis vestibulum mattis aliquet sed. Feugiat in varius aliquet sit diam vel hendrerit vitae.",
+  "ending": {
+    "desc": "You can easily create any NFT with high security!",
+    "createNft": "Create a NFT",
+    "headingOne": "If you are interested in becoming a creator or buyer,",
+    "headingTwo": "Do you want to create a NFTs?"
+  },
+  "headingOne": "Lorem ipsum dolor sit consectetur adipiscing elit",
+  "latestNfts": "Latest NFTs",
+  "latestTransactions": "The Latest Transactions",
+  "latestTransactionsDesc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut netus proin sociis dolor netus Convallis vestibulum mattis.",
+  "nfts": {
+    "badges": {
+      "charityDonate": "Donate to charity",
+      "forBidding": "For bidding",
+      "downloadable": "Downloadable",
+      "limited": "Limited",
+      "printable": "Printable",
+      "unique": "Unique"
+    },
+    "item": {
+      "amount": "Amount",
+      "payWhatYouWant": "Pay what you want",
+      "unitPrice": "Unit Price"
+    }
+  },
+  "seeMore": "See More",
+  "table": {
+    "name": "NFT Name",
+    "price": "Price",
+    "seeMore": "See More",
+    "search": "Search...",
+    "transactionId": "Transaction ID"
+  }
+}

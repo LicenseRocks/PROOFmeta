@@ -213,25 +213,18 @@ export const ShowHome = withTranslation("home")(({ t }) => {
   return (
     <>
       <ContentContainer mb={12}>
-        <H1
-          align="center"
-          content="Lorem ipsum dolor sit consectetur adipiscing elit"
-          mb={6}
-        />
+        <H1 align="center" content={t("headingOne")} mb={6} />
 
-        <Paragraph
-          content="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut netus proin sociis dolor netus. Adipiscing consequat maecenas non tortor. Velit cursus at blandit eu senectus. Convallis vestibulum mattis aliquet sed. Feugiat in varius aliquet sit diam vel hendrerit vitae."
-          fontWeight="light"
-        />
+        <Paragraph content={t("descOne")} fontWeight="light" />
       </ContentContainer>
 
       <HomeCharts />
 
       <ContentContainer mt={30}>
-        <H1 align="center" content="The Latest Transactions" mb={6} />
+        <H1 align="center" content={t("latestTransactions")} mb={6} />
 
         <Paragraph
-          content="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut netus proin sociis dolor netus Convallis vestibulum mattis. "
+          content={t("latestTransactionsDesc")}
           fontWeight="light"
           mb={12}
         />
@@ -240,22 +233,19 @@ export const ShowHome = withTranslation("home")(({ t }) => {
       <TransactionsTable data={NFTS} />
 
       <ContentContainer mt={30} mb={12}>
-        <H1 align="center" content="Latest NFTs" />
+        <H1 align="center" content={t("latestNfts")} />
       </ContentContainer>
 
       <NftGrid items={NFTS} />
 
       <ContentContainer mb={20}>
-        <Button content="See More" endIcon="arrow-right" size="lg" />
+        <Button content={t("seeMore")} endIcon="arrow-right" size="lg" />
       </ContentContainer>
 
       <ContentContainer mb={12}>
-        <H2 align="center" content="Creators are here!" />
+        <H2 align="center" content={t("creatorsHeading")} />
 
-        <Paragraph
-          content="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut netus proin sociis dolor netus Convallis vestibulum mattis."
-          fontWeight="light"
-        />
+        <Paragraph content={t("creatorsDesc")} fontWeight="light" />
       </ContentContainer>
 
       <PageFigure>
@@ -264,19 +254,12 @@ export const ShowHome = withTranslation("home")(({ t }) => {
 
       <ContentContainer mt={20}>
         <div className="bg">
-          <H5
-            content="If you are interested in becoming a creator or buyer,"
-            mb={2}
-          />
+          <H5 content={t("ending.headingOne")} mb={2} />
 
-          <H2 content="Do you want to create a NFTs?" mb={2} />
+          <H2 content={t("ending.headingTwo")} mb={2} />
 
-          <Paragraph
-            content="You can easily create any NFT with high security!"
-            fontWeight="light"
-            mb={8}
-          />
-          <Button content="Create a NFT" size="lg" />
+          <Paragraph content={t("ending.desc")} fontWeight="light" mb={8} />
+          <Button content={t("ending.createNft")} size="lg" />
         </div>
       </ContentContainer>
     </>

@@ -87,13 +87,18 @@ export const TransactionsTable = withTranslation("home")(({ data, t }) => {
   return (
     <StyledBox
       headerRenderTitle={() => (
-        <Input endIcon="search" placeholder="Search..." />
+        <Input endIcon="search" placeholder={t("table.search")} />
       )}
     >
       <Table {...tableData} />
 
       <div className="bottom">
-        <Button content="See More" endIcon="arrow-right" size="lg" my={6} />
+        <Button
+          content={t("table.seeMore")}
+          endIcon="arrow-right"
+          size="lg"
+          my={6}
+        />
       </div>
     </StyledBox>
   );

@@ -1,14 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Flex, H4, H6, Link as RKLink, NoItem } from "@licenserocks/kit";
+import { Flex, NoItem } from "@licenserocks/kit";
 import Masonry from "react-masonry-css";
 import styled from "styled-components";
-import { filter, propEq } from "ramda";
 
 import { withTranslation } from "i18n";
-import { centsToPrice } from "utils/price";
 import { NftItem, NftItemLoader } from "../item";
-import { getBadges } from "../helper";
+import { getBadges, getDetails } from "../helper";
 
 const GridWrapper = styled.div`
   width: 100%;
@@ -40,32 +38,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const getDetails = (t, item) =>
-  filter(propEq("show", true))([
-    {
-      label: t("item.amount"),
-      value: <H4 content={item.amount} />,
-      show: item.amount > 0,
-    },
-    {
-      label: t("item.unitPrice"),
-      value: <H4 content={centsToPrice(item.price)} color="primary" />,
-      show: !item.priceType || item.priceType === "FIXED",
-    },
-    {
-      label: t("item.unitPrice"),
-      value: (
-        <H6
-          align="right"
-          content={t("item.payWhatYouWant")}
-          color="secondary"
-        />
-      ),
-      show: item.priceType === "CUSTOM",
-    },
-  ]);
-
-export const NftGrid = withTranslation(["nft-grid", "common"])(
+export const NftGrid = withTranslation("home")(
   ({ cols, items, loading, t }) => {
     const renderLoader = () =>
       [...new Array(10)].map((_, idx) => (
