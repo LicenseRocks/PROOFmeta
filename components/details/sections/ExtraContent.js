@@ -19,7 +19,7 @@ const SectionLink = styled(Link)`
   }
 `;
 
-export const IndexExtraContent = withTranslation("index")(
+export const DetailsExtraContent = withTranslation("index")(
   ({ histories, documents, checksums, fileURI, t }) => {
     const transactionsData = [
       {
@@ -82,7 +82,7 @@ export const IndexExtraContent = withTranslation("index")(
   }
 );
 
-IndexExtraContent.propTypes = {
+DetailsExtraContent.propTypes = {
   histories: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   documents: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };

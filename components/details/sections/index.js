@@ -1,8 +1,8 @@
-// Index
+// Details - Sections
 
-export * from "./Content";
-export * from "./ExtraContent";
-export * from "./ExtraSidebar";
-export * from "./Sidebar";
-export * from "./MiningInProgress";
-export * from "./ItemHistory";
+export * from "./content";
+export * from "./extraContent";
+export * from "./extraSidebar";
+export * from "./itemHistory";
+export * from "./miningInProgress";
+export * from "./sidebar";

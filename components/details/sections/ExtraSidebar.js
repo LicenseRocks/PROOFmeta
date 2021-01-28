@@ -20,7 +20,7 @@ const PoweredByArweave = styled(Text).attrs(() => ({
   }
 `;
 
-export const IndexExtraSidebar = withTranslation("common")(
+export const DetailsExtraSidebar = withTranslation("common")(
   ({ pdfUrl, qrCodeUrl, qrCodeValue, t }) => (
     <>
       <DownloadModule
