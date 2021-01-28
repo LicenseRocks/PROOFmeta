@@ -18,7 +18,7 @@ export async function getServerSideProps({ req }) {
   };
 }
 
-const IndexPage = withTranslation("details")(({ t, url }) => {
+const IndexPage = withTranslation("home")(({ url }) => {
   return (
     <>
       <PageMeta

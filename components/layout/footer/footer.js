@@ -142,10 +142,10 @@ export const renderFooter = (t) => {
         <Image src={branding?.logo} />
 
         <div className="contact-section">
-          <StyledText content="Do you have any questions?" dInline />
+          <StyledText content={t("footer.question")} dInline />
 
           <Button
-            content="Get in touch"
+            content={t("footer.getInTouch")}
             href="https://license.rocks/contact"
             rel="noreferrer"
             size={isMobile ? "sm" : "lg"}

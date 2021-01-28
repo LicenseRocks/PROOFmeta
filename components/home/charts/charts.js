@@ -121,7 +121,7 @@ export const HomeCharts = withTranslation("home")(({ t }) => {
                 </PieChart>
 
                 <div className="title">
-                  <H3 content="NFTs" />
+                  <H3 content={t("charts.nfts")} />
                 </div>
               </PieWrapper>
             </Flex>
@@ -132,19 +132,19 @@ export const HomeCharts = withTranslation("home")(({ t }) => {
                 labelWidth={80}
                 rows={[
                   {
-                    label: <H4 color="textPrimary" content="All" />,
+                    label: <H4 color="textPrimary" content={t("charts.all")} />,
                     value: <H2 content="10,246" />,
                   },
                   {
-                    label: "Unique",
+                    label: t("charts.unique"),
                     value: <Text content="2000" fontWeight="bold" />,
                   },
                   {
-                    label: "Limited",
+                    label: t("charts.limited"),
                     value: <Text content="2000" fontWeight="bold" />,
                   },
                   {
-                    label: "Others",
+                    label: t("charts.others"),
                     value: <Text content="2000" fontWeight="bold" />,
                   },
                 ]}
@@ -159,7 +159,7 @@ export const HomeCharts = withTranslation("home")(({ t }) => {
         <Box>
           <Flex alignItems="flex-start" container spacing={8}>
             <Flex item>
-              <H3 content="Created NFTs" />
+              <H3 content={t("charts.createdNfts")} />
             </Flex>
 
             <Flex item>
