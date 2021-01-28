@@ -6,12 +6,12 @@ import qs from "qs";
 
 import { i18n, withTranslation } from "i18n";
 import {
-  IndexContent,
-  IndexExtraContent,
-  IndexExtraSidebar,
-  IndexSidebar,
+  DetailsContent,
+  DetailsExtraContent,
+  DetailsExtraSidebar,
+  DetailsSidebar,
   MiningInProgress,
-} from "components";
+} from "components/details";
 import { getLicenseInfo, fetchMetaDataFile } from "utils/ethereum";
 import absoluteUrl from "utils/absoluteUrl";
 
@@ -117,7 +117,7 @@ const DetailsPage = withTranslation("index")(
             />
           }
           content={
-            <IndexContent
+            <DetailsContent
               childId={childId}
               coverSrc={coverSrc}
               amount={amountOfThisGood || amount}
@@ -132,18 +132,18 @@ const DetailsPage = withTranslation("index")(
               {...rest}
             />
           }
-          extraContent={IndexExtraContent({
+          extraContent={DetailsExtraContent({
             histories,
             documents: [...documents, ...cover],
             fileURI,
             checksums,
           })}
-          extraSidebar={IndexExtraSidebar({
+          extraSidebar={DetailsExtraSidebar({
             pdfUrl: generateUrl("api/export/pdf"),
             qrcodeUrl: generateUrl("api/export/qrcode"),
             qrcodeValue: generateUrl("https://https://explorer.license.rocks/"),
           })}
-          sidebar={IndexSidebar({ url })}
+          sidebar={DetailsSidebar({ url })}
         />
       </>
     );

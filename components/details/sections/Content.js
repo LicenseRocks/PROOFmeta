@@ -149,7 +149,7 @@ const getChildLink = (childId) => {
   return currentUrl.toString();
 };
 
-export const IndexContent = withTranslation("index")(
+export const DetailsContent = withTranslation("index")(
   ({
     amount,
     childId,
@@ -316,7 +316,7 @@ export const IndexContent = withTranslation("index")(
   }
 );
 
-IndexContent.propTypes = {
+DetailsContent.propTypes = {
   amount: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
   price: PropTypes.string.isRequired,
@@ -327,6 +327,6 @@ IndexContent.propTypes = {
   _documents: PropTypes.arrayOf().isRequired,
 };
 
-IndexContent.defaultProps = {
+DetailsContent.defaultProps = {
   histories: [],
 };
