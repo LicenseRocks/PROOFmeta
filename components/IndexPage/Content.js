@@ -34,7 +34,8 @@ const HeaderContainer = styled.div`
 `;
 
 const StyledImage = styled(Image)`
-  width: 50%;
+  width: auto;
+  max-width: 50%;
   height: auto;
   max-height: 250px;
   object-fit: cover;
