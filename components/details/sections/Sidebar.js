@@ -3,6 +3,7 @@ import { H4, ShareModule } from "@licenserocks/kit";
 
 import { withTranslation } from "i18n";
 
+
 export const IndexSidebar = withTranslation("common")(({ url, t }) => (
   <>
     <H4 mb={6}>{t("shareThisLicense")}</H4>

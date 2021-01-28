@@ -5,6 +5,7 @@ import { Icon, Text, TinyBadge, Link as RKLink } from "@licenserocks/kit";
 
 import { withTranslation } from "i18n";
 
+
 const DocumentItem = styled.div`
   display: flex;
   align-items: center;

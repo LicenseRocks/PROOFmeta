@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Tab, Text } from "@licenserocks/kit";
-import { withTranslation } from "i18n";
 import styled from "styled-components";
+
+import { withTranslation } from "i18n";
 
 const HistoryWrapper = styled.div`
   position: relative;

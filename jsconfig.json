@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "es6",
-    "baseUrl": "./",
-    "paths": {
-      "components": ["./components"]
-    }
+    "baseUrl": "."
   },
-  "include": ["./components/**/*"]
+  "include": [
+    "components/**/*",
+    "config/**/*",
+    "pages/**/*",
+    "theme/**/*",
+    "utils/**/*"
+  ]
 }

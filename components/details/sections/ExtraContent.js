@@ -4,9 +4,11 @@ import { Link } from "@licenserocks/kit";
 import styled from "styled-components";
 
 import { withTranslation } from "i18n";
-import { DocumentsTable } from "components/DocumentsTable";
-import { SectionSeparator } from "components/SectionSeparator";
-import { TransactionsTable } from "components/TransactionsTable";
+import {
+  DocumentsTable,
+  SectionSeparator,
+  TransactionsTable,
+} from "components/details";
 
 const SectionLink = styled(Link)`
   && {

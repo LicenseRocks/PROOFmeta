@@ -1,7 +1,8 @@
 import stringSimilarity from "string-similarity";
+
 import { Icons } from "theme/icons";
 
-export default (property) => {
+const iconMapper = (property) => {
   let bestMatch;
   switch (property) {
     case "amount":
@@ -25,3 +26,5 @@ export default (property) => {
       return bestMatch.charAt(0).toLowerCase() + bestMatch.slice(1);
   }
 };
+
+export default iconMapper;
