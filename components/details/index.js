@@ -1,3 +1,4 @@
+export * from "./details";
 export * from "./documentsTable";
 export * from "./historyPicker";
 export * from "./pdf";

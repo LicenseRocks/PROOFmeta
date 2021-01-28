@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import { hotjar } from "react-hotjar";
 import { AppContainer, RocksKitTheme } from "@licenserocks/kit";
 import * as Sentry from "@sentry/node";
+import { SWRConfig } from "swr";
+import { useRouter } from "next/router";
 
 import { Icons } from "theme/icons";
 import { appWithTranslation } from "i18n";
@@ -15,6 +17,9 @@ if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
 }
 
 function MyApp({ Component, pageProps, err }) {
+  const Layout = Component?.Layout || (({ children }) => children);
+  const router = useRouter();
+
   useEffect(() => {
     // Load Hotjar
     if (process.env.NODE_ENV === "production") {
@@ -31,9 +36,32 @@ function MyApp({ Component, pageProps, err }) {
     }
   }, []);
 
+  const pageProgressBarListener = (
+    routeChangeStartHandler,
+    routeChangeEndHandler
+  ) => {
+    router.events.on("routeChangeStart", routeChangeStartHandler);
+    router.events.on("routeChangeComplete", routeChangeEndHandler);
+    router.events.on("routeChangeError", routeChangeEndHandler);
+  };
+
   return (
-    <AppContainer icons={Icons} theme={RocksKitTheme}>
-      <Component {...pageProps} err={err} />
+    <AppContainer
+      icons={Icons}
+      pageProgressBar
+      pageProgressBarListener={pageProgressBarListener}
+      theme={RocksKitTheme}
+    >
+      <SWRConfig
+        value={{
+          fetcher: (...args) => fetch(...args).then((res) => res.json()),
+          revalidateOnFocus: false,
+        }}
+      >
+        <Layout>
+          <Component {...pageProps} err={err} />
+        </Layout>
+      </SWRConfig>
     </AppContainer>
   );
 }

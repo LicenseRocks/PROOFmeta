@@ -126,7 +126,7 @@ const getTabs = ({
   ];
 };
 
-export const VersionHistory = withTranslation("index")(
+export const VersionHistory = withTranslation("details")(
   ({ t, histories, onChange }) => {
     const [currentTab, setCurrentTab] = useState(0);
     const [activeHistory, setActiveHistory] = useState(0);

@@ -1,8 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Head from "next/head";
-import { ExplorerLayout, PageMeta } from "@licenserocks/kit";
+import { PageMeta } from "@licenserocks/kit";
 
+import { ExplorerLayout } from "components/layout"
 import { withTranslation } from "i18n";
 import absoluteUrl from "utils/absoluteUrl";
 
@@ -17,7 +18,7 @@ export async function getServerSideProps({ query, req }) {
   };
 }
 
-const Index = withTranslation("details")(({ t, url }) => {
+const IndexPage = withTranslation("details")(({ t, url }) => {
   return (
     <>
       <PageMeta
@@ -26,13 +27,16 @@ const Index = withTranslation("details")(({ t, url }) => {
         url={url}
         Wrapper={(props) => <Head {...props} />}
       />
-      <ExplorerLayout content="Content" />
+
+      Content
     </>
   );
 });
 
-Index.propTypes = {};
+IndexPage.Layout = ExplorerLayout;
 
-Index.defaultProps = {};
+IndexPage.propTypes = {};
 
-export default Index;
+IndexPage.defaultProps = {};
+
+export default IndexPage;
