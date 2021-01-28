@@ -1,12 +1,27 @@
 import React from "react";
 import PropTypes from "prop-types";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import Grid from "@material-ui/core/Grid";
 import MuiContainer from "@material-ui/core/Container";
-import { Hidden, PageLoading, Text } from "@licenserocks/kit";
+import { PageLoading, Text } from "@licenserocks/kit";
 
+import { withTranslation } from "i18n";
 import { ExplorerLayoutHeader } from "./header";
-import { ExplorerLayoutFooter } from "./footer";
+import { renderFooter } from "./footer";
+
+const FluidContainer = styled(MuiContainer).attrs(() => ({
+  maxWidth: false,
+}))`
+  ${({ white }) =>
+    white &&
+    css`
+      background-color: ${({ theme }) => theme.palette.common.white};
+    `}
+`;
+
+const Container = styled(MuiContainer).attrs(() => ({
+  maxWidth: "lg",
+}))``;
 
 const Content = styled(Grid).attrs(() => ({
   container: true,
@@ -21,50 +36,38 @@ const Content = styled(Grid).attrs(() => ({
   }
 `;
 
-const poweredBy = (
-  <Text color="textSecondary" fontStyle="italic">
-    Powered by
-    <Text color="textPrimary" fontWeight="bold">
-      {" "}
-      license.rocks
-    </Text>
-  </Text>
+export const ExplorerLayout = withTranslation("layout")(
+  ({ children, headerLogoAction, headerRight, loading, t, ...props }) => {
+    if (loading) return <PageLoading fullScreen />;
+
+    return (
+      <>
+        <FluidContainer white>
+          <Container>
+            <ExplorerLayoutHeader
+              logoAction={headerLogoAction}
+              headerRight={headerRight}
+            />
+          </Container>
+        </FluidContainer>
+
+        <Container>
+          <Content>{children}</Content>
+        </Container>
+
+        <FluidContainer white>
+          <Container>{renderFooter(t)}</Container>
+        </FluidContainer>
+      </>
+    );
+  }
 );
-
-export const ExplorerLayout = ({
-  children,
-  footerContent,
-  headerLogoAction,
-  headerRight,
-  loading,
-  ...props
-}) => {
-  if (loading) return <PageLoading fullScreen />;
-
-  return (
-    <MuiContainer maxWidth="lg" {...props}>
-      <ExplorerLayoutHeader
-        logoAction={headerLogoAction}
-        headerRight={headerRight}
-      />
-      <Content>{children}</Content>
-      {footerContent && (
-        <ExplorerLayoutFooter>
-          {footerContent || poweredBy}
-        </ExplorerLayoutFooter>
-      )}
-    </MuiContainer>
-  );
-};
 
 ExplorerLayout.propTypes = {
   children: PropTypes.node,
-  footerContent: PropTypes.node,
   headerLogoAction: PropTypes.func,
   headerRight: PropTypes.node,
   loading: PropTypes.bool,
 };
 
-ExplorerLayout.defaultProps = {
-  footerContent: poweredBy,
-};
+ExplorerLayout.defaultProps = {};
