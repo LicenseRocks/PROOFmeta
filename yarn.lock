@@ -4358,6 +4358,11 @@ jsx-ast-utils@^2.4.1:
     array-includes "^3.1.1"
     object.assign "^4.1.0"
 
+keen-slider@^5.4.0:
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/keen-slider/-/keen-slider-5.4.0.tgz#e5a949e2bb237d7d6b068458dcda59ae9c415254"
+  integrity sha512-gN+lYpaj4vgJr0fIKtJVy/xG2CnjHiY4lixllp32x6LW8QlT1gD4qmzclFBwMn1/LPvnM2UhOFSgAOmBIhPtAQ==
+
 kew@^0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/kew/-/kew-0.7.0.tgz#79d93d2d33363d6fdd2970b335d9141ad591d79b"
