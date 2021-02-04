@@ -1,0 +1,28 @@
+name: Capistrano preview deployments
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on pull request events to the main branch
+  push:
+    branches:
+      - develop
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.7
+        bundler-cache: true
+    - uses: miloserdow/capistrano-deploy@master
+      with:
+        target: staging
+        deploy_key: ${{ secrets.DEPLOY_ENC_KEY }}
+        enc_rsa_key_pth: config/github_actions_id_rsa_enc
