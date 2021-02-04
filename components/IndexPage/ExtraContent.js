@@ -47,12 +47,13 @@ export const IndexExtraContent = withTranslation("index")(
     ];
 
     const documentsData = [
-      ...documents.map((document) => ({
-        hash: null,
-        public: true,
-        url: document.preview,
-        filename: document.path,
-      })),
+      ...documents
+        .map((document) => ({
+          hash: null,
+          public: true,
+          url: document?.file?.publicUrl,
+          filename: document?.file?.fileName ?? document.path,
+        })),
       ...checksums.map((checksum) => ({
         hash: checksum,
         public: false,
