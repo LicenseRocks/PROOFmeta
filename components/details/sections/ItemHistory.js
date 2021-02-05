@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Tab, Text } from "@licenserocks/kit";
-import { withTranslation } from "i18n";
 import styled from "styled-components";
+
+import { withTranslation } from "i18n";
 
 const HistoryWrapper = styled.div`
   position: relative;
@@ -125,7 +126,7 @@ const getTabs = ({
   ];
 };
 
-export const VersionHistory = withTranslation("index")(
+export const VersionHistory = withTranslation("details")(
   ({ t, histories, onChange }) => {
     const [currentTab, setCurrentTab] = useState(0);
     const [activeHistory, setActiveHistory] = useState(0);

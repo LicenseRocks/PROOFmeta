@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import Head from "next/head";
-import { ExplorerLayout, PageMeta, Button } from "@licenserocks/kit";
+import { PageMeta, Button } from "@licenserocks/kit";
 import qs from "qs";
 
 import { i18n, withTranslation } from "i18n";
 import {
-  IndexContent,
-  IndexExtraContent,
-  IndexExtraSidebar,
-  IndexSidebar,
+  DetailsContent,
+  DetailsExtraContent,
+  DetailsExtraSidebar,
+  DetailsSidebar,
+  DetailsShow,
   MiningInProgress,
-} from "components";
+} from "components/details";
+import { ExplorerLayout } from "components/layout"
 import { getLicenseInfo, fetchMetaDataFile } from "utils/ethereum";
 import absoluteUrl from "utils/absoluteUrl";
 
@@ -52,8 +54,8 @@ export async function getServerSideProps({ query, req }) {
       creatorUrl,
       id: id || null,
       url: fullPath,
-      network,
-      namespacesRequired: ["index", "common"],
+      network: network || null,
+      namespacesRequired: ["details", "common"],
     },
   };
 }
@@ -67,18 +69,8 @@ const generateUrl = (path) => {
   })}`;
 };
 
-const Index = withTranslation("index")(
-  ({
-    childId,
-    checksums,
-    coverSrc,
-    creatorUrl,
-    fileURI,
-    license,
-    network,
-    t,
-    url,
-  }) => {
+const DetailsPage = withTranslation("details")(
+  ({ childId, checksums, coverSrc, fileURI, license, network, url }) => {
     const [licenseData, setLicenseData] = useState(license);
     const pageTitle = `${license.title} | MetaProof`;
 
@@ -106,18 +98,9 @@ const Index = withTranslation("index")(
           url={url}
           Wrapper={(props) => <Head {...props} />}
         />
-        <ExplorerLayout
-          headerRight={
-            <Button
-              content={t("buyLicense")}
-              size="sm"
-              // NOTE: buy URL should be added to JSON metadata file.
-              href={creatorUrl}
-              target="_blank"
-            />
-          }
+        <DetailsShow
           content={
-            <IndexContent
+            <DetailsContent
               childId={childId}
               coverSrc={coverSrc}
               amount={amountOfThisGood || amount}
@@ -132,25 +115,48 @@ const Index = withTranslation("index")(
               {...rest}
             />
           }
-          extraContent={IndexExtraContent({
+          extraContent={DetailsExtraContent({
             histories,
             documents: [...documents, ...cover],
             fileURI,
             checksums,
           })}
-          extraSidebar={IndexExtraSidebar({
+          extraSidebar={DetailsExtraSidebar({
             pdfUrl: generateUrl("api/export/pdf"),
             qrcodeUrl: generateUrl("api/export/qrcode"),
-            qrcodeValue: generateUrl("https://https://explorer.license.rocks/"),
+            qrcodeValue: generateUrl("https://explorer.license.rocks/"),
           })}
-          sidebar={IndexSidebar({ url })}
+          sidebar={DetailsSidebar({ url })}
         />
       </>
     );
   }
 );
 
-Index.propTypes = {
+DetailsPage.Layout = withTranslation("details")(({ t, ...props }) => {
+  const {
+    children: {
+      props: { creatorUrl },
+    },
+  } = props;
+
+  return (
+    <ExplorerLayout
+      headerRight={
+        <Button
+          content={t("buyLicense")}
+          size="sm"
+          // NOTE: buy URL should be added to JSON metadata file.
+          href={creatorUrl}
+          target="_blank"
+        />
+      }
+      {...props}
+    />
+  );
+});
+
+DetailsPage.propTypes = {
   coverSrc: PropTypes.string,
   license: PropTypes.shape({
     histories: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
@@ -166,8 +172,8 @@ Index.propTypes = {
   checksums: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
-Index.defaultProps = {
+DetailsPage.defaultProps = {
   coverSrc: null,
 };
 
-export default Index;
+export default DetailsPage;

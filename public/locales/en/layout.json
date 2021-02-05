@@ -1,0 +1,17 @@
+{
+  "footer": {
+    "by": "by",
+    "fromBerlin": "From Berlin with",
+    "getInTouch": "Get in touch",
+    "links": {
+      "about": "About",
+      "vision": "Vision",
+      "support": "Support",
+      "contactUs": "Contact Us",
+      "imprint": "Imprint",
+      "termsOfUse": "Terms of Use",
+      "privacy": "Privacy"
+    },
+    "question": "Do you have any questions?"
+  }
+}

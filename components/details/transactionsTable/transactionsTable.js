@@ -11,6 +11,7 @@ import {
 
 import { withTranslation } from "i18n";
 
+
 const Table = styled(RKTable)`
   tr {
     background: transparent;
@@ -82,7 +83,7 @@ const statusToColor = (status) => {
   }
 };
 
-export const TransactionsTable = withTranslation("index")(({ data, t }) => {
+export const TransactionsTable = withTranslation("details")(({ data, t }) => {
   const tableData = {
     columns: [
       {

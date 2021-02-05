@@ -14,12 +14,12 @@ import {
   HistoryTree,
 } from "@licenserocks/kit";
 import styled from "styled-components";
+import Link from "next/link";
 
-import { HistoryPicker } from "components/HistoryPicker";
+import { HistoryPicker } from "components/details/historyPicker";
 import date from "utils/date";
 import { getTransaction } from "utils/ethereum";
 import { withTranslation } from "i18n";
-import Link from "next/link";
 import iconMapper from "./iconMapper";
 
 const HeaderContainer = styled.div`
@@ -149,7 +149,7 @@ const getChildLink = (childId) => {
   return currentUrl.toString();
 };
 
-export const IndexContent = withTranslation("index")(
+export const DetailsContent = withTranslation("details")(
   ({
     amount,
     childId,
@@ -316,7 +316,7 @@ export const IndexContent = withTranslation("index")(
   }
 );
 
-IndexContent.propTypes = {
+DetailsContent.propTypes = {
   amount: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
   price: PropTypes.string.isRequired,
@@ -327,6 +327,6 @@ IndexContent.propTypes = {
   _documents: PropTypes.arrayOf().isRequired,
 };
 
-IndexContent.defaultProps = {
+DetailsContent.defaultProps = {
   histories: [],
 };

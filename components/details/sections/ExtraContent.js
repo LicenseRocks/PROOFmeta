@@ -4,9 +4,11 @@ import { Link } from "@licenserocks/kit";
 import styled from "styled-components";
 
 import { withTranslation } from "i18n";
-import { DocumentsTable } from "components/DocumentsTable";
-import { SectionSeparator } from "components/SectionSeparator";
-import { TransactionsTable } from "components/TransactionsTable";
+import {
+  DocumentsTable,
+  SectionSeparator,
+  TransactionsTable,
+} from "components/details";
 
 const SectionLink = styled(Link)`
   && {
@@ -17,7 +19,7 @@ const SectionLink = styled(Link)`
   }
 `;
 
-export const IndexExtraContent = withTranslation("index")(
+export const DetailsExtraContent = withTranslation("details")(
   ({ histories, documents, checksums, fileURI, t }) => {
     const transactionsData = [
       {
@@ -47,12 +49,13 @@ export const IndexExtraContent = withTranslation("index")(
     ];
 
     const documentsData = [
-      ...documents.map((document) => ({
-        hash: null,
-        public: true,
-        url: document.preview,
-        filename: document.path,
-      })),
+      ...documents
+        .map((document) => ({
+          hash: null,
+          public: true,
+          url: document?.file?.publicUrl,
+          filename: document?.file?.fileName ?? document.path,
+        })),
       ...checksums.map((checksum) => ({
         hash: checksum,
         public: false,
@@ -79,7 +82,7 @@ export const IndexExtraContent = withTranslation("index")(
   }
 );
 
-IndexExtraContent.propTypes = {
+DetailsExtraContent.propTypes = {
   histories: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   documents: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };

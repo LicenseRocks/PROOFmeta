@@ -5,6 +5,7 @@ import { Icon, Text, TinyBadge, Link as RKLink } from "@licenserocks/kit";
 
 import { withTranslation } from "i18n";
 
+
 const DocumentItem = styled.div`
   display: flex;
   align-items: center;
@@ -65,7 +66,7 @@ const getBadgeColor = (isPublic) => {
   return "warning";
 };
 
-export const DocumentsTable = withTranslation("index")(({ data, t }) => {
+export const DocumentsTable = withTranslation("details")(({ data, t }) => {
   return data.map((document) => (
     <DocumentItem>
       <IconContainer>
