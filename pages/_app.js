@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 
 import { Icons } from "theme/icons";
 import { appWithTranslation } from "i18n";
-import 'keen-slider/keen-slider.min.css'
+import "keen-slider/keen-slider.min.css";
 
 if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
   Sentry.init({
