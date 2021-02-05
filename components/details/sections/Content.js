@@ -153,6 +153,7 @@ export const DetailsContent = withTranslation("details")(
   ({
     amount,
     childId,
+    isPdf,
     title,
     price,
     unique,
@@ -210,7 +211,7 @@ export const DetailsContent = withTranslation("details")(
             <ChipBadge color="success" label="Updated" icon="check-circle" />
           )}
 
-          {childId !== "0" && (
+          {childId !== "0" && !isPdf && (
             <Row>
               <ChipBadge color="error" label="Outdated" />
               <Link href={getChildLink(childId)}>See latest version</Link>
@@ -221,14 +222,16 @@ export const DetailsContent = withTranslation("details")(
             <>
               <StyledImage
                 src={coverSrc}
-                onClick={() => setCoverPreviewOpen(true)}
+                onClick={isPdf ? undefined : () => setCoverPreviewOpen(true)}
               />
 
-              <ImageModal
-                imgSrc={coverSrc}
-                isOpen={coverPreviewOpen}
-                onClose={() => setCoverPreviewOpen(false)}
-              />
+              {!isPdf && (
+                <ImageModal
+                  imgSrc={coverSrc}
+                  isOpen={coverPreviewOpen}
+                  onClose={() => setCoverPreviewOpen(false)}
+                />
+              )}
             </>
           )}
 
@@ -260,13 +263,13 @@ export const DetailsContent = withTranslation("details")(
                       {
                         label: t("creatorPublicKey"),
                         value: <CryptoProof value={txInfo?.from} />,
-                        expandable: true,
+                        expandable: !isPdf,
                         icon: iconMapper("creatorPublicKey"),
                       },
                       {
                         label: t("transactionId"),
                         value: <CryptoProof value={txInfo?.hash} />,
-                        expandable: true,
+                        expandable: !isPdf,
                         icon: iconMapper("transactionId"),
                       },
                     ]
@@ -276,11 +279,14 @@ export const DetailsContent = withTranslation("details")(
         </Flex>
 
         <Flex item xs={12} md={4} pr={4}>
-          <HistoryPicker
-            historyItems={orderedHistories}
-            activeHistory={activeHistory}
-            onSelect={(item) => setActiveHistory(item)}
-          />
+          {!isPdf && (
+            <HistoryPicker
+              historyItems={orderedHistories}
+              activeHistory={activeHistory}
+              onSelect={(item) => setActiveHistory(item)}
+            />
+          )}
+
           <HistoryTree
             activeNodeId={3}
             data={[

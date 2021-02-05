@@ -7,6 +7,7 @@ import {
   StyleSheetManager,
 } from "styled-components";
 import { AppContainer } from "@licenserocks/kit";
+import { config as faConfig, dom } from "@fortawesome/fontawesome-svg-core";
 
 import absoluteUrl from "utils/absoluteUrl";
 import { Icons } from "theme/icons";
@@ -14,6 +15,8 @@ import { config } from "config";
 import { getLicenseInfo } from "utils/ethereum";
 import { withServerTranslation } from "utils/translations";
 import { CertificatePDF } from "components";
+
+faConfig.autoAddCss = false;
 
 function renderFullPage(html, muiStyleTags, scStyleTags) {
   return `
@@ -31,6 +34,7 @@ function renderFullPage(html, muiStyleTags, scStyleTags) {
         />
         ${muiStyleTags}
         ${scStyleTags}
+        <style>${dom.css()}</style>
       </head>
       <body>
         <div id="root">${html}</div>
@@ -40,14 +44,21 @@ function renderFullPage(html, muiStyleTags, scStyleTags) {
 }
 
 export default async function downloadPDF(req, res) {
-  const { id, network, contractAddr, locale, contractName } = req.query;
+  const {
+    coverKey,
+    id,
+    network,
+    contractAddr,
+    locale,
+    contractName,
+  } = req.query;
   const licenseInfo = await getLicenseInfo(
     id,
     contractAddr,
     contractName,
     network
   );
-  const { license } = licenseInfo;
+  const { fileURI, license } = licenseInfo;
   const t = withServerTranslation(locale, "pdfs");
 
   const { theme } = config;
@@ -59,15 +70,20 @@ export default async function downloadPDF(req, res) {
       <StyleSheetManager sheet={styledSheets.instance}>
         <AppContainer appConfig={config} theme={theme} icons={Icons}>
           <CertificatePDF
-            amount={license.amount}
+            coverSrc={
+              coverKey
+                ? `${process.env.BUCKET_URL}/${coverKey}`
+                : "/images/lr-placeholder.jpg"
+            }
+            fileURI={fileURI}
             locale={locale}
-            price={license.price}
             createdAt={
               license.histories
                 .filter((history) => history.name === "minted")
                 .shift().createdAt
             }
             linkToExplorer={absoluteUrl(req).fullPath}
+            network={network}
             t={t}
             {...license}
           />
