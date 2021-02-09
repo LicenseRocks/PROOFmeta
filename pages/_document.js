@@ -2,6 +2,9 @@ import React from "react";
 import Document, { Head, Html, Main, NextScript } from "next/document";
 import { ServerStyleSheet as StyledComponentSheets } from "styled-components";
 import { ServerStyleSheets as MaterialUiServerStyleSheets } from "@material-ui/core/styles";
+import { config as faConfig, dom } from "@fortawesome/fontawesome-svg-core";
+
+faConfig.autoAddCss = false;
 
 export default class MyDocument extends Document {
   render() {
@@ -55,6 +58,7 @@ MyDocument.getInitialProps = async (ctx) => {
           {initialProps.styles}
           {materialUiSheets.getStyleElement()}
           {styledComponentSheet.getStyleElement()}
+          <style>${dom.css()}</style>
         </React.Fragment>,
       ],
     };
