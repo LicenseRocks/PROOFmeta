@@ -35,7 +35,11 @@ export const DetailsExtraSidebar = withTranslation("common")(
         {t("permanentStorageProvider")}
         &nbsp;
         <a href="https://arweave.org">
-          <img src={arweaveLogo} alt="arweave.org" title="arweave.org" />
+          <img
+            src="/images/arweave-logo.svg"
+            alt="arweave.org"
+            title="arweave.org"
+          />
         </a>
       </PoweredByArweave>
       <Language onChange={i18n.changeLanguage} value={i18n.language} mb={6} />
