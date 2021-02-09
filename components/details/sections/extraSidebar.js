@@ -3,6 +3,7 @@ import { DownloadModule, Language, Text } from "@licenserocks/kit";
 import styled from "styled-components";
 
 import { i18n, withTranslation } from "i18n";
+import arweaveLogo from "./arweave-logo.svg";
 
 const PoweredByArweave = styled(Text).attrs(() => ({
   fontStyle: "italic",
@@ -35,11 +36,7 @@ export const DetailsExtraSidebar = withTranslation("common")(
         {t("permanentStorageProvider")}
         &nbsp;
         <a href="https://arweave.org">
-          <img
-            src="/images/arweave-logo.svg"
-            alt="arweave.org"
-            title="arweave.org"
-          />
+          <img src={arweaveLogo} alt="arweave.org" title="arweave.org" />
         </a>
       </PoweredByArweave>
       <Language onChange={i18n.changeLanguage} value={i18n.language} mb={6} />
