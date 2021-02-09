@@ -48,13 +48,14 @@ export const DetailsExtraContent = withTranslation("details")(
       },
     ];
 
+
     const documentsData = [
       ...documents
         .map((document) => ({
           hash: null,
           public: true,
-          url: document?.file?.publicUrl,
-          filename: document?.file?.fileName ?? document.path,
+          url: document?.file?.publicUrl ?? document?.data?.file?.publicUrl,
+          filename: document?.data?.file?.fileName ?? document.path,
         })),
       ...checksums.map((checksum) => ({
         hash: checksum,
