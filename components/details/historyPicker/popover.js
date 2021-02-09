@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { Popover as MuiPopover } from "@material-ui/core";
 import { Input } from "@licenserocks/kit";
 
-import HistoryItem from "./Item";
+import HistoryItem from "./item";
 
 const Popover = styled(MuiPopover)``;
 
