@@ -82,8 +82,8 @@ const LogoContainer = styled.div`
   z-index: 1;
   position: absolute;
   left: 107px;
-  top: 29px;
-  height: 28px;
+  top: 20px;
+  height: 48px;
   img {
     margin: 0 3px;
   }
@@ -114,7 +114,7 @@ const FooterItem = styled.div`
 `;
 
 const Content = styled.div`
-  height: calc(100%);
+  height: calc(100% - 56px);
 `;
 
 export const PDFTemplate = ({ qrcodeValue, qrcodeHint, children }) => {
@@ -125,8 +125,7 @@ export const PDFTemplate = ({ qrcodeValue, qrcodeHint, children }) => {
       <Wrapper>
         <Header>
           <LogoContainer>
-            <img src={branding.logo} alt="logo" height="28" />
-            <img src={branding.logoType} alt="logotype" height="28" />
+            <img src={branding.logo} alt="logo" height="48" />
           </LogoContainer>
           <QRCodeContainer>
             <StyledQRCode renderAs="svg" value={qrcodeValue} />

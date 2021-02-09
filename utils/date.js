@@ -1,5 +1,5 @@
 export default {
-  format: (dateString, { locale = "en-US", withTime = true }) => {
+  format: (dateString, { locale = "en-US", withTime = true } = {}) => {
     const date = new Date(dateString);
     const outcome = date.toLocaleDateString(locale);
 
