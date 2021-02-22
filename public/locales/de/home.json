@@ -2,10 +2,10 @@
   "charts": {
     "all": "All",
     "createdNfts": "Created NFTs",
-    "limited": "Limited",
     "nfts": "NFTs",
-    "others": "Others",
-    "unique": "Unique"
+    "rare": "Rare",
+    "unique": "Unique",
+    "unlimited": "Unlimited"
   },
   "creators": {
     "nfts": "NFTs"

@@ -29,7 +29,7 @@ export async function getServerSideProps({ query, req }) {
   } = query;
   const {
     BUCKET_URL,
-    NEXT_CREATORS_HUB_URL,
+    NEXT_PUBLIC_CREATORSHUB_URL,
     NEXT_LICENSE_CORE_URL,
   } = process.env;
   const licenseInfo = await getLicenseInfo(
@@ -42,7 +42,7 @@ export async function getServerSideProps({ query, req }) {
 
   const creatorUrl =
     createdWith && createdWith === "creatorshub"
-      ? `${NEXT_CREATORS_HUB_URL}/nft/${id}`
+      ? `${NEXT_PUBLIC_CREATORSHUB_URL}/nft/${id}`
       : `${NEXT_LICENSE_CORE_URL}/licenses/${id}`;
 
   return {
