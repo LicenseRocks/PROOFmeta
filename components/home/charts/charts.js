@@ -1,56 +1,11 @@
 import React from "react";
 import styled, { useTheme } from "styled-components";
 import { Box, DetailsTable, Flex, H2, H3, H4, Text } from "@licenserocks/kit";
-import { AreaChart, Area, XAxis, Tooltip, PieChart, Pie, Cell } from "recharts";
+import { PieChart, Pie, Cell } from "recharts";
 import useSWR from "swr";
 
 import { withTranslation } from "i18n";
 import { apiRoutes } from "routes";
-
-const areaData = [
-  {
-    name: "Page A",
-    uv: 4000,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: "Page B",
-    uv: 3000,
-    pv: 1398,
-    amt: 2210,
-  },
-  {
-    name: "Page C",
-    uv: 2000,
-    pv: 9800,
-    amt: 2290,
-  },
-  {
-    name: "Page D",
-    uv: 2780,
-    pv: 3908,
-    amt: 2000,
-  },
-  {
-    name: "Page E",
-    uv: 1890,
-    pv: 4800,
-    amt: 2181,
-  },
-  {
-    name: "Page F",
-    uv: 2390,
-    pv: 3800,
-    amt: 2500,
-  },
-  {
-    name: "Page G",
-    uv: 3490,
-    pv: 4300,
-    amt: 2100,
-  },
-];
 
 const getColors = ({ palette }) => ({
   unique: palette.success.main,
@@ -88,8 +43,8 @@ export const HomeCharts = withTranslation("home")(({ t }) => {
   const colors = getColors(theme);
   const pieData = getPieData(stats);
   return (
-    <Flex container spacing={8}>
-      <Flex item lg={4} xs={12}>
+    <Flex container justify="center" spacing={8}>
+      <Flex item md={4} xs={12}>
         <Box>
           <Flex container spacing={8}>
             <Flex item>
@@ -151,36 +106,6 @@ export const HomeCharts = withTranslation("home")(({ t }) => {
                 ]}
                 size="sm"
               />
-            </Flex>
-          </Flex>
-        </Box>
-      </Flex>
-
-      <Flex item lg={8} xs={12}>
-        <Box>
-          <Flex alignItems="flex-start" container spacing={8}>
-            <Flex item>
-              <H3 content={t("charts.createdNfts")} />
-            </Flex>
-
-            <Flex item>
-              <AreaChart width={500} height={120} data={areaData}>
-                <XAxis
-                  axisLine={false}
-                  dataKey="name"
-                  tickLine={false}
-                  tickMargin={10}
-                />
-
-                <Tooltip />
-
-                <Area
-                  type="monotone"
-                  dataKey="uv"
-                  stroke={theme.palette.primary.main}
-                  fill={theme.palette.primary.light}
-                />
-              </AreaChart>
             </Flex>
           </Flex>
         </Box>
