@@ -82,7 +82,7 @@ const getPieData = (stats) => [
 
 export const HomeCharts = withTranslation("home")(({ t }) => {
   const theme = useTheme();
-  const { data = { stats: {} } } = useSWR(apiRoutes.creatorshub.getStats);
+  const { data = { stats: {} } } = useSWR(apiRoutes.creatorshub.getStats());
 
   const { stats } = data;
   const colors = getColors(theme);
