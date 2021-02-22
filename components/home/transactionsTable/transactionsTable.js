@@ -74,14 +74,14 @@ const getColumns = ({ t }) => [
   },
 ];
 
-const getRows = ({ nfts }) =>
+const getRows = ({ nfts, t }) =>
   nfts.map((transaction) => {
     const coverKey = transaction.Files?.findIndex((f) => f.type === "cover");
     const price =
       transaction.priceType === "FIXED" ? (
         <H4 content={centsToPrice(transaction.price)} />
       ) : (
-        "Custom"
+        t("table.custom")
       );
 
     return {

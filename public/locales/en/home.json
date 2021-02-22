@@ -8,6 +8,7 @@
     "unlimited": "Unlimited"
   },
   "creators": {
+    "creator": "Creator",
     "nfts": "NFTs"
   },
   "creatorsHeading": "Creators are here!",
@@ -40,6 +41,9 @@
   },
   "seeMore": "See More",
   "table": {
+    "createdAt": "Date Created",
+    "creator": "Created by",
+    "custom": "Custom",
     "name": "NFT Name",
     "price": "Price",
     "seeMore": "See More",

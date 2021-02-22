@@ -104,7 +104,7 @@ export const HomeCharts = withTranslation("home")(({ t }) => {
                   >
                     {pieData.map((entry, index) => (
                       <Cell
-                        key={`cell-${index}`}
+                        key={entry.name}
                         fill={
                           Object.values(colors)[
                             index % Object.values(colors).length
