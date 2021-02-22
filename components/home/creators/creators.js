@@ -1,13 +1,18 @@
-import React, { useEffect } from "react";
-import styled from "styled-components";
-import { H4, Image, Text } from "@licenserocks/kit";
-import { useKeenSlider } from "keen-slider/react";
+import React from "react";
+import styled, { useTheme } from "styled-components";
+import { H4, Image, PageFigure, Text } from "@licenserocks/kit";
+import { CarouselProvider, Slide, Slider } from "pure-react-carousel";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import useSWR from "swr";
 
 import { withTranslation } from "i18n";
 import { apiRoutes } from "routes";
 
-const Slide = styled.div`
+const StyledPageFigure = styled(PageFigure)`
+  display: table;
+`;
+
+const StyledSlide = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -37,79 +42,63 @@ export const HomeCreators = withTranslation("home")(({ t }) => {
   const { data = { creators: [] } } = useSWR(
     apiRoutes.creatorshub.getCreators()
   );
-  const [pause, setPause] = React.useState(false);
-  const timer = React.useRef();
-  const [sliderRef, slider] = useKeenSlider({
-    loop: true,
-    duration: 1000,
-    dragStart: () => {
-      setPause(true);
-    },
-    dragEnd: () => {
-      setPause(false);
-    },
-    slidesPerView: 6,
-    spacing: 16,
-  });
-
-  useEffect(() => {
-    sliderRef.current.addEventListener("mouseover", () => {
-      setPause(true);
-    });
-    sliderRef.current.addEventListener("mouseout", () => {
-      setPause(false);
-    });
-  }, [sliderRef]);
-
-  useEffect(() => {
-    timer.current = setInterval(() => {
-      if (!pause && slider) {
-        slider.next();
-      }
-    }, 2000);
-    return () => {
-      clearInterval(timer.current);
-    };
-  }, [pause, slider]);
+  const theme = useTheme();
+  let visibleSlides = 6;
+  if (useMediaQuery(theme.breakpoints.down("md"))) visibleSlides = 2;
+  if (useMediaQuery(theme.breakpoints.down("sm"))) visibleSlides = 1;
 
   const { creators } = data;
 
   return (
-    <>
-      <div ref={sliderRef} className="keen-slider">
-        {creators.map((c) => (
-          <Slide key={c.id} className="keen-slider__slide">
-            <Image src={c.profile.avatar || "/images/user-placeholder.png"} />
+    <StyledPageFigure>
+      <CarouselProvider
+        infinite
+        isPlaying
+        interval={2000}
+        visibleSlides={visibleSlides}
+        totalSlides={creators.length}
+        naturalSlideWidth={205}
+        naturalSlideHeight={205}
+      >
+        <Slider>
+          {creators.map((c) => (
+            <Slide key={c.id}>
+              <StyledSlide>
+                <Image
+                  src={c.profile.avatar || "/images/user-placeholder.png"}
+                />
 
-            <div className="card">
-              <Text
-                content={c.name || c.ethereumPublicAddr}
-                fontWeight="bold"
-                fontSize="lg"
-                mb={1}
-                noWrap
-              />
+                <div className="card">
+                  <Text
+                    content={c.name || c.ethereumPublicAddr}
+                    fontWeight="bold"
+                    fontSize="lg"
+                    mb={1}
+                    noWrap
+                  />
 
-              <Text
-                content={c.profile.description || t("creators.creator")}
-                color="textSecondary"
-                fontSize="sm"
-                noWrap
-              />
+                  <Text
+                    content={c.profile.description || t("creators.creator")}
+                    color="textSecondary"
+                    fontSize="sm"
+                    noWrap
+                  />
 
-              <Text color="textSecondary" fontSize="sm" mt={10}>
-                <H4
-                  content={c.nfts.length || "0"}
-                  color="textPrimary"
-                  dInline
-                />{" "}
-                {t("creators.nfts")}
-              </Text>
-            </div>
-          </Slide>
-        ))}
-      </div>
-    </>
+                  <Text color="textSecondary" fontSize="sm" mt={10}>
+                    <H4
+                      content={c.nfts.length || "0"}
+                      color="textPrimary"
+                      dInline
+                    />{" "}
+                    {t("creators.nfts")}
+                  </Text>
+                </div>
+              </StyledSlide>
+            </Slide>
+          ))}
+        </Slider>
+      </CarouselProvider>
+    </StyledPageFigure>
   );
 });
 

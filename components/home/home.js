@@ -6,7 +6,6 @@ import {
   H1,
   H2,
   H5,
-  PageFigure,
   Paragraph,
 } from "@licenserocks/kit";
 
@@ -65,9 +64,7 @@ export const ShowHome = withTranslation("home")(({ t }) => {
         <Paragraph content={t("creatorsDesc")} fontWeight="light" />
       </ContentContainer>
 
-      <PageFigure>
-        <HomeCreators />
-      </PageFigure>
+      <HomeCreators />
 
       <ContentContainer mt={20}>
         <div className="bg">
