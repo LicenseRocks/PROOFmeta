@@ -28,7 +28,7 @@ export const DetailsExtraSidebar = withTranslation("common")(
         downloadQrCodeText={t("downloadQrCodeText")}
         mb={6}
         qrCodeValue={qrCodeValue}
-        qrCodeUrl={qrCodeUrl}
+        downloadQrCodeUrl={qrCodeUrl}
         downloadPdfUrl={pdfUrl}
       />
       <PoweredByArweave>
