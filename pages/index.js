@@ -16,6 +16,7 @@ import {
 import { ExplorerLayout } from "components/layout"
 import { getLicenseInfo, fetchMetaDataFile } from "utils/ethereum";
 import absoluteUrl from "utils/absoluteUrl";
+import { apiRoutes } from "routes";
 
 export async function getServerSideProps({ query, req }) {
   // Call smart contract to get files array on server side
@@ -29,7 +30,7 @@ export async function getServerSideProps({ query, req }) {
   } = query;
   const {
     BUCKET_URL,
-    NEXT_CREATORS_HUB_URL,
+    NEXT_PUBLIC_CREATORSHUB_URL,
     NEXT_LICENSE_CORE_URL,
   } = process.env;
   const licenseInfo = await getLicenseInfo(
@@ -42,7 +43,7 @@ export async function getServerSideProps({ query, req }) {
 
   const creatorUrl =
     createdWith && createdWith === "creatorshub"
-      ? `${NEXT_CREATORS_HUB_URL}/nft/${id}`
+      ? `${NEXT_PUBLIC_CREATORSHUB_URL}/nft/${id}`
       : `${NEXT_LICENSE_CORE_URL}/licenses/${id}`;
 
   return {
@@ -70,7 +71,7 @@ const generateUrl = (path) => {
 };
 
 const DetailsPage = withTranslation("details")(
-  ({ childId, checksums, coverSrc, fileURI, license, network, url }) => {
+  ({ childId, checksums, coverSrc, fileURI, id, license, network, url }) => {
     const [licenseData, setLicenseData] = useState(license);
     const pageTitle = `${license.title} | MetaProof`;
 
@@ -122,9 +123,9 @@ const DetailsPage = withTranslation("details")(
             checksums,
           })}
           extraSidebar={DetailsExtraSidebar({
-            pdfUrl: generateUrl("api/export/pdf"),
-            qrcodeUrl: generateUrl("api/export/qrcode"),
-            qrcodeValue: generateUrl("https://explorer.license.rocks/"),
+            pdfUrl: apiRoutes.creatorshub.getNftPdf(id, i18n.language),
+            qrCodeUrl: generateUrl("api/export/qrcode"),
+            qrCodeValue: generateUrl(process.env.NEXT_PUBLIC_APP_DOMAIN),
           })}
           sidebar={DetailsSidebar({ url })}
         />

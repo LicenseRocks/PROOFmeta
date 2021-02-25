@@ -1,71 +1,11 @@
 import React from "react";
-import PropTypes from "prop-types";
 import styled, { useTheme } from "styled-components";
 import { Box, DetailsTable, Flex, H2, H3, H4, Text } from "@licenserocks/kit";
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  PieChart,
-  Pie,
-  Cell,
-} from "recharts";
+import { PieChart, Pie, Cell } from "recharts";
+import useSWR from "swr";
 
 import { withTranslation } from "i18n";
-
-const data = [
-  { name: "Group A", value: 400 },
-  { name: "Group B", value: 300 },
-  { name: "Group C", value: 300 },
-];
-
-const areaData = [
-  {
-    name: "Page A",
-    uv: 4000,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: "Page B",
-    uv: 3000,
-    pv: 1398,
-    amt: 2210,
-  },
-  {
-    name: "Page C",
-    uv: 2000,
-    pv: 9800,
-    amt: 2290,
-  },
-  {
-    name: "Page D",
-    uv: 2780,
-    pv: 3908,
-    amt: 2000,
-  },
-  {
-    name: "Page E",
-    uv: 1890,
-    pv: 4800,
-    amt: 2181,
-  },
-  {
-    name: "Page F",
-    uv: 2390,
-    pv: 3800,
-    amt: 2500,
-  },
-  {
-    name: "Page G",
-    uv: 3490,
-    pv: 4300,
-    amt: 2100,
-  },
-];
+import { apiRoutes } from "routes";
 
 const getColors = ({ palette }) => ({
   unique: palette.success.main,
@@ -89,27 +29,37 @@ const PieWrapper = styled.div`
   }
 `;
 
+const getPieData = (stats) => [
+  { name: "unique", value: stats.nfts?.unique },
+  { name: "rare", value: stats.nfts?.rare },
+  { name: "unlimited", value: stats.nfts?.unlimited },
+];
+
 export const HomeCharts = withTranslation("home")(({ t }) => {
   const theme = useTheme();
+  const { data = { stats: {} } } = useSWR(apiRoutes.creatorshub.getStats());
+
+  const { stats } = data;
   const colors = getColors(theme);
+  const pieData = getPieData(stats);
   return (
-    <Flex container spacing={8}>
-      <Flex item lg={4} xs={12}>
+    <Flex container justify="center" spacing={8}>
+      <Flex item md={4} xs={12}>
         <Box>
           <Flex container spacing={8}>
             <Flex item>
               <PieWrapper>
                 <PieChart width={120} height={120}>
                   <Pie
-                    data={data}
+                    data={pieData}
                     innerRadius={45}
                     outerRadius={56}
                     paddingAngle={5}
                     dataKey="value"
                   >
-                    {data.map((entry, index) => (
+                    {pieData.map((entry, index) => (
                       <Cell
-                        key={`cell-${index}`}
+                        key={entry.name}
                         fill={
                           Object.values(colors)[
                             index % Object.values(colors).length
@@ -133,53 +83,29 @@ export const HomeCharts = withTranslation("home")(({ t }) => {
                 rows={[
                   {
                     label: <H4 color="textPrimary" content={t("charts.all")} />,
-                    value: <H2 content="10,246" />,
+                    value: <H2 content={stats.nfts?.total} />,
                   },
                   {
                     label: t("charts.unique"),
-                    value: <Text content="2000" fontWeight="bold" />,
+                    value: (
+                      <Text content={stats.nfts?.unique} fontWeight="bold" />
+                    ),
                   },
                   {
-                    label: t("charts.limited"),
-                    value: <Text content="2000" fontWeight="bold" />,
+                    label: t("charts.rare"),
+                    value: (
+                      <Text content={stats.nfts?.rare} fontWeight="bold" />
+                    ),
                   },
                   {
-                    label: t("charts.others"),
-                    value: <Text content="2000" fontWeight="bold" />,
+                    label: t("charts.unlimited"),
+                    value: (
+                      <Text content={stats.nfts?.unlimited} fontWeight="bold" />
+                    ),
                   },
                 ]}
                 size="sm"
               />
-            </Flex>
-          </Flex>
-        </Box>
-      </Flex>
-
-      <Flex item lg={8} xs={12}>
-        <Box>
-          <Flex alignItems="flex-start" container spacing={8}>
-            <Flex item>
-              <H3 content={t("charts.createdNfts")} />
-            </Flex>
-
-            <Flex item>
-              <AreaChart width={500} height={120} data={areaData}>
-                <XAxis
-                  axisLine={false}
-                  dataKey="name"
-                  tickLine={false}
-                  tickMargin={10}
-                />
-
-                <Tooltip />
-
-                <Area
-                  type="monotone"
-                  dataKey="uv"
-                  stroke={theme.palette.primary.main}
-                  fill={theme.palette.primary.light}
-                />
-              </AreaChart>
             </Flex>
           </Flex>
         </Box>
