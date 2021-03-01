@@ -11,19 +11,19 @@
     "creator": "Creator",
     "nfts": "NFTs"
   },
-  "creatorsHeading": "Creators are here!",
-  "creatorsDesc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut netus proin sociis dolor netus Convallis vestibulum mattis.",
+  "creatorsHeading": "Our latest NFT Creators",
+  "creatorsDesc": "Check the latest NFT creators, the true artist of tomorrow's digital space.",
   "descOne": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut netus proin sociis dolor netus. Adipiscing consequat maecenas non tortor. Velit cursus at blandit eu senectus. Convallis vestibulum mattis aliquet sed. Feugiat in varius aliquet sit diam vel hendrerit vitae.",
   "ending": {
-    "desc": "You can easily create any NFT with high security!",
+    "desc": "You can easily create any NFT with us!",
     "createNft": "Create a NFT",
     "headingOne": "If you are interested in becoming a creator or buyer,",
     "headingTwo": "Do you want to create a NFTs?"
   },
-  "headingOne": "Lorem ipsum dolor sit consectetur adipiscing elit",
+  "headingOne": "MetaProof your NFT explorer",
   "latestNfts": "Latest NFTs",
   "latestTransactions": "The Latest Transactions",
-  "latestTransactionsDesc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut netus proin sociis dolor netus Convallis vestibulum mattis.",
+  "latestTransactionsDesc": "We currently show you NFTs on the Polygon (Matic) chain. In the future you can easily add your smart contract to get listed here.",
   "nfts": {
     "badges": {
       "charityDonate": "Donate to charity",
