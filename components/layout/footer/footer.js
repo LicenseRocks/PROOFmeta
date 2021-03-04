@@ -6,7 +6,6 @@ import Hidden from "@material-ui/core/Hidden";
 
 import { config } from "config";
 
-
 const { branding } = config;
 
 const Footer = styled.div`
@@ -108,6 +107,9 @@ const Copyright = styled(H4).attrs(() => ({
   }
 `;
 
+const createCHUrl = (path) =>
+  `${process.env.NEXT_PUBLIC_CREATORSHUB_URL}${path}`;
+
 const renderLink = (title, href) => (
   <a href={href} target="_blank" rel="noreferrer">
     {title}
@@ -146,7 +148,7 @@ export const renderFooter = (t) => {
 
           <Button
             content={t("footer.getInTouch")}
-            href="https://license.rocks/contact"
+            href={createCHUrl("/contact")}
             rel="noreferrer"
             size={isMobile ? "sm" : "lg"}
             target="_blank"
@@ -159,22 +161,11 @@ export const renderFooter = (t) => {
       <BottomSection>
         <StyledList>
           <ListItem>
-            {renderLink(t("footer.links.about"), "https://license.rocks/about")}
+            {renderLink(t("footer.links.vision"), createCHUrl("/vision"))}
           </ListItem>
 
           <ListItem>
-            {renderLink(t("footer.links.vision"), "https://license.rocks/")}
-          </ListItem>
-
-          <ListItem>
-            {renderLink(t("footer.links.support"), "https://license.rocks/")}
-          </ListItem>
-
-          <ListItem>
-            {renderLink(
-              t("footer.links.contactUs"),
-              "https://license.rocks/contact"
-            )}
+            {renderLink(t("footer.links.contactUs"), createCHUrl("/contact"))}
           </ListItem>
 
           <Hidden smDown>{renderSocial()}</Hidden>
@@ -182,23 +173,17 @@ export const renderFooter = (t) => {
 
         <StyledList>
           <ListItem>
-            {renderLink(
-              t("footer.links.imprint"),
-              "https://license.rocks/imprint"
-            )}
+            {renderLink(t("footer.links.imprint"), createCHUrl("/imprint"))}
           </ListItem>
 
           <ListItem>
-            {renderLink(
-              t("footer.links.termsOfUse"),
-              "https://license.rocks/terms"
-            )}
+            {renderLink(t("footer.links.termsOfUse"), createCHUrl("/terms"))}
           </ListItem>
 
           <ListItem>
             {renderLink(
               t("footer.links.privacy"),
-              "https://license.rocks/privacy-policy"
+              createCHUrl("/privacy-policy")
             )}
           </ListItem>
         </StyledList>
