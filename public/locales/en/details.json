@@ -23,7 +23,7 @@
   "documents": {
     "public": "Public",
     "private": "Private",
-    "label": "Documents",
+    "label": "Assets",
     "view": "View"
   }
 }

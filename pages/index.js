@@ -13,21 +13,14 @@ import {
   DetailsShow,
   MiningInProgress,
 } from "components/details";
-import { ExplorerLayout } from "components/layout"
+import { ExplorerLayout } from "components/layout";
 import { getLicenseInfo, fetchMetaDataFile } from "utils/ethereum";
 import absoluteUrl from "utils/absoluteUrl";
 import { apiRoutes } from "routes";
 
 export async function getServerSideProps({ query, req }) {
   // Call smart contract to get files array on server side
-  const {
-    coverKey,
-    id,
-    contractAddr,
-    network,
-    createdWith,
-    contractName,
-  } = query;
+  const { id, contractAddr, network, createdWith, contractName } = query;
   const {
     BUCKET_URL,
     NEXT_PUBLIC_CREATORSHUB_URL,
@@ -46,12 +39,14 @@ export async function getServerSideProps({ query, req }) {
       ? `${NEXT_PUBLIC_CREATORSHUB_URL}/nft/${id}`
       : `${NEXT_LICENSE_CORE_URL}/licenses/${id}`;
 
+  const coverKey = licenseInfo.license?.documents?.find(
+    (doc) => doc.type === "cover"
+  )?.key;
+
   return {
     props: {
       ...licenseInfo,
-      coverSrc: coverKey
-        ? `${BUCKET_URL}/${coverKey}`
-        : "/images/lr-placeholder.jpg",
+      coverSrc: coverKey ? `${BUCKET_URL}/${coverKey}` : "",
       creatorUrl,
       id: id || null,
       url: fullPath,
@@ -81,7 +76,6 @@ const DetailsPage = withTranslation("details")(
       title = "No name",
       price,
       documents = [],
-      cover = [],
       histories = [],
       ...rest
     } = licenseData;
@@ -118,7 +112,7 @@ const DetailsPage = withTranslation("details")(
           }
           extraContent={DetailsExtraContent({
             histories,
-            documents: [...documents, ...cover],
+            documents,
             fileURI,
             checksums,
           })}
