@@ -20,43 +20,14 @@ const SectionLink = styled(Link)`
 `;
 
 export const DetailsExtraContent = withTranslation("details")(
-  ({ histories, documents, checksums, fileURI, t }) => {
-    const transactionsData = [
-      {
-        transactionHash:
-          "0x3ed043f8a5ba9c5139a172ccdcaa99f4b154650eaba84cb9cc2c4550bc2054f7",
-        createdAt: new Date().toLocaleDateString(),
-        amount: 10,
-        to: "0xfaa68ee0df6bc5e6a2174e7df2ec252931302e60",
-        status: "success",
-      },
-      {
-        transactionHash:
-          "0x3ed043f8a5ba9c5139a172ccdcaa99f4b154650eaba84cb9cc2c4550bc2054f7",
-        createdAt: new Date().toLocaleDateString(),
-        amount: 10,
-        to: "0xfaa68ee0df6bc5e6a2174e7df2ec252931302e60",
-        status: "pending",
-      },
-      {
-        transactionHash:
-          "0x3ed043f8a5ba9c5139a172ccdcaa99f4b154650eaba84cb9cc2c4550bc2054f7",
-        createdAt: new Date().toLocaleDateString(),
-        amount: 10,
-        to: "0xfaa68ee0df6bc5e6a2174e7df2ec252931302e60",
-        status: "success",
-      },
-    ];
-
-
+  ({ documents, checksums, t }) => {
     const documentsData = [
-      ...documents
-        .map((document) => ({
-          hash: null,
-          public: true,
-          url: document?.file?.publicUrl ?? document?.data?.file?.publicUrl,
-          filename: document?.data?.file?.fileName ?? document.path,
-        })),
+      ...documents.map((document) => ({
+        hash: null,
+        public: true,
+        url: document?.file?.publicUrl ?? document?.data?.file?.publicUrl,
+        filename: document?.data?.file?.fileName ?? document.path,
+      })),
       ...checksums.map((checksum) => ({
         hash: checksum,
         public: false,
@@ -75,7 +46,7 @@ export const DetailsExtraContent = withTranslation("details")(
             </SectionLink>
           }
         />
-        <TransactionsTable data={transactionsData} />
+        <TransactionsTable data={[]} />
         <SectionSeparator label={t("documents.label")} />
         <DocumentsTable data={documentsData} />
       </>
