@@ -37,10 +37,17 @@ const getLicenseInfo = async (id, contractAddr, contractName, network) => {
     const fileURI = await contract.getMetaFileUrl(tokenId);
     const checksums = await contract.getChecksums(tokenId);
     const license = await fetchMetaDataFile(fileURI);
-    const isUpgradable = contract.isUpgradable
-      ? await contract.isUpgradable(tokenId)
-      : false;
     let childId;
+    let isUpgradable;
+
+    try {
+      isUpgradable = contract.isUpgradable
+        ? await contract.isUpgradable(tokenId)
+        : false;
+    } catch (err) {
+      isUpgradable = false;
+    }
+
     try {
       childId = await contract.getChildId(tokenId);
     } catch (err) {
