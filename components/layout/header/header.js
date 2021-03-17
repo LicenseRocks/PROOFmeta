@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { Flex, Image, Text } from "@licenserocks/kit";
-import { useTranslation } from "next-i18next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import QueryString from "qs";
@@ -47,7 +46,9 @@ export const ExplorerLayoutHeader = ({ headerRight, logoAction, ...props }) => {
   return (
     <StyledHeader {...props}>
       <Flex item lg={9} xs={6}>
-        <StyledLogo onClick={logoAction} />
+        <Link href="/">
+          <StyledLogo onClick={logoAction} />
+        </Link>
       </Flex>
       <Flex container item justify="flex-end" lg={3} xs={6}>
         {headerRight}
