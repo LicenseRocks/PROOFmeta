@@ -18,14 +18,23 @@ import { getLicenseInfo, fetchMetaDataFile } from "utils/ethereum";
 import absoluteUrl from "utils/absoluteUrl";
 import { apiRoutes } from "routes";
 
-export async function getServerSideProps({ query, req }) {
-  // Call smart contract to get files array on server side
+export async function getServerSideProps({ query, req, res }) {
   const { id, contractAddr, network, createdWith, contractName } = query;
+
+  // Redirect to home if NFT id is not present
+  if (!id) {
+    res.setHeader("Location", "/home");
+    res.statusCode = 302;
+    res.end();
+  }
+
   const {
     BUCKET_URL,
     NEXT_PUBLIC_CREATORSHUB_URL,
     NEXT_LICENSE_CORE_URL,
   } = process.env;
+
+  // Call smart contract to get files array on server side
   const licenseInfo = await getLicenseInfo(
     id,
     contractAddr,
