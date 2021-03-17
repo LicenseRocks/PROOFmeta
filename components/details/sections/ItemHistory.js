@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Tab, Text } from "@licenserocks/kit";
 import styled from "styled-components";
-
-import { withTranslation } from "i18n";
+import { useTranslation } from 'next-i18next'
 
 const HistoryWrapper = styled.div`
   position: relative;
@@ -50,7 +49,7 @@ const HistoryItem = styled(Text)`
     width: 16px;
     height: 16px;
     background-color: ${({ theme, active }) =>
-      active ? theme.palette.primary.main : theme.palette.gray.regular};
+    active ? theme.palette.primary.main : theme.palette.gray.regular};
     bottom: 22px;
     left: calc(50% - 8px);
     border-radius: 50%;
@@ -126,23 +125,23 @@ const getTabs = ({
   ];
 };
 
-export const VersionHistory = withTranslation("details")(
-  ({ t, histories, onChange }) => {
-    const [currentTab, setCurrentTab] = useState(0);
-    const [activeHistory, setActiveHistory] = useState(0);
-    const tabs = getTabs({
-      t,
-      histories,
-      activeHistory,
-      setActiveHistory,
-      onChange,
-    });
+export const VersionHistory = ({ histories, onChange }) => {
+  const { t } = useTranslation('details')
 
-    return (
-      <>
-        <Tab currentTab={currentTab} onChange={setCurrentTab} tabs={tabs} />
-        {tabs[currentTab].render({ histories })}
-      </>
-    );
-  }
-);
+  const [currentTab, setCurrentTab] = useState(0);
+  const [activeHistory, setActiveHistory] = useState(0);
+  const tabs = getTabs({
+    t,
+    histories,
+    activeHistory,
+    setActiveHistory,
+    onChange,
+  });
+
+  return (
+    <>
+      <Tab currentTab={currentTab} onChange={setCurrentTab} tabs={tabs} />
+      {tabs[currentTab].render({ histories })}
+    </>
+  );
+};

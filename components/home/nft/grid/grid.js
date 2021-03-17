@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import { Flex, NoItem } from "@licenserocks/kit";
 import Masonry from "react-masonry-css";
 import styled from "styled-components";
+import { useTranslation } from "next-i18next";
 
-import { withTranslation } from "i18n";
 import { NftItem, NftItemLoader } from "../item";
 import { getBadges, getDetails } from "../helper";
 
@@ -38,61 +38,61 @@ const Wrapper = styled.div`
   }
 `;
 
-export const NftGrid = withTranslation("home")(
-  ({ cols, items, loading, t }) => {
-    const renderLoader = () =>
-      [...new Array(10)].map((_, idx) => (
-        <NftItemLoader idx={idx} key={`loader-${`${idx}`}`} />
-      ));
+export const NftGrid = ({ cols, items, loading }) => {
+  const { t } = useTranslation("home");
 
-    return (
-      <Flex container direction="column">
-        {items.length === 0 && !loading && <NoItem mt={4} />}
+  const renderLoader = () =>
+    [...new Array(10)].map((_, idx) => (
+      <NftItemLoader idx={idx} key={`loader-${`${idx}`}`} />
+    ));
 
-        <GridWrapper>
-          <Masonry
-            breakpointCols={
-              cols || {
-                default: 5,
-                992: 3,
-                768: 2,
-                576: 1,
-              }
+  return (
+    <Flex container direction="column">
+      {items.length === 0 && !loading && <NoItem mt={4} />}
+
+      <GridWrapper>
+        <Masonry
+          breakpointCols={
+            cols || {
+              default: 5,
+              992: 3,
+              768: 2,
+              576: 1,
             }
-            className="nft-masonry-grid"
-            columnClassName="nft-masonry-grid_column"
-          >
-            {loading
-              ? renderLoader()
-              : items.map((item) => {
-                  const badges = getBadges(t, item);
-                  const details = getDetails(t, item);
-                  return (
-                    <NftItem
-                      key={item.id}
-                      badges={badges}
-                      coverSrc={item?.coverSrc}
-                      details={details}
-                      megaTitle={item?.vendor}
-                      subTitle={item?.version}
-                      title={item.title}
-                      type="modern"
-                      Wrapper={(props) => (
-                        <Wrapper>
-                          <a href="https://demo2-creatorshub.license.rocks">
-                            {props.children}
-                          </a>
-                        </Wrapper>
-                      )}
-                    />
-                  );
-                })}
-          </Masonry>
-        </GridWrapper>
-      </Flex>
-    );
-  }
-);
+          }
+          className="nft-masonry-grid"
+          columnClassName="nft-masonry-grid_column"
+        >
+          {loading
+            ? renderLoader()
+            : items.map((item) => {
+              const badges = getBadges(t, item);
+              const details = getDetails(t, item);
+              return (
+                <NftItem
+                  key={item.id}
+                  badges={badges}
+                  coverSrc={item?.coverSrc}
+                  details={details}
+                  megaTitle={item?.vendor}
+                  subTitle={item?.version}
+                  title={item.title}
+                  type="modern"
+                  Wrapper={(props) => (
+                    <Wrapper>
+                      <a href="https://demo2-creatorshub.license.rocks">
+                        {props.children}
+                      </a>
+                    </Wrapper>
+                  )}
+                />
+              );
+            })}
+        </Masonry>
+      </GridWrapper>
+    </Flex>
+  );
+};
 
 NftGrid.propTypes = {
   cols: PropTypes.shape({}),

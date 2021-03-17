@@ -11,8 +11,9 @@ import {
   Table as RKTable,
 } from "@licenserocks/kit";
 import useSWR from "swr";
+import { useTranslation } from "next-i18next";
+import Link from "next/link";
 
-import { Link, withTranslation } from "i18n";
 import { centsToPrice } from "utils/price";
 import { apiRoutes } from "routes";
 import date from "utils/date";
@@ -118,7 +119,8 @@ const getRows = ({ nfts, t }) =>
     };
   });
 
-export const TransactionsTable = withTranslation("home")(({ t }) => {
+export const TransactionsTable = () => {
+  const { t } = useTranslation("home");
   const [q, setQ] = useState("");
   const debouncedQ = useDebounce(q, 1000);
   const { data = { nfts: [] } } = useSWR(
@@ -141,7 +143,7 @@ export const TransactionsTable = withTranslation("home")(({ t }) => {
       <Table columns={getColumns({ t })} rows={getRows({ nfts, t })} />
     </StyledBox>
   );
-});
+};
 
 TransactionsTable.propTypes = {
   data: PropTypes.arrayOf(

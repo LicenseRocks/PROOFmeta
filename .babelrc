@@ -1,5 +1,7 @@
 {
-  "presets": ["next/babel"],
+  "presets": [
+    "next/babel"
+  ],
   "plugins": [
     [
       "styled-components",
@@ -10,11 +12,12 @@
     [
       "module-resolver",
       {
-        "root": ["./"],
+        "root": [
+          "./"
+        ],
         "alias": {
           "components": "./components",
-          "utils": "./utils",
-          "i18n": "./i18n.js"
+          "utils": "./utils"
         }
       }
     ]

@@ -8,8 +8,8 @@ import {
   H5,
   Paragraph,
 } from "@licenserocks/kit";
+import { useTranslation } from "next-i18next";
 
-import { withTranslation } from "i18n";
 import { HomeCharts } from "./charts";
 import { TransactionsTable } from "./transactionsTable";
 import { HomeCreators } from "./creators";
@@ -35,7 +35,9 @@ const ContentContainer = styled(Flex).attrs(() => ({
   }
 `;
 
-export const ShowHome = withTranslation("home")(({ t }) => {
+export const ShowHome = () => {
+  const { t } = useTranslation("home");
+
   return (
     <>
       <ContentContainer mb={12}>
@@ -78,7 +80,7 @@ export const ShowHome = withTranslation("home")(({ t }) => {
       </ContentContainer>
     </>
   );
-});
+};
 
 ShowHome.propTypes = {};
 

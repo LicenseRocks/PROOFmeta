@@ -3,8 +3,9 @@ import PropTypes from "prop-types";
 import Head from "next/head";
 import { PageMeta, Button } from "@licenserocks/kit";
 import qs from "qs";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
-import { i18n, withTranslation } from "i18n";
 import {
   DetailsContent,
   DetailsExtraContent,
@@ -18,7 +19,7 @@ import { getLicenseInfo, fetchMetaDataFile } from "utils/ethereum";
 import absoluteUrl from "utils/absoluteUrl";
 import { apiRoutes } from "routes";
 
-export async function getServerSideProps({ query, req, res }) {
+export async function getServerSideProps({ locale, query, req, res }) {
   const { id, contractAddr, network, createdWith, contractName } = query;
 
   // Redirect to home if NFT id is not present
@@ -60,12 +61,16 @@ export async function getServerSideProps({ query, req, res }) {
       id: id || null,
       url: fullPath,
       network: network || null,
-      namespacesRequired: ["details", "common"],
+      ...(await serverSideTranslations(locale, [
+        "common",
+        "details",
+        "layout",
+      ])),
     },
   };
 }
 
-const generateUrl = (path) => {
+const generateUrl = (path, i18n) => {
   if (typeof window === "undefined") return "";
 
   return `${path}?${qs.stringify({
@@ -74,70 +79,80 @@ const generateUrl = (path) => {
   })}`;
 };
 
-const DetailsPage = withTranslation("details")(
-  ({ childId, checksums, coverSrc, fileURI, id, license, network, url }) => {
-    const [licenseData, setLicenseData] = useState(license);
-    const pageTitle = `${license.title} | MetaProof`;
+const DetailsPage = ({
+  childId,
+  checksums,
+  coverSrc,
+  fileURI,
+  id,
+  license,
+  network,
+  url,
+}) => {
+  const { i18n } = useTranslation("details");
+  const [licenseData, setLicenseData] = useState(license);
+  const pageTitle = `${license.title} | MetaProof`;
 
-    const {
-      amountOfThisGood = 0,
-      amount = 0,
-      title = "No name",
-      price,
-      documents = [],
-      histories = [],
-      ...rest
-    } = licenseData;
+  const {
+    amountOfThisGood = 0,
+    amount = 0,
+    title = "No name",
+    price,
+    documents = [],
+    histories = [],
+    ...rest
+  } = licenseData;
 
-    if (!license || Object.keys(license).length === 0) {
-      return <MiningInProgress />;
-    }
-
-    return (
-      <>
-        <PageMeta
-          description="MetaProof is an explorer to extract the metadata of NFTs that are secured with their JSON files on the Arweave permanent storage"
-          imgSrc={coverSrc}
-          title={pageTitle}
-          url={url}
-          Wrapper={(props) => <Head {...props} />}
-        />
-        <DetailsShow
-          content={
-            <DetailsContent
-              childId={childId}
-              coverSrc={coverSrc}
-              amount={amountOfThisGood || amount}
-              title={title}
-              price={price}
-              network={network}
-              fileURI={fileURI}
-              histories={histories}
-              onMetaDataChange={(fileUrl) =>
-                fetchMetaDataFile(fileUrl).then((data) => setLicenseData(data))
-              }
-              {...rest}
-            />
-          }
-          extraContent={DetailsExtraContent({
-            histories,
-            documents,
-            fileURI,
-            checksums,
-          })}
-          extraSidebar={DetailsExtraSidebar({
-            pdfUrl: apiRoutes.creatorshub.getNftPdf(id, i18n.language),
-            qrCodeUrl: generateUrl("api/export/qrcode"),
-            qrCodeValue: generateUrl(process.env.NEXT_PUBLIC_APP_DOMAIN),
-          })}
-          sidebar={DetailsSidebar({ url })}
-        />
-      </>
-    );
+  if (!license || Object.keys(license).length === 0) {
+    return <MiningInProgress />;
   }
-);
 
-DetailsPage.Layout = withTranslation("details")(({ t, ...props }) => {
+  return (
+    <>
+      <PageMeta
+        description="MetaProof is an explorer to extract the metadata of NFTs that are secured with their JSON files on the Arweave permanent storage"
+        imgSrc={coverSrc}
+        title={pageTitle}
+        url={url}
+        Wrapper={(props) => <Head {...props} />}
+      />
+      <DetailsShow
+        content={
+          <DetailsContent
+            childId={childId}
+            coverSrc={coverSrc}
+            amount={amountOfThisGood || amount}
+            title={title}
+            price={price}
+            network={network}
+            fileURI={fileURI}
+            histories={histories}
+            onMetaDataChange={(fileUrl) =>
+              fetchMetaDataFile(fileUrl).then((data) => setLicenseData(data))
+            }
+            {...rest}
+          />
+        }
+        extraContent={DetailsExtraContent({
+          histories,
+          documents,
+          fileURI,
+          checksums,
+        })}
+        extraSidebar={DetailsExtraSidebar({
+          pdfUrl: apiRoutes.creatorshub.getNftPdf(id, i18n.language),
+          qrCodeUrl: generateUrl("api/export/qrcode", i18n),
+          qrCodeValue: generateUrl(process.env.NEXT_PUBLIC_APP_DOMAIN, i18n),
+        })}
+        sidebar={DetailsSidebar({ url })}
+      />
+    </>
+  );
+};
+
+DetailsPage.Layout = (props) => {
+  const { t } = useTranslation("details");
+
   const {
     children: {
       props: { creatorUrl },
@@ -158,7 +173,7 @@ DetailsPage.Layout = withTranslation("details")(({ t, ...props }) => {
       {...props}
     />
   );
-});
+};
 
 DetailsPage.propTypes = {
   coverSrc: PropTypes.string,

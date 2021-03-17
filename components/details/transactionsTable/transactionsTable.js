@@ -8,9 +8,7 @@ import {
   Link,
   TinyBadge,
 } from "@licenserocks/kit";
-
-import { withTranslation } from "i18n";
-
+import { useTranslation } from "next-i18next";
 
 const Table = styled(RKTable)`
   tr {
@@ -83,7 +81,9 @@ const statusToColor = (status) => {
   }
 };
 
-export const TransactionsTable = withTranslation("details")(({ data, t }) => {
+export const TransactionsTable = ({ data }) => {
+  const { t } = useTranslation("details");
+
   const tableData = {
     columns: [
       {
@@ -140,7 +140,7 @@ export const TransactionsTable = withTranslation("details")(({ data, t }) => {
   };
 
   return <Table {...tableData} />;
-});
+};
 
 TransactionsTable.propTypes = {
   data: PropTypes.arrayOf(

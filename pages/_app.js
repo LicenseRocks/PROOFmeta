@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
+import { appWithTranslation } from "next-i18next";
 import { hotjar } from "react-hotjar";
 import { AppContainer, RocksKitTheme } from "@licenserocks/kit";
 import * as Sentry from "@sentry/node";
@@ -7,7 +8,6 @@ import { SWRConfig } from "swr";
 import { useRouter } from "next/router";
 
 import { Icons } from "theme/icons";
-import { appWithTranslation } from "i18n";
 import "pure-react-carousel/dist/react-carousel.es.css";
 
 if (process.env.NEXT_PUBLIC_SENTRY_DSN) {

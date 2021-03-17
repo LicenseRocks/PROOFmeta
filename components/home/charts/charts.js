@@ -3,8 +3,8 @@ import styled, { useTheme } from "styled-components";
 import { Box, DetailsTable, Flex, H2, H3, H4, Text } from "@licenserocks/kit";
 import { PieChart, Pie, Cell } from "recharts";
 import useSWR from "swr";
+import { useTranslation } from "next-i18next";
 
-import { withTranslation } from "i18n";
 import { apiRoutes } from "routes";
 
 const getColors = ({ palette }) => ({
@@ -35,7 +35,8 @@ const getPieData = (stats) => [
   { name: "unlimited", value: stats.nfts?.unlimited },
 ];
 
-export const HomeCharts = withTranslation("home")(({ t }) => {
+export const HomeCharts = () => {
+  const { t } = useTranslation("home");
   const theme = useTheme();
   const { data = { stats: {} } } = useSWR(apiRoutes.creatorshub.getStats());
 
@@ -62,7 +63,7 @@ export const HomeCharts = withTranslation("home")(({ t }) => {
                         key={entry.name}
                         fill={
                           Object.values(colors)[
-                            index % Object.values(colors).length
+                          index % Object.values(colors).length
                           ]
                         }
                       />
@@ -112,7 +113,7 @@ export const HomeCharts = withTranslation("home")(({ t }) => {
       </Flex>
     </Flex>
   );
-});
+};
 
 HomeCharts.propTypes = {};
 

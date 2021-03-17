@@ -1,15 +1,9 @@
-const { nextI18NextRewrites } = require("next-i18next/rewrites");
 const withImages = require("next-images");
 
-const localeSubpaths = {
-  de: "de",
-};
+const { i18n } = require('./next-i18next.config')
 
 module.exports = withImages({
-  rewrites: async () => nextI18NextRewrites(localeSubpaths),
-  publicRuntimeConfig: {
-    localeSubpaths,
-  },
+  i18n,
   webpack: (config, options) => {
     // Ask Webpack to replace @sentry/node imports with @sentry/browser when
     // building the browser's bundle

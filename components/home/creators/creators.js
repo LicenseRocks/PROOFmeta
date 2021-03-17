@@ -4,19 +4,23 @@ import { H4, Image, PageFigure, Text } from "@licenserocks/kit";
 import { CarouselProvider, Slide, Slider } from "pure-react-carousel";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import useSWR from "swr";
+import { useTranslation } from "next-i18next";
 
-import { withTranslation } from "i18n";
 import { apiRoutes } from "routes";
+
+const { NEXT_PUBLIC_CREATORSHUB_URL } = process.env;
 
 const StyledPageFigure = styled(PageFigure)`
   display: table;
 `;
 
-const StyledSlide = styled.div`
+const StyledSlide = styled.a`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  color: initial;
+  text-decoration: none;
 
   img {
     width: 72px;
@@ -24,6 +28,7 @@ const StyledSlide = styled.div`
     border-radius: 16px;
     margin-bottom: -36px;
     z-index: 1;
+    object-fit: cover;
   }
 
   .card {
@@ -38,12 +43,14 @@ const StyledSlide = styled.div`
   }
 `;
 
-export const HomeCreators = withTranslation("home")(({ t }) => {
+export const HomeCreators = () => {
+  const { t } = useTranslation("home");
   const { data = { creators: [] } } = useSWR(
     apiRoutes.creatorshub.getCreators()
   );
   const theme = useTheme();
-  let visibleSlides = 6;
+  let visibleSlides = 8;
+  if (useMediaQuery(theme.breakpoints.down("xl"))) visibleSlides = 6;
   if (useMediaQuery(theme.breakpoints.down("md"))) visibleSlides = 2;
   if (useMediaQuery(theme.breakpoints.down("sm"))) visibleSlides = 1;
 
@@ -63,7 +70,10 @@ export const HomeCreators = withTranslation("home")(({ t }) => {
         <Slider>
           {creators.map((c) => (
             <Slide key={c.id}>
-              <StyledSlide>
+              <StyledSlide
+                href={`${NEXT_PUBLIC_CREATORSHUB_URL}/creator/${c.id}`}
+                target="_blank"
+              >
                 <Image
                   src={c.profile.avatar || "/images/user-placeholder.png"}
                 />
@@ -100,7 +110,7 @@ export const HomeCreators = withTranslation("home")(({ t }) => {
       </CarouselProvider>
     </StyledPageFigure>
   );
-});
+};
 
 HomeCreators.propTypes = {};
 
