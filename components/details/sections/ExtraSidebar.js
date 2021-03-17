@@ -1,8 +1,7 @@
 import React from "react";
 import { DownloadModule, Language, Text } from "@licenserocks/kit";
 import styled from "styled-components";
-
-import { i18n, withTranslation } from "i18n";
+import { useTranslation } from "next-i18next";
 
 const PoweredByArweave = styled(Text).attrs(() => ({
   fontStyle: "italic",
@@ -19,8 +18,10 @@ const PoweredByArweave = styled(Text).attrs(() => ({
   }
 `;
 
-export const DetailsExtraSidebar = withTranslation("common")(
-  ({ pdfUrl, qrCodeUrl, qrCodeValue, t }) => (
+export const DetailsExtraSidebar = ({ pdfUrl, qrCodeUrl, qrCodeValue }) => {
+  const { i18n, t } = useTranslation("common");
+
+  return (
     <>
       <DownloadModule
         downloadPdfText={t("downloadAsPdf")}
@@ -44,5 +45,5 @@ export const DetailsExtraSidebar = withTranslation("common")(
       </PoweredByArweave>
       <Language onChange={i18n.changeLanguage} value={i18n.language} mb={6} />
     </>
-  )
-);
+  );
+};

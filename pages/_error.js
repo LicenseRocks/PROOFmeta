@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import NextErrorComponent from "next/error";
 import * as Sentry from "@sentry/node";
 
-const Error = ({ statusCode, hasGetInitialPropsRun, err }) => {
+const ErrorPage = ({ statusCode, hasGetInitialPropsRun, err }) => {
   if (!hasGetInitialPropsRun && err) {
     // getInitialProps is not called in case of
     // https://github.com/vercel/next.js/issues/8592. As a workaround, we pass
@@ -14,7 +14,7 @@ const Error = ({ statusCode, hasGetInitialPropsRun, err }) => {
   return <NextErrorComponent statusCode={statusCode} />;
 };
 
-Error.getInitialProps = async ({ res, err, asPath }) => {
+ErrorPage.getInitialProps = async ({ res, err, asPath }) => {
   const errorInitialProps = await NextErrorComponent.getInitialProps({
     res,
     err,
@@ -58,10 +58,10 @@ Error.getInitialProps = async ({ res, err, asPath }) => {
   return errorInitialProps;
 };
 
-Error.propTypes = {
+ErrorPage.propTypes = {
   statusCode: PropTypes.number.isRequired,
   hasGetInitialPropsRun: PropTypes.bool.isRequired,
   err: PropTypes.shape({}).isRequired,
 };
 
-export default Error;
+export default ErrorPage;

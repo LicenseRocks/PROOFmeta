@@ -2,9 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { Icon, Text, TinyBadge, Link as RKLink } from "@licenserocks/kit";
-
-import { withTranslation } from "i18n";
-
+import { useTranslation } from "next-i18next";
 
 const DocumentItem = styled.div`
   display: flex;
@@ -66,7 +64,9 @@ const getBadgeColor = (isPublic) => {
   return "warning";
 };
 
-export const DocumentsTable = withTranslation("details")(({ data, t }) => {
+export const DocumentsTable = ({ data }) => {
+  const { t } = useTranslation("details");
+
   return data.map((document) => (
     <DocumentItem>
       <IconContainer>
@@ -94,7 +94,7 @@ export const DocumentsTable = withTranslation("details")(({ data, t }) => {
       </ContentContainer>
     </DocumentItem>
   ));
-});
+};
 
 DocumentsTable.propTypes = {
   data: PropTypes.arrayOf(

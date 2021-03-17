@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Link } from "@licenserocks/kit";
 import styled from "styled-components";
 
-import { withTranslation } from "i18n";
+import { useTranslation } from "next-i18next";
 import {
   DocumentsTable,
   SectionSeparator,
@@ -19,40 +19,40 @@ const SectionLink = styled(Link)`
   }
 `;
 
-export const DetailsExtraContent = withTranslation("details")(
-  ({ documents, checksums, t }) => {
-    const documentsData = [
-      ...documents.map((document) => ({
-        hash: null,
-        public: true,
-        url: document?.file?.publicUrl ?? document?.data?.file?.publicUrl,
-        filename: document?.data?.file?.fileName ?? document.path,
-      })),
-      ...checksums.map((checksum) => ({
-        hash: checksum,
-        public: false,
-        url: null,
-        filename: null,
-      })),
-    ];
+export const DetailsExtraContent = ({ documents, checksums }) => {
+  const { t } = useTranslation("details");
 
-    return (
-      <>
-        <SectionSeparator
-          label={t("transactions.label")}
-          link={
-            <SectionLink Component="span" href="/">
-              {t("transactions.all")}
-            </SectionLink>
-          }
-        />
-        <TransactionsTable data={[]} />
-        <SectionSeparator label={t("documents.label")} />
-        <DocumentsTable data={documentsData} />
-      </>
-    );
-  }
-);
+  const documentsData = [
+    ...documents.map((document) => ({
+      hash: null,
+      public: true,
+      url: document?.file?.publicUrl ?? document?.data?.file?.publicUrl,
+      filename: document?.data?.file?.fileName ?? document.path,
+    })),
+    ...checksums.map((checksum) => ({
+      hash: checksum,
+      public: false,
+      url: null,
+      filename: null,
+    })),
+  ];
+
+  return (
+    <>
+      <SectionSeparator
+        label={t("transactions.label")}
+        link={
+          <SectionLink Component="span" href="/">
+            {t("transactions.all")}
+          </SectionLink>
+        }
+      />
+      <TransactionsTable data={[]} />
+      <SectionSeparator label={t("documents.label")} />
+      <DocumentsTable data={documentsData} />
+    </>
+  );
+};
 
 DetailsExtraContent.propTypes = {
   histories: PropTypes.arrayOf(PropTypes.shape({})).isRequired,

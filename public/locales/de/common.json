@@ -3,6 +3,18 @@
   "downloadAsPdf": "PDF Herunterladen",
   "downloadQrCodeDesc": "Oder nutze den QR-Lizenzcode",
   "downloadQrCodeText": "QR-Code Herunterladen",
+  "errorPage": {
+    "notFoundError": {
+      "action": "Go to Home",
+      "subTitle": "Uh oh, we can’t seem to find the page you’re looking for.",
+      "title": "Oops! Page not found"
+    },
+    "serverError": {
+      "action": "Reload",
+      "subTitle": "Don't worry, it's not you - it's us. Sorry about that. We are currently trying to fix the problem.",
+      "title": "Oops! Something went wrong at our end"
+    }
+  },
   "shareThisLicense": "Lizenzinformation Teilen",
   "permanentStorageProvider": "Permanent storage by"
 }

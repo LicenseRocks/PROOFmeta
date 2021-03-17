@@ -1,12 +1,14 @@
 import React from "react";
 import { H4, ShareModule } from "@licenserocks/kit";
+import { useTranslation } from "next-i18next";
 
-import { withTranslation } from "i18n";
+export const DetailsSidebar = ({ url }) => {
+  const { t } = useTranslation("common");
 
-
-export const DetailsSidebar = withTranslation("common")(({ url, t }) => (
-  <>
-    <H4 mb={6}>{t("shareThisLicense")}</H4>
-    <ShareModule copyText={t("copyLink")} mb={6} url={url} />
-  </>
-));
+  return (
+    <>
+      <H4 mb={6}>{t("shareThisLicense")}</H4>
+      <ShareModule copyText={t("copyLink")} mb={6} url={url} />
+    </>
+  );
+};

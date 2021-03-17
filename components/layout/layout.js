@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import styled, { css } from "styled-components";
 import Grid from "@material-ui/core/Grid";
 import MuiContainer from "@material-ui/core/Container";
-import { PageLoading, Text } from "@licenserocks/kit";
+import { PageLoading } from "@licenserocks/kit";
+import { useTranslation } from "next-i18next";
 
-import { withTranslation } from "i18n";
 import { ExplorerLayoutHeader } from "./header";
 import { renderFooter } from "./footer";
 
@@ -36,32 +36,37 @@ const Content = styled(Grid).attrs(() => ({
   }
 `;
 
-export const ExplorerLayout = withTranslation("layout")(
-  ({ children, headerLogoAction, headerRight, loading, t, ...props }) => {
-    if (loading) return <PageLoading fullScreen />;
+export const ExplorerLayout = ({
+  children,
+  headerLogoAction,
+  headerRight,
+  loading,
+}) => {
+  const { t } = useTranslation("layout");
 
-    return (
-      <>
-        <FluidContainer white>
-          <Container>
-            <ExplorerLayoutHeader
-              logoAction={headerLogoAction}
-              headerRight={headerRight}
-            />
-          </Container>
-        </FluidContainer>
+  if (loading) return <PageLoading fullScreen />;
 
+  return (
+    <>
+      <FluidContainer white>
         <Container>
-          <Content>{children}</Content>
+          <ExplorerLayoutHeader
+            logoAction={headerLogoAction}
+            headerRight={headerRight}
+          />
         </Container>
+      </FluidContainer>
 
-        <FluidContainer white>
-          <Container>{renderFooter(t)}</Container>
-        </FluidContainer>
-      </>
-    );
-  }
-);
+      <Container>
+        <Content>{children}</Content>
+      </Container>
+
+      <FluidContainer white>
+        <Container>{renderFooter(t)}</Container>
+      </FluidContainer>
+    </>
+  );
+};
 
 ExplorerLayout.propTypes = {
   children: PropTypes.node,

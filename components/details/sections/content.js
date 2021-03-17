@@ -15,11 +15,11 @@ import {
 } from "@licenserocks/kit";
 import styled from "styled-components";
 import Link from "next/link";
+import { useTranslation } from "next-i18next";
 
 import { HistoryPicker } from "components/details/historyPicker";
 import date from "utils/date";
 import { getTransaction } from "utils/ethereum";
-import { withTranslation } from "i18n";
 import iconMapper from "./iconMapper";
 
 const HeaderContainer = styled.div`
@@ -149,178 +149,177 @@ const getChildLink = (childId) => {
   return currentUrl.toString();
 };
 
-export const DetailsContent = withTranslation("details")(
-  ({
-    amount,
-    childId,
-    isPdf,
-    title,
-    price,
-    unique,
-    exclusive,
-    network,
-    histories,
-    coverSrc,
-    t,
-    fileURI: _fileURI,
-    _documents,
-    ...rest
-  }) => {
-    // Order histories by created_at in descending way
-    const orderedHistories = histories.sort(
-      (first, second) =>
-        Date.parse(second.created_at || first.createdAt) -
-        Date.parse(first.created_at || first.createdAt)
-    );
-    const [activeHistory, setActiveHistory] = useState(orderedHistories[0]);
-    const [txInfo, setTxInfo] = useState(null);
-    const [txLoading, setTxLoading] = useState(false);
-    const [coverPreviewOpen, setCoverPreviewOpen] = useState(false);
+export const DetailsContent = ({
+  amount,
+  childId,
+  isPdf,
+  title,
+  price,
+  unique,
+  exclusive,
+  network,
+  histories,
+  coverSrc,
+  fileURI: _fileURI,
+  _documents,
+  ...rest
+}) => {
+  const { t } = useTranslation("details");
 
-    const getTransactionInfo = () => {
-      setTxLoading(true);
-      setTxInfo(null);
-      getTransaction(activeHistory.txHash, network)
-        .then((tx) => setTxInfo(tx))
-        .finally(() => setTxLoading(false));
-    };
+  // Order histories by created_at in descending way
+  const orderedHistories = histories.sort(
+    (first, second) =>
+      Date.parse(second.created_at || first.createdAt) -
+      Date.parse(first.created_at || first.createdAt)
+  );
+  const [activeHistory, setActiveHistory] = useState(orderedHistories[0]);
+  const [txInfo, setTxInfo] = useState(null);
+  const [txLoading, setTxLoading] = useState(false);
+  const [coverPreviewOpen, setCoverPreviewOpen] = useState(false);
 
-    useEffect(() => {
-      if (activeHistory.txHash) getTransactionInfo();
-    }, []);
+  const getTransactionInfo = () => {
+    setTxLoading(true);
+    setTxInfo(null);
+    getTransaction(activeHistory.txHash, network)
+      .then((tx) => setTxInfo(tx))
+      .finally(() => setTxLoading(false));
+  };
 
-    return (
-      <Flex container alignItems="flex-start">
-        <Flex item xs={12} md={8}>
-          <HeaderContainer>
-            <H1 content={title} />
-            {exclusive && <TinyBadge label={t("exclusive")} color="warning" />}
-            {unique && <TinyBadge label={t("unique")} color="success" />}
-          </HeaderContainer>
-          <Text color="textSecondary" mb={2}>
-            {t("network")}:
-            <Text
-              color="textPrimary"
-              content={` ${network}`}
-              dInline
-              fontWeight="bold"
+  useEffect(() => {
+    if (activeHistory.txHash) getTransactionInfo();
+  }, []);
+
+  return (
+    <Flex container alignItems="flex-start">
+      <Flex item xs={12} md={8}>
+        <HeaderContainer>
+          <H1 content={title} />
+          {exclusive && <TinyBadge label={t("exclusive")} color="warning" />}
+          {unique && <TinyBadge label={t("unique")} color="success" />}
+        </HeaderContainer>
+        <Text color="textSecondary" mb={2}>
+          {t("network")}:
+          <Text
+            color="textPrimary"
+            content={` ${network}`}
+            dInline
+            fontWeight="bold"
+          />
+        </Text>
+
+        {childId === "0" && (
+          <ChipBadge color="success" label="Updated" icon="check-circle" />
+        )}
+
+        {childId !== "0" && !isPdf && (
+          <Row>
+            <ChipBadge color="error" label="Outdated" />
+            <Link href={getChildLink(childId)}>See latest version</Link>
+          </Row>
+        )}
+
+        {coverSrc && (
+          <>
+            <StyledImage
+              src={coverSrc}
+              onClick={isPdf ? undefined : () => setCoverPreviewOpen(true)}
             />
-          </Text>
 
-          {childId === "0" && (
-            <ChipBadge color="success" label="Updated" icon="check-circle" />
-          )}
-
-          {childId !== "0" && !isPdf && (
-            <Row>
-              <ChipBadge color="error" label="Outdated" />
-              <Link href={getChildLink(childId)}>See latest version</Link>
-            </Row>
-          )}
-
-          {coverSrc && (
-            <>
-              <StyledImage
-                src={coverSrc}
-                onClick={isPdf ? undefined : () => setCoverPreviewOpen(true)}
+            {!isPdf && (
+              <ImageModal
+                imgSrc={coverSrc}
+                isOpen={coverPreviewOpen}
+                onClose={() => setCoverPreviewOpen(false)}
               />
+            )}
+          </>
+        )}
 
-              {!isPdf && (
-                <ImageModal
-                  imgSrc={coverSrc}
-                  isOpen={coverPreviewOpen}
-                  onClose={() => setCoverPreviewOpen(false)}
-                />
-              )}
-            </>
-          )}
-
-          <DetailsTable
-            labelTextTransform="capitalize"
-            my={10}
-            labelWidth={220}
-            expandButtonProps={{ loading: txLoading }}
-            rows={[
-              {
-                label: t("status"),
-                value: <ChipBadge icon="check-circle" label="Verified" />,
-              },
-              {
-                label: t("amount"),
-                value: <H3 content={amount} />,
-                icon: iconMapper("amount"),
-              },
-              {
-                label: t("price"),
-                value: <H3 content={price} color="primary" />,
-                icon: iconMapper("price"),
-              },
-            ]
-              .concat(renderRest(rest))
-              .concat(
-                activeHistory.txHash
-                  ? [
-                      {
-                        label: t("creatorPublicKey"),
-                        value: <CryptoProof value={txInfo?.from} />,
-                        expandable: !isPdf,
-                        icon: iconMapper("creatorPublicKey"),
-                      },
-                      {
-                        label: t("transactionId"),
-                        value: <CryptoProof value={txInfo?.hash} />,
-                        expandable: !isPdf,
-                        icon: iconMapper("transactionId"),
-                      },
-                    ]
-                  : []
-              )}
-          />
-        </Flex>
-
-        <Flex item xs={12} md={4} pr={4}>
-          {!isPdf && (
-            <HistoryPicker
-              historyItems={orderedHistories}
-              activeHistory={activeHistory}
-              onSelect={(item) => setActiveHistory(item)}
-            />
-          )}
-
-          <HistoryTree
-            activeNodeId={3}
-            data={[
-              {
-                key: 1,
-                description: "2020-12-20",
-                nodes: [
+        <DetailsTable
+          labelTextTransform="capitalize"
+          my={10}
+          labelWidth={220}
+          expandButtonProps={{ loading: txLoading }}
+          rows={[
+            {
+              label: t("status"),
+              value: <ChipBadge icon="check-circle" label="Verified" />,
+            },
+            {
+              label: t("amount"),
+              value: <H3 content={amount} />,
+              icon: iconMapper("amount"),
+            },
+            {
+              label: t("price"),
+              value: <H3 content={price} color="primary" />,
+              icon: iconMapper("price"),
+            },
+          ]
+            .concat(renderRest(rest))
+            .concat(
+              activeHistory.txHash
+                ? [
                   {
-                    id: 1,
-                    label: "NFT created",
-                  },
-                ],
-              },
-              {
-                key: 2,
-                description: "2020-12-22",
-                nodes: [
-                  {
-                    id: 2,
-                    label: "NFT re-created",
+                    label: t("creatorPublicKey"),
+                    value: <CryptoProof value={txInfo?.from} />,
+                    expandable: !isPdf,
+                    icon: iconMapper("creatorPublicKey"),
                   },
                   {
-                    id: 3,
-                    label: "Documents added",
+                    label: t("transactionId"),
+                    value: <CryptoProof value={txInfo?.hash} />,
+                    expandable: !isPdf,
+                    icon: iconMapper("transactionId"),
                   },
-                ],
-              },
-            ]}
-          />
-        </Flex>
+                ]
+                : []
+            )}
+        />
       </Flex>
-    );
-  }
-);
+
+      <Flex item xs={12} md={4} pr={4}>
+        {!isPdf && (
+          <HistoryPicker
+            historyItems={orderedHistories}
+            activeHistory={activeHistory}
+            onSelect={(item) => setActiveHistory(item)}
+          />
+        )}
+
+        <HistoryTree
+          activeNodeId={3}
+          data={[
+            {
+              key: 1,
+              description: "2020-12-20",
+              nodes: [
+                {
+                  id: 1,
+                  label: "NFT created",
+                },
+              ],
+            },
+            {
+              key: 2,
+              description: "2020-12-22",
+              nodes: [
+                {
+                  id: 2,
+                  label: "NFT re-created",
+                },
+                {
+                  id: 3,
+                  label: "Documents added",
+                },
+              ],
+            },
+          ]}
+        />
+      </Flex>
+    </Flex>
+  );
+};
 
 DetailsContent.propTypes = {
   amount: PropTypes.number.isRequired,
