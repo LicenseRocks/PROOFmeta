@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "@licenserocks/kit": "^1.19.0",
-    "@material-ui/core": "^4.11.0",
     "@sentry/browser": "^6.0.4",
     "@sentry/node": "^6.0.4",
     "ethers": "^5.0.5",
@@ -20,17 +19,16 @@
     "prop-types": "^15.7.2",
     "pure-react-carousel": "^1.27.6",
     "qrcode": "^1.4.4",
-    "qrcode.react": "^1.0.0",
     "qs": "^6.9.4",
     "ramda": "^0.27.1",
-    "react": "^17.0.0",
+    "react": "^17.0.2",
     "react-content-loader": "^6.0.1",
-    "react-dom": "^17.0.0",
+    "react-dom": "^17.0.2",
     "react-hotjar": "^2.2.1",
     "react-masonry-css": "^1.0.14",
     "recharts": "^2.0.4",
     "string-similarity": "^4.0.2",
-    "styled-components": "^5.2.0",
+    "styled-components": "^5.2.1",
     "swr": "^0.4.0"
   },
   "devDependencies": {
