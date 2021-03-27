@@ -7,7 +7,7 @@ import { useTranslation } from "next-i18next";
 import {
   DocumentsTable,
   SectionSeparator,
-  TransactionsTable,
+  TradingHistory,
 } from "components/details";
 
 const SectionLink = styled(Link)`
@@ -19,7 +19,7 @@ const SectionLink = styled(Link)`
   }
 `;
 
-export const DetailsExtraContent = ({ documents, checksums }) => {
+export const DetailsExtraContent = ({ documents, checksums, histories }) => {
   const { t } = useTranslation("details");
 
   const documentsData = [
@@ -39,15 +39,9 @@ export const DetailsExtraContent = ({ documents, checksums }) => {
 
   return (
     <>
-      <SectionSeparator
-        label={t("transactions.label")}
-        link={
-          <SectionLink Component="span" href="/">
-            {t("transactions.all")}
-          </SectionLink>
-        }
-      />
-      <TransactionsTable data={[]} />
+      <SectionSeparator label={t("tradingHistory.title")} />
+      <TradingHistory data={histories} />
+
       <SectionSeparator label={t("documents.label")} />
       <DocumentsTable data={documentsData} />
     </>
