@@ -11,14 +11,26 @@
   "transactionId": "Transaction ID",
   "publicLicenseDetails": "Public License Details",
   "cryptoProofs": "Crypto proofs",
-  "transactions": {
-    "label": "Transactions",
-    "all": "All transactions",
-    "id": "Transaction ID",
-    "date": "Date",
-    "amount": "Amount",
-    "to": "To (Public Key)",
-    "status": "Status"
+  "tradingHistory": {
+    "events": {
+      "bid": "Offer",
+      "minted": "Create",
+      "transfer": "Buy"
+    },
+    "statuses": {
+      "pending": "Pending",
+      "success": "Success"
+    },
+    "table": {
+      "event": "Event",
+      "from": "From",
+      "date": "Date",
+      "noTradingHistory": "No trading histories yet...",
+      "status": "Status",
+      "to": "To",
+      "txId": "Tx ID"
+    },
+    "title": "Trading History"
   },
   "documents": {
     "public": "Public",

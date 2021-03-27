@@ -21,7 +21,7 @@ set :pm2_roles, :app
 set :keep_releases, 5
 
 set :nvm_type, :user # or :system, depends on your nvm setup
-set :nvm_node, "v12.20.0"
+set :nvm_node, "v14.15.5"
 set :nvm_map_bins, %w{node npm yarn}
 
 # Default value for linked_dirs is []

@@ -77,7 +77,6 @@ const getColumns = ({ t }) => [
 
 const getRows = ({ nfts, t }) =>
   nfts.map((transaction) => {
-    const coverKey = transaction.Files?.findIndex((f) => f.type === "cover");
     const price =
       transaction.priceType === "FIXED" ? (
         <H4 content={centsToPrice(transaction.price)} />
@@ -98,9 +97,6 @@ const getRows = ({ nfts, t }) =>
               contractName: transaction.contractName || "CustomERC1155",
               contractAddr: transaction?.contractAddr,
               createdWith: "creatorshub",
-              ...(coverKey > -1
-                ? { coverKey: transaction.Files[coverKey]?.key }
-                : {}),
             },
           }}
           passHref
