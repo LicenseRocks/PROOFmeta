@@ -1,9 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Table as RKTable } from "@licenserocks/kit";
+import useSWR from "swr";
 import styled from "styled-components";
-
+import { Table as RKTable } from "@licenserocks/kit";
 import { useTranslation } from "next-i18next";
+
+import { TableLoader } from "components/common";
+import { apiRoutes } from "routes";
 import { generateTableRows } from "./helper";
 
 const Table = styled(RKTable)`
@@ -23,8 +26,13 @@ const Table = styled(RKTable)`
   }
 `;
 
-export const TradingHistory = ({ data }) => {
+export const TradingHistory = ({ nftId }) => {
   const { t } = useTranslation("details");
+  const { data, isValidating } = useSWR(
+    apiRoutes.creatorshub.getNftTradingHistory(nftId)
+  );
+  const tradingHistory = data?.tradingHistory || [];
+  if (isValidating) return <TableLoader />;
 
   return (
     <Table
@@ -55,7 +63,7 @@ export const TradingHistory = ({ data }) => {
           label: t("tradingHistory.table.status"),
         },
       ]}
-      rows={generateTableRows(data, t)}
+      rows={generateTableRows(tradingHistory, t)}
       noDataProps={{
         text: t("tradingHistory.table.noTradingHistory"),
       }}
@@ -64,5 +72,5 @@ export const TradingHistory = ({ data }) => {
 };
 
 TradingHistory.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  nftId: PropTypes.number.isRequired,
 };

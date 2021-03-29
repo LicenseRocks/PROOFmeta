@@ -21,15 +21,10 @@ const renderUser = (user) => {
   return (
     <Flex container>
       <Flex item>
-        <StyledImage src="/images/user-placeholder.png" />
+        <StyledImage src={user.avatar || "/images/user-placeholder.png"} />
       </Flex>
       <Flex item ml={2}>
-        <Text
-          content={`${user.substring(0, 10)}...`}
-          fontWeight="bold"
-          fontSize="sm"
-          noWrap
-        />
+        <Text content={user.name} fontWeight="bold" fontSize="sm" noWrap />
       </Flex>
     </Flex>
   );
@@ -69,7 +64,7 @@ export const generateTableRows = (txs, t) => {
   const statuses = getStatuses(t);
   const events = getEvents(t);
 
-  return txs.map(({ createdAt, name, txHash, toAddr, fromAddr, status }) => ({
+  return txs.map(({ date, name, txId, to, from, status }) => ({
     event: (
       <Flex container>
         <Flex item>
@@ -85,29 +80,25 @@ export const generateTableRows = (txs, t) => {
         </Flex>
       </Flex>
     ),
-    from: renderUser(fromAddr),
-    to: renderUser(toAddr),
+    from: renderUser(from),
+    to: renderUser(to),
     txId: (
       <Flex container>
         <Flex item xs={4}>
           <Text
-            content={`${txHash.substring(0, 10)}...`}
+            content={`${txId.substring(0, 14)}...`}
             color="textSecondary"
             fontSize="sm"
             noWrap
           />
         </Flex>
         <Flex item ml={2}>
-          <Icon color="secondary" icon="copy" onClick={() => copy(txHash)} />
+          <Icon color="secondary" icon="copy" onClick={() => copy(txId)} />
         </Flex>
       </Flex>
     ),
     date: (
-      <Text
-        content={formatDateAndTime(createdAt)}
-        fontSize="sm"
-        fontWeight="bold"
-      />
+      <Text content={formatDateAndTime(date)} fontSize="sm" fontWeight="bold" />
     ),
     status: status ? (
       <TinyBadge
