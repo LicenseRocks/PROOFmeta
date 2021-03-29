@@ -134,7 +134,7 @@ const DetailsPage = ({
           />
         }
         extraContent={DetailsExtraContent({
-          histories,
+          nftId: id,
           documents,
           fileURI,
           checksums,

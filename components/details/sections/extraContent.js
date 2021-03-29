@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Link } from "@licenserocks/kit";
+import { Flex, Link } from "@licenserocks/kit";
 import styled from "styled-components";
 
 import { useTranslation } from "next-i18next";
@@ -19,7 +19,7 @@ const SectionLink = styled(Link)`
   }
 `;
 
-export const DetailsExtraContent = ({ documents, checksums, histories }) => {
+export const DetailsExtraContent = ({ documents, checksums, nftId }) => {
   const { t } = useTranslation("details");
 
   const documentsData = [
@@ -40,7 +40,9 @@ export const DetailsExtraContent = ({ documents, checksums, histories }) => {
   return (
     <>
       <SectionSeparator label={t("tradingHistory.title")} />
-      <TradingHistory data={histories} />
+      <TradingHistory nftId={nftId} />
+
+      <Flex item pb={4} />
 
       <SectionSeparator label={t("documents.label")} />
       <DocumentsTable data={documentsData} />
@@ -49,6 +51,6 @@ export const DetailsExtraContent = ({ documents, checksums, histories }) => {
 };
 
 DetailsExtraContent.propTypes = {
-  histories: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  nftId: PropTypes.number.isRequired,
   documents: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };

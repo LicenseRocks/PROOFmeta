@@ -8,5 +8,7 @@ export const apiRoutes = {
     getCreators: () => `${NEXT_PUBLIC_CREATORSHUB_URL}/api/public/creators`,
     getNftPdf: (nftId, locale = "en") =>
       `${NEXT_PUBLIC_CREATORSHUB_URL}/api/public/nft/${nftId}/pdf?download=true&locale=${locale}`,
+    getNftTradingHistory: (nftId) =>
+      `${NEXT_PUBLIC_CREATORSHUB_URL}/api/public/nft/${nftId}/trading_history`,
   },
 };
