@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Flex, Link } from "@licenserocks/kit";
-import styled from "styled-components";
+import { Flex } from "@licenserocks/kit";
 
 import { useTranslation } from "next-i18next";
 import {
@@ -10,30 +9,15 @@ import {
   TradingHistory,
 } from "components/details";
 
-const SectionLink = styled(Link)`
-  && {
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: ${({ theme }) => theme.palette.primary.main};
-  }
-`;
-
-export const DetailsExtraContent = ({ documents, checksums, nftId }) => {
+export const DetailsExtraContent = ({ documents, nftId }) => {
   const { t } = useTranslation("details");
 
   const documentsData = [
     ...documents.map((document) => ({
-      hash: null,
-      public: true,
+      public: document?.file?.public ?? document?.data?.file?.public,
       url: document?.file?.publicUrl ?? document?.data?.file?.publicUrl,
       filename: document?.data?.file?.fileName ?? document.path,
-    })),
-    ...checksums.map((checksum) => ({
-      hash: checksum,
-      public: false,
-      url: null,
-      filename: null,
+      checksum: document.checksum,
     })),
   ];
 

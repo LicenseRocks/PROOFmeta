@@ -1,50 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { Icon, Text, TinyBadge, Link as RKLink } from "@licenserocks/kit";
+import {
+  Text,
+  TinyBadge,
+  Link as RKLink,
+  FileManager,
+} from "@licenserocks/kit";
 import { useTranslation } from "next-i18next";
-
-const DocumentItem = styled.div`
-  display: flex;
-  align-items: center;
-  margin: 4px 0;
-  height: 40px;
-`;
-
-const IconContainer = styled.div`
-  display: inline;
-  padding: 8px 10px;
-  border: 1px solid #ddd;
-  border-radius: 50%;
-  margin-right: 8px;
-`;
-
-const FileIcon = styled(Icon).attrs(() => ({
-  icon: "file",
-}))`
-  color: ${({ theme }) => theme.palette.secondary.main};
-`;
-
-const ContentContainer = styled.div`
-  border-bottom: 1px solid #f0f0f4;
-  height: 40px;
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-`;
-
-const MainContent = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const FileName = styled(Text)`
-  && {
-    font-size: 12px;
-    font-weight: 600;
-    margin-right: 8px;
-  }
-`;
 
 const LinkContainer = styled.div`
   align-self: center;
@@ -66,34 +29,49 @@ const getBadgeColor = (isPublic) => {
 
 export const DocumentsTable = ({ data }) => {
   const { t } = useTranslation("details");
-
-  return data.map((document) => (
-    <DocumentItem>
-      <IconContainer>
-        <FileIcon />
-      </IconContainer>
-      <ContentContainer>
-        <MainContent>
-          <FileName>
-            {document.public ? document.filename : document.hash}
-          </FileName>
-          <TinyBadge
-            label={
-              document.public ? t("documents.public") : t("documents.private")
-            }
-            color={getBadgeColor(document.public)}
-          />
-        </MainContent>
-        {document.url && (
-          <LinkContainer>
-            <Link href={document.url} Component="span">
-              <Text>{t("documents.view")}</Text>
-            </Link>
-          </LinkContainer>
-        )}
-      </ContentContainer>
-    </DocumentItem>
-  ));
+  return (
+    <FileManager
+      data={[
+        {
+          label: "",
+          files: data.map((item) => ({
+            renderName: () => (
+              <>
+                <Text
+                  content={item.filename}
+                  fontSize="sm"
+                  fontWeight="bold"
+                  noWrap
+                />
+                <TinyBadge
+                  label={
+                    item.public ? t("documents.public") : t("documents.private")
+                  }
+                  color={getBadgeColor(item.public)}
+                  mx={2}
+                />
+              </>
+            ),
+            renderDate: () => (
+              <Text
+                content={item.checksum}
+                color="textSecondary"
+                fontSize="sm"
+                noWrap
+              />
+            ),
+            description: (
+              <LinkContainer>
+                <Link href={item.url} Component="span">
+                  <Text>{t("documents.view")}</Text>
+                </Link>
+              </LinkContainer>
+            ),
+          })),
+        },
+      ]}
+    />
+  );
 };
 
 DocumentsTable.propTypes = {

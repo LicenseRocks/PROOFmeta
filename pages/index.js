@@ -81,7 +81,6 @@ const generateUrl = (path, i18n) => {
 
 const DetailsPage = ({
   childId,
-  checksums,
   coverSrc,
   fileURI,
   id,
@@ -137,7 +136,6 @@ const DetailsPage = ({
           nftId: id,
           documents,
           fileURI,
-          checksums,
         })}
         extraSidebar={DetailsExtraSidebar({
           pdfUrl: apiRoutes.creatorshub.getNftPdf(id, i18n.language),
