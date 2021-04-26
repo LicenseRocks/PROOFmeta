@@ -19,6 +19,21 @@ import { getLicenseInfo, fetchMetaDataFile } from "utils/ethereum";
 import absoluteUrl from "utils/absoluteUrl";
 import { apiRoutes } from "routes";
 
+const getCreatorUrl = (id, createdWith) => {
+  switch (createdWith) {
+    case "creatorshub":
+      return `${process.env.NEXT_PUBLIC_CREATORSHUB_URL}/nft/${id}`;
+    case "pshr":
+      return `https://nftable.xyz/nft/${id}`;
+    case "wallet":
+      return `https://wallet.license.rocks/nft/${id}`;
+    case "minty":
+      return `https://minty.rocks/nft/${id}`;
+    default:
+      return `${process.env.NEXT_LICENSE_CORE_URL}/licenses/${id}`;
+  }
+};
+
 export async function getServerSideProps({ locale, query, req, res }) {
   const { id, contractAddr, network, createdWith, contractName } = query;
 
@@ -29,12 +44,6 @@ export async function getServerSideProps({ locale, query, req, res }) {
     res.end();
   }
 
-  const {
-    BUCKET_URL,
-    NEXT_PUBLIC_CREATORSHUB_URL,
-    NEXT_LICENSE_CORE_URL,
-  } = process.env;
-
   // Call smart contract to get files array on server side
   const licenseInfo = await getLicenseInfo(
     id,
@@ -44,11 +53,6 @@ export async function getServerSideProps({ locale, query, req, res }) {
   );
   const { fullPath } = absoluteUrl(req);
 
-  const creatorUrl =
-    createdWith && createdWith === "creatorshub"
-      ? `${NEXT_PUBLIC_CREATORSHUB_URL}/nft/${id}`
-      : `${NEXT_LICENSE_CORE_URL}/licenses/${id}`;
-
   const coverKey = licenseInfo.license?.documents?.find(
     (doc) => doc.type === "cover"
   )?.key;
@@ -56,8 +60,8 @@ export async function getServerSideProps({ locale, query, req, res }) {
   return {
     props: {
       ...licenseInfo,
-      coverSrc: coverKey ? `${BUCKET_URL}/${coverKey}` : "",
-      creatorUrl,
+      coverSrc: coverKey ? `${process.env.BUCKET_URL}/${coverKey}` : "",
+      creatorUrl: getCreatorUrl(id, createdWith),
       id: id || null,
       url: fullPath,
       network: network || null,
