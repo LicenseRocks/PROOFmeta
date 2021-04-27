@@ -1,8 +1,8 @@
 {
-  "name": "with-styled-components",
+  "name": "meta-proof",
   "version": "1.0.0",
   "scripts": {
-    "dev": "NODE_OPTIONS='--inspect' next dev",
+    "dev": "next",
     "build": "next build",
     "start": "next start",
     "start:do": "next start -H 0.0.0.0 -p ${PORT:-8080}"
