@@ -51,7 +51,7 @@ export async function getServerSideProps({ locale, query, req, res }) {
     contractName,
     network
   );
-  const { fullPath } = absoluteUrl(req);
+  const { origin } = absoluteUrl(req);
 
   const coverKey = licenseInfo.license?.documents?.find(
     (doc) => doc.type === "cover"
@@ -63,7 +63,11 @@ export async function getServerSideProps({ locale, query, req, res }) {
       coverSrc: coverKey ? `${process.env.BUCKET_URL}/${coverKey}` : "",
       creatorUrl: getCreatorUrl(id, createdWith),
       id: id || null,
-      url: fullPath,
+      url:
+        origin +
+        qs.stringify(query, {
+          addQueryPrefix: true,
+        }),
       network: network || null,
       ...(await serverSideTranslations(locale, [
         "common",
