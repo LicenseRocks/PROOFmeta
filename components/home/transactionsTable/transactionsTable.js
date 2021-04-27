@@ -93,10 +93,10 @@ const getRows = ({ nfts, t }) =>
             pathname: "/",
             query: {
               id: transaction.id,
-              network: "maticTestnet",
+              network: transaction?.contractNetwork || "maticTestnet",
               contractName: transaction.contractName || "CustomERC1155",
               contractAddr: transaction?.contractAddr,
-              createdWith: "creatorshub",
+              createdWith: transaction?.createdWith || "creatorshub",
             },
           }}
           passHref
