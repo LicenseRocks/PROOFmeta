@@ -14,6 +14,7 @@ const providerUrls = {
   ropsten:
     "https://eth-ropsten.alchemyapi.io/v2/mxlKqKI5tfDXjwlJLQDgP90fUJWXnJ4L",
   maticTestnet: "https://rpc-mumbai.matic.today",
+  maticMainnet: "https://rpc-mainnet.maticvigil.com",
 };
 
 const fetchMetaDataFile = async (url) => {
