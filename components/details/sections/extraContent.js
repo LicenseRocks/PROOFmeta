@@ -9,7 +9,7 @@ import {
   TradingHistory,
 } from "components/details";
 
-export const DetailsExtraContent = ({ documents, nftId }) => {
+export const DetailsExtraContent = ({ createdWith, documents, nftId }) => {
   const { t } = useTranslation("details");
 
   const documentsData = [
@@ -24,7 +24,7 @@ export const DetailsExtraContent = ({ documents, nftId }) => {
   return (
     <>
       <SectionSeparator label={t("tradingHistory.title")} />
-      <TradingHistory nftId={nftId} />
+      <TradingHistory createdWith={createdWith} nftId={nftId} />
 
       <Flex item pb={4} />
 
@@ -35,6 +35,7 @@ export const DetailsExtraContent = ({ documents, nftId }) => {
 };
 
 DetailsExtraContent.propTypes = {
+  createdWith: PropTypes.string.isRequired,
   nftId: PropTypes.number.isRequired,
   documents: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };

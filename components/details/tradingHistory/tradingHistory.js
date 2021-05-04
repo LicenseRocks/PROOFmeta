@@ -26,10 +26,10 @@ const Table = styled(RKTable)`
   }
 `;
 
-export const TradingHistory = ({ nftId }) => {
+export const TradingHistory = ({ createdWith, nftId }) => {
   const { t } = useTranslation("details");
   const { data, isValidating } = useSWR(
-    apiRoutes.creatorshub.getNftTradingHistory(nftId)
+    apiRoutes.creatorshub.getNftTradingHistory(nftId, createdWith)
   );
   const tradingHistory = data?.tradingHistory || [];
   if (isValidating) return <TableLoader />;
@@ -73,4 +73,5 @@ export const TradingHistory = ({ nftId }) => {
 
 TradingHistory.propTypes = {
   nftId: PropTypes.number.isRequired,
+  createdWith: PropTypes.string.isRequired,
 };

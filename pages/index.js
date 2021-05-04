@@ -18,20 +18,12 @@ import { ExplorerLayout } from "components/layout";
 import { getLicenseInfo, fetchMetaDataFile } from "utils/ethereum";
 import absoluteUrl from "utils/absoluteUrl";
 import { apiRoutes } from "routes";
+import { getBaseUrl } from "utils/url";
 
 const getCreatorUrl = (id, createdWith) => {
-  switch (createdWith) {
-    case "creatorshub":
-      return `${process.env.NEXT_PUBLIC_CREATORSHUB_URL}/nft/${id}`;
-    case "pshr":
-      return `https://nftable.xyz/nft/${id}`;
-    case "wallet":
-      return `https://wallet.license.rocks/nft/${id}`;
-    case "minty":
-      return `https://minty.rocks/nft/${id}`;
-    default:
-      return `${process.env.NEXT_LICENSE_CORE_URL}/licenses/${id}`;
-  }
+  const baseUrl = getBaseUrl(createdWith);
+  if (createdWith === "licensecore") return `${baseUrl}/licenses/${id}`;
+  return `${baseUrl}/nft/${id}`;
 };
 
 export async function getServerSideProps({ locale, query, req, res }) {
@@ -60,6 +52,7 @@ export async function getServerSideProps({ locale, query, req, res }) {
   return {
     props: {
       ...licenseInfo,
+      createdWith,
       coverSrc: coverKey ? `${process.env.BUCKET_URL}/${coverKey}` : "",
       creatorUrl: getCreatorUrl(id, createdWith),
       id: id || null,
@@ -89,6 +82,7 @@ const generateUrl = (path, i18n) => {
 
 const DetailsPage = ({
   childId,
+  createdWith,
   coverSrc,
   fileURI,
   id,
@@ -141,12 +135,17 @@ const DetailsPage = ({
           />
         }
         extraContent={DetailsExtraContent({
+          createdWith,
           nftId: id,
           documents,
           fileURI,
         })}
         extraSidebar={DetailsExtraSidebar({
-          pdfUrl: apiRoutes.creatorshub.getNftPdf(id, i18n.language),
+          pdfUrl: apiRoutes.creatorshub.getNftPdf(
+            id,
+            createdWith,
+            i18n.language
+          ),
           qrCodeUrl: generateUrl("api/export/qrcode", i18n),
           qrCodeValue: generateUrl(process.env.NEXT_PUBLIC_APP_DOMAIN, i18n),
         })}
