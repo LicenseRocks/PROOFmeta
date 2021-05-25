@@ -9,6 +9,6 @@ export const getBaseUrl = (createdWith = "creatorshub") => {
     case "minty":
       return `https://minty.rocks`;
     default:
-      return `https://creatorshub.license.rocks`;
+      return `https://preview-creatorshub.license.rocks`;
   }
 };

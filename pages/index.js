@@ -20,7 +20,11 @@ import absoluteUrl from "utils/absoluteUrl";
 import { apiRoutes } from "routes";
 import { getBaseUrl } from "utils/url";
 
-const getCreatorUrl = (id, createdWith) => {
+const getCreatorUrl = (id, createdWith, licenseInfo) => {
+  if (licenseInfo?.license?.buyNowUrl) {
+    return licenseInfo.license.buyNowUrl;
+  }
+
   const baseUrl = getBaseUrl(createdWith);
   if (createdWith === "licensecore") return `${baseUrl}/licenses/${id}`;
   return `${baseUrl}/nft/${id}`;
@@ -54,7 +58,7 @@ export async function getServerSideProps({ locale, query, req, res }) {
       ...licenseInfo,
       createdWith,
       coverSrc: coverKey ? `${process.env.BUCKET_URL}/${coverKey}` : "",
-      creatorUrl: getCreatorUrl(id, createdWith),
+      creatorUrl: getCreatorUrl(id, createdWith, licenseInfo),
       id: id || null,
       url:
         origin +
