@@ -13,8 +13,10 @@ import AuctionableERC1155abi from "../contractsABI/AuctionableERC1155.json";
 const providerUrls = {
   ropsten:
     "https://eth-ropsten.alchemyapi.io/v2/mxlKqKI5tfDXjwlJLQDgP90fUJWXnJ4L",
-  maticTestnet: "https://rpc-mumbai.matic.today",
-  maticMainnet: "https://rpc-mainnet.maticvigil.com",
+  maticTestnet:
+    "https://rpc-mumbai.maticvigil.com/v1/bd92be5a726038f12c92f3a3b65b18b7227ace28",
+  maticMainnet:
+    "https://rpc-mainnet.maticvigil.com/v1/bd92be5a726038f12c92f3a3b65b18b7227ace28",
 };
 
 const fetchMetaDataFile = async (url) => {
