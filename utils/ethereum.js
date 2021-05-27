@@ -20,7 +20,16 @@ const providerUrls = {
 };
 
 const fetchMetaDataFile = async (url) => {
-  const response = await fetch(url);
+  let metaFileUrl = url;
+  if (url.includes("https://arweave.net/tx/")) {
+    metaFileUrl = metaFileUrl.replace(
+      "https://arweave.net/tx/",
+      "https://arweave.net/"
+    );
+
+    metaFileUrl = metaFileUrl.replace("/data.json", "");
+  }
+  const response = await fetch(metaFileUrl);
   const license = await response.json(); // parse DIN json
   return license;
 };
