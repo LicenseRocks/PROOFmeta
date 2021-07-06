@@ -45,9 +45,9 @@ const Label = styled.div`
 `;
 
 const getPieData = (stats) => [
-  { name: "unique", value: stats.nfts?.unique },
-  { name: "rare", value: stats.nfts?.rare },
-  { name: "unlimited", value: stats.nfts?.unlimited },
+  { name: "unique", value: stats?.unique },
+  { name: "rare", value: stats?.rare },
+  { name: "unlimited", value: stats?.unlimited },
 ];
 
 const renderPieLabel = (label, color) => {

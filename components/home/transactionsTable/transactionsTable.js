@@ -74,44 +74,48 @@ const getColumns = ({ t }) => [
 ];
 
 const getRows = ({ nfts = [], t }) =>
-  nfts.map((transaction) => {
-    const price =
-      transaction.priceType === "FIXED" ? (
-        <H4 content={centsToPrice(transaction.price)} />
-      ) : (
-        t("table.custom")
-      );
+  nfts
+    .sort((n1, n2) => n1.createdAt - n2.createdAt)
+    .map((transaction) => {
+      const price =
+        transaction.priceType === "FIXED" ? (
+          <H4 content={centsToPrice(transaction.price)} />
+        ) : (
+          t("table.custom")
+        );
 
-    return {
-      image: <StyledImage alt={transaction.title} src={transaction.coverSrc} />,
-      title: (
-        <RKLink
-          Component={Link}
-          href={{
-            pathname: "/",
-            query: {
-              id: transaction.id,
-              network: transaction?.contractNetwork || "maticTestnet",
-              contractName: transaction.contractName || "CustomERC1155",
-              contractAddr: transaction?.contractAddr,
-              createdWith: transaction?.createdWith || "creatorshub",
-            },
-          }}
-          passHref
-        >
-          <H4 content={transaction.title} />
-        </RKLink>
-      ),
-      creator: transaction.creator.name || transaction.creator.username,
-      price,
-      createdAt: (
-        <Text
-          content={date.format(transaction.createdAt)}
-          color="textSecondary"
-        />
-      ),
-    };
-  });
+      return {
+        image: (
+          <StyledImage alt={transaction.title} src={transaction.coverSrc} />
+        ),
+        title: (
+          <RKLink
+            Component={Link}
+            href={{
+              pathname: "/",
+              query: {
+                id: transaction.id,
+                network: transaction?.contractNetwork || "maticTestnet",
+                contractName: transaction.contractName || "CustomERC1155",
+                contractAddr: transaction?.contractAddr,
+                createdWith: transaction?.createdWith || "creatorshub",
+              },
+            }}
+            passHref
+          >
+            <H4 content={transaction.title} />
+          </RKLink>
+        ),
+        creator: transaction.creator.name || transaction.creator.username,
+        price,
+        createdAt: (
+          <Text
+            content={date.format(transaction.createdAt)}
+            color="textSecondary"
+          />
+        ),
+      };
+    });
 
 export const TransactionsTable = () => {
   const { t } = useTranslation("home");
