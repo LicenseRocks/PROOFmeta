@@ -3,18 +3,16 @@ import styled, { useTheme } from "styled-components";
 import { H4, Image, PageFigure, Text } from "@licenserocks/kit";
 import { CarouselProvider, Slide, Slider } from "pure-react-carousel";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-import useSWR from "swr";
 import { useTranslation } from "next-i18next";
 
 import { apiRoutes } from "routes";
-
-const { NEXT_PUBLIC_CREATORSHUB_URL } = process.env;
+import { useRequest } from "hooks";
 
 const StyledPageFigure = styled(PageFigure)`
   display: table;
 `;
 
-const StyledSlide = styled.a`
+const StyledSlide = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -45,16 +43,16 @@ const StyledSlide = styled.a`
 
 export const HomeCreators = () => {
   const { t } = useTranslation("home");
-  const { data = { creators: [] } } = useSWR(
-    apiRoutes.creatorshub.getCreators()
+  const { items = [] } = useRequest(
+    apiRoutes.creatorshub.getCreators(),
+    "creators"
   );
   const theme = useTheme();
+
   let visibleSlides = 8;
   if (useMediaQuery(theme.breakpoints.down("xl"))) visibleSlides = 6;
   if (useMediaQuery(theme.breakpoints.down("md"))) visibleSlides = 2;
   if (useMediaQuery(theme.breakpoints.down("sm"))) visibleSlides = 1;
-
-  const { creators } = data;
 
   return (
     <StyledPageFigure>
@@ -63,17 +61,14 @@ export const HomeCreators = () => {
         isPlaying
         interval={2000}
         visibleSlides={visibleSlides}
-        totalSlides={creators.length}
+        totalSlides={items.length}
         naturalSlideWidth={205}
         naturalSlideHeight={205}
       >
         <Slider>
-          {creators.map((c) => (
+          {items.map((c) => (
             <Slide key={c.id}>
-              <StyledSlide
-                href={`${NEXT_PUBLIC_CREATORSHUB_URL}/creator/${c.id}`}
-                target="_blank"
-              >
+              <StyledSlide>
                 <Image
                   src={c.profile.avatar || "/images/user-placeholder.png"}
                 />

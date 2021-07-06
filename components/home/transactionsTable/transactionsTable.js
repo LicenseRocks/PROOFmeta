@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
 import styled from "styled-components";
 import {
   Box,
@@ -10,14 +9,13 @@ import {
   Text,
   Table as RKTable,
 } from "@licenserocks/kit";
-import useSWR from "swr";
 import { useTranslation } from "next-i18next";
 import Link from "next/link";
 
 import { centsToPrice } from "utils/price";
 import { apiRoutes } from "routes";
 import date from "utils/date";
-import { useDebounce } from "hooks";
+import { useDebounce, useRequest } from "hooks";
 
 const StyledBox = styled(Box)`
   && {
@@ -75,7 +73,7 @@ const getColumns = ({ t }) => [
   },
 ];
 
-const getRows = ({ nfts, t }) =>
+const getRows = ({ nfts = [], t }) =>
   nfts.map((transaction) => {
     const price =
       transaction.priceType === "FIXED" ? (
@@ -119,11 +117,10 @@ export const TransactionsTable = () => {
   const { t } = useTranslation("home");
   const [q, setQ] = useState("");
   const debouncedQ = useDebounce(q, 1000);
-  const { data = { nfts: [] } } = useSWR(
-    apiRoutes.creatorshub.getNfts(debouncedQ)
+  const { items } = useRequest(
+    apiRoutes.creatorshub.getNfts(debouncedQ),
+    "nfts"
   );
-
-  const { nfts } = data;
 
   return (
     <StyledBox
@@ -136,19 +133,9 @@ export const TransactionsTable = () => {
         />
       )}
     >
-      <Table columns={getColumns({ t })} rows={getRows({ nfts, t })} />
+      <Table columns={getColumns({ t })} rows={getRows({ nfts: items, t })} />
     </StyledBox>
   );
 };
 
-TransactionsTable.propTypes = {
-  data: PropTypes.arrayOf(
-    PropTypes.shape({
-      transactionHash: PropTypes.string,
-      createdAt: PropTypes.string,
-      amount: PropTypes.string,
-      to: PropTypes.string,
-      status: PropTypes.string,
-    })
-  ).isRequired,
-};
+TransactionsTable.propTypes = {};

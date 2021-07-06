@@ -6,6 +6,7 @@ import useSWR from "swr";
 import { useTranslation } from "next-i18next";
 
 import { apiRoutes } from "routes";
+import { useRequest } from "hooks";
 
 const getColors = ({ palette }) => ({
   unique: palette.success.main,
@@ -56,9 +57,16 @@ const renderPieLabel = (label, color) => {
 export const HomeCharts = () => {
   const { t } = useTranslation("home");
   const theme = useTheme();
-  const { data = { stats: {} } } = useSWR(apiRoutes.creatorshub.getStats());
+  const { items = [] } = useRequest(apiRoutes.creatorshub.getStats(), "stats");
 
-  const { stats } = data;
+  const stats = items?.[0]?.nfts || {};
+  items.forEach((item, idx) => {
+    if (idx === 0) return;
+    Object.keys(item.nfts).forEach((key) => {
+      stats[key] += item.nfts[key];
+    });
+  });
+
   const colors = getColors(theme);
   const pieData = getPieData(stats);
   return (
@@ -76,7 +84,7 @@ export const HomeCharts = () => {
                     paddingAngle={5}
                     dataKey="value"
                   >
-                    {pieData.map((entry, index) => (
+                    {pieData.map((entry) => (
                       <Cell key={entry.name} fill={colors[entry.name]} />
                     ))}
                   </Pie>
@@ -95,19 +103,15 @@ export const HomeCharts = () => {
                 rows={[
                   {
                     label: <H4 color="textPrimary" content={t("charts.all")} />,
-                    value: <H2 content={stats.nfts?.total} />,
+                    value: <H2 content={stats?.total} />,
                   },
                   {
                     label: renderPieLabel(t("charts.unique"), colors.unique),
-                    value: (
-                      <Text content={stats.nfts?.unique} fontWeight="bold" />
-                    ),
+                    value: <Text content={stats?.unique} fontWeight="bold" />,
                   },
                   {
                     label: renderPieLabel(t("charts.rare"), colors.rare),
-                    value: (
-                      <Text content={stats.nfts?.rare} fontWeight="bold" />
-                    ),
+                    value: <Text content={stats?.rare} fontWeight="bold" />,
                   },
                   {
                     label: renderPieLabel(
@@ -115,7 +119,7 @@ export const HomeCharts = () => {
                       colors.unlimited
                     ),
                     value: (
-                      <Text content={stats.nfts?.unlimited} fontWeight="bold" />
+                      <Text content={stats?.unlimited} fontWeight="bold" />
                     ),
                   },
                 ]}
