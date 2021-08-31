@@ -205,8 +205,6 @@ app:
       environmentFromVariables:
         configMapRef: 
           name: backend-config
-        secretRef1: 
-          name: backend-secret
       volumeMounts: []
       volumes: []
       nodeSelector: {}

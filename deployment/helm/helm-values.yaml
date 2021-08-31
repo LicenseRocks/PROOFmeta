@@ -54,6 +54,9 @@ configmap:
       data:
         DEBUG: "$DEBUG"
         NAMESPACE: "$NAMESPACE"
+  ######### secrets ########
+secret:
+  enabled: false
 
   ######### service accounts ########
 serviceAccount:
