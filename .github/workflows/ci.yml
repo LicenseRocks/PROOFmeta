@@ -121,8 +121,6 @@ jobs:
           ALB_HOSTNAME: ${{ env.PROJECT_DOMAIN }}
           ALB_GROUP: ${{ env.ALB_GROUP }}
           ALB_SUBNETS: ${{ env.ALB_SUBNETS }}
-
-        if: env.CD == 1
         run: |
           echo $GITHUB_ENV
           echo "create namespace"
