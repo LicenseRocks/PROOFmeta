@@ -73,19 +73,19 @@ jobs:
           $(aws ecr get-login --no-include-email --region $AWS_REGION)
           docker-compose -f deployment/docker-compose-base.yml push
 
-      - name: Slack Notify
-        uses: rtCamp/action-slack-notify@v2
-        if: always()
-        env:
-            SLACK_CHANNEL: devops-alerts
-            SLACK_COLOR: ${{ steps.push.outcome }}
-            SLACK_ICON_EMOJI: ':licenserocks:'
-            SLACK_TITLE: 'Build Base Image'
-            SLACK_MESSAGE: 'package.json was changed, commit message: ${{ env.GITHUB_MESSAGE }}'
-            SLACK_USERNAME: 'CI/CD'
-            SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-            MSG_MINIMAL: 'commit,ref,actions url'
-            SLACK_FOOTER: 'Powered by GitHub Actions'
+      # - name: Slack Notify
+      #   uses: rtCamp/action-slack-notify@v2
+      #   if: always()
+      #   env:
+      #       SLACK_CHANNEL: devops-alerts
+      #       SLACK_COLOR: ${{ steps.push.outcome }}
+      #       SLACK_ICON_EMOJI: ':m:'
+      #       SLACK_TITLE: 'Build Base Image'
+      #       SLACK_MESSAGE: 'package.json was changed, commit message: ${{ env.GITHUB_MESSAGE }}'
+      #       SLACK_USERNAME: 'CI/CD'
+      #       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      #       MSG_MINIMAL: 'commit,ref,actions url'
+      #       SLACK_FOOTER: 'Powered by GitHub Actions'
 
       - name: Cleanup
         if: always()
