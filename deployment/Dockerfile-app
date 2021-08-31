@@ -4,7 +4,6 @@ WORKDIR /app
 COPY . .
 RUN yarn build && yarn install --production --ignore-scripts --prefer-offline
 RUN rm -f .env
-RUN ls -la
 
 FROM node:14.17-alpine AS runner
 ENV NEXT_TELEMETRY_DISABLED 1
