@@ -1,0 +1,64 @@
+app:
+  projectName: "meta-proof"
+  type:
+    frontend: true
+    backend_nodejs: true
+    migration: false
+
+  frontend:
+    deployment:
+      image:
+        repository: $DCR_HOST/$DCR_PATH/frontend
+        tag: latest
+      livenessProbe:
+        port: 80
+      readinessProbe:
+        port: 80
+    service:
+      type: NodePort
+
+  backend_nodejs:
+    deployment:
+      livenessProbe:
+        port: 3000
+      readinessProbe:
+        port: 3000
+      environmentFromVariables:
+        configMapRef:
+          name: backend-app-env
+
+  ingress:
+    enabled: true
+    name: {}
+    labels: {}
+    type: aws
+    rulesHost: true
+    tls:
+      enabled: false
+
+  hpa:
+    backend:
+      enabled: true
+      minReplicas: 2
+    frontend:
+      enabled: true
+
+  ######### configmap ########
+configmap:
+  enabled: true
+  configmaps:
+    - name: backend-config
+      data:
+        DEBUG: "$DEBUG"
+    - name: frontend-config
+      data:
+        DEBUG: "$DEBUG"
+        NAMESPACE: "$NAMESPACE"
+
+  ######### service accounts ########
+serviceAccount:
+  create: true
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-5"
+  name: metabackend

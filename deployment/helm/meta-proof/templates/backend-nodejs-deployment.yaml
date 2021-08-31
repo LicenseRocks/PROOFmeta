@@ -1,0 +1,147 @@
+{{- if .Values.app.type.backend_nodejs }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "creators-hub-app.app.projectName" . }}-backend-nodejs
+  labels:
+        {{- include "creators-hub-app.backend_nodejs.deployment.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.app.backend_nodejs.deployment.autoscaling.enabled }}
+  replicas: {{ .Values.app.backend_nodejs.deployment.replicaCount }}
+  {{- end }}
+  revisionHistoryLimit: {{ .Values.app.backend_nodejs.deployment.revisionHistoryLimit }}
+  selector:
+    matchLabels:
+        {{- include "creators-hub-app.backend_nodejs.deployment.matchLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        {{- range $key, $value := .Values.app.backend_nodejs.deployment.podAnnotations }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}     
+      labels:
+        {{- range $key, $value := .Values.app.backend_nodejs.deployment.podLabels }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}    
+        {{- include "creators-hub-app.backend_nodejs.container.labels" . | nindent 8 }}
+    spec:
+      {{- with .Values.app.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName:
+          {{- include "creators-hub-app.app.serviceAccountName" . | nindent 8 }}
+      {{- if .Values.app.backend_nodejs.deployment.podSecurityContext }}
+      securityContext:
+        {{- toYaml .Values.app.backend_nodejs.deployment.podSecurityContext | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: {{ .Chart.Name }}
+        {{- if .Values.app.backend_nodejs.deployment.securityContext }}
+        securityContext:
+          {{- toYaml .Values.app.backend_nodejs.deployment.securityContext | nindent 12 }}
+        {{- end }}
+        image: {{ .Values.app.backend_nodejs.deployment.image.repository }}:{{ .Values.app.backend_nodejs.deployment.image.tag | default .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.app.backend_nodejs.deployment.image.pullPolicy }}
+        {{- if .Values.app.backend_nodejs.deployment.command }}
+        command: {{ .Values.app.backend_nodejs.deployment.command }}
+        {{- end }}
+        {{- if .Values.app.backend_nodejs.deployment.args }}
+        args: 
+          {{- range .Values.app.backend_nodejs.deployment.args }}
+          - {{ . }}
+          {{- end }}
+        {{- end }}
+        {{- if .Values.app.backend_nodejs.deployment.ports }}
+        ports:
+          - name: {{ .Values.app.backend_nodejs.deployment.ports.name }}
+            containerPort: {{ .Values.app.backend_nodejs.deployment.ports.containerPort }}
+            protocol: {{ .Values.app.backend_nodejs.deployment.ports.protocol }}
+        {{- end }}
+        {{- if .Values.app.backend_nodejs.deployment.livenessProbe.port }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.app.backend_nodejs.deployment.livenessProbe.path }}
+            port: {{ .Values.app.backend_nodejs.deployment.livenessProbe.port }}
+          initialDelaySeconds: {{ .Values.app.backend_nodejs.deployment.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.app.backend_nodejs.deployment.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.app.backend_nodejs.deployment.livenessProbe.timeoutSeconds }}
+          failureThreshold: {{ .Values.app.backend_nodejs.deployment.livenessProbe.failureThreshold }}
+        {{- end }}
+        {{- if .Values.app.backend_nodejs.deployment.readinessProbe.port }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.app.backend_nodejs.deployment.readinessProbe.path }}
+            port: {{ .Values.app.backend_nodejs.deployment.readinessProbe.port }}
+          initialDelaySeconds: {{ .Values.app.backend_nodejs.deployment.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.app.backend_nodejs.deployment.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.app.backend_nodejs.deployment.readinessProbe.timeoutSeconds }}
+          failureThreshold: {{ .Values.app.backend_nodejs.deployment.readinessProbe.failureThreshold }}
+        {{- end }}
+        {{- if .Values.app.backend_nodejs.deployment.resources }}
+        resources:
+          {{- toYaml .Values.app.backend_nodejs.deployment.resources | nindent 12 }}
+        {{- end }}
+        env:
+        {{- range .Values.app.backend_nodejs.deployment.environmentVariables }}
+        - name: {{ .name }}
+          value: {{ quote .value }}
+        {{- end }}
+        envFrom:
+        {{- with .Values.app.backend_nodejs.deployment.environmentFromVariables.configMapRef }}
+        - configMapRef:
+          {{- toYaml . | nindent 12 }}
+        {{- end }}
+        {{- with .Values.app.backend_nodejs.deployment.environmentFromVariables.secretRef1 }}
+        - secretRef:
+          {{- toYaml . | nindent 12 }}
+        {{- end }}
+        {{- with .Values.app.backend_nodejs.deployment.environmentFromVariables.secretRef2 }}
+        - secretRef:
+          {{- toYaml . | nindent 12 }}
+        {{- end }}
+        {{- if .Values.app.backend_nodejs.deployment.volumeMounts }}
+        volumeMounts:
+          {{- toYaml .Values.app.backend_nodejs.deployment.volumeMounts| nindent 12 }}
+        {{- end }}
+      {{- with .Values.app.backend_nodejs.deployment.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.app.backend_nodejs.deployment.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.app.backend_nodejs.deployment.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.app.backend_nodejs.deployment.volumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
+---
+{{- if .Values.app.type.backend_nodejs }}
+{{- if .Values.app.backend_nodejs.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-svc
+  labels:
+      {{- include "creators-hub-app.backend_nodejs.deployment.labels" . | nindent 4 }}
+{{- if .Values.app.backend_nodejs.service.annotations }}
+  annotations:
+{{ toYaml .Values.app.backend_nodejs.service.annotations | indent 4 }}
+{{- end }}
+spec:
+  type: {{ .Values.app.backend_nodejs.service.type }}
+  ports:
+    - name: {{ .Values.app.backend_nodejs.service.portName | default "port" }}-{{ .Values.app.backend_nodejs.service.port }}
+      port: {{ .Values.app.backend_nodejs.service.port }}
+      protocol: {{ .Values.app.backend_nodejs.service.protocol }}
+      targetPort: {{ .Values.app.backend_nodejs.service.targetPort }}
+  selector:
+    {{- include "creators-hub-app.backend_nodejs.deployment.matchLabels" . | nindent 4 }}
+{{- end }}
+{{- end }}
