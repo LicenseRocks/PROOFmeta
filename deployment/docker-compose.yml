@@ -1,0 +1,11 @@
+version: '3.4'
+services:
+  backend:
+    image: "${DCR_HOST}/${DCR_PATH}/backend:${CI_COMMIT_SHA}"
+    build:
+        dockerfile: deployment/Dockerfile-next-app
+        context: ..
+        args:
+            - NEXT_TELEMETRY_DISABLED=1
+            - DATABASE_URL
+    restart: unless-stopped

@@ -1,0 +1,102 @@
+name: Build Image
+on:
+  push:
+    paths:
+      - 'package.json'
+
+jobs:
+  build_image:
+    name: Build Base Image
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Set BRANCH
+        shell: bash
+        run: echo "BRANCH=$(echo ${GITHUB_REF##*/})" >> $GITHUB_ENV
+
+      - name: Cluster specific envs
+        shell: bash
+        run: |
+          echo "CLUSTER=prod_1" >> $GITHUB_ENV
+
+      - name: Cluster specific envs
+        shell: bash
+        run: |
+          case $CLUSTER in
+            prod_1)
+              echo "DCR_HOST=245763787462.dkr.ecr.eu-central-1.amazonaws.com" >> $GITHUB_ENV
+              echo "DCR_PATH=meta-proof" >> $GITHUB_ENV
+              echo "AWS_PROFILE=lr_prod_1_ci" >> $GITHUB_ENV
+              ;;
+          esac
+
+      - name: Checkout Repo
+        uses: actions/checkout@v1
+
+      - name: Cluster specific AWS creds
+        shell: bash
+        run: |
+          echo "AWS_ACCESS_KEY_ID=${{ secrets[format('{0}_AWS_ACCESS_KEY_ID', env.CLUSTER)] }}" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets[format('{0}_AWS_SECRET_ACCESS_KEY', env.CLUSTER)] }}" >> $GITHUB_ENV
+          echo "AWS_REGION=eu-central-1" >> $GITHUB_ENV
+          echo "GITHUB_MESSAGE=$(git log -1 --pretty=format:'%s')" >> $GITHUB_ENV
+
+      - name: Build Containers - Docker Compose
+        env:
+          DCR_HOST: ${{ env.DCR_HOST }}
+          DCR_PATH: ${{ env.DCR_PATH }}
+          AWS_PROFILE: ${{ env.AWS_PROFILE }}
+          AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ env.AWS_REGION }}
+        run: |
+          export DOCKER_BUILDKIT=0
+          docker-compose -f deployment/docker-compose-base.yml build
+
+      - name: Create AWS Profile
+        run: |
+          mkdir -p ~/.aws
+
+          cat << EoF >> ~/.aws/config
+          [${AWS_PROFILE}]
+          region = ${AWS_REGION}
+          EoF
+
+          cat << EoF >> ~/.aws/credentials
+          [${AWS_PROFILE}]
+          aws_access_key_id=${AWS_ACCESS_KEY_ID}
+          aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}
+          EoF
+
+      - name: Push base containers to DCR
+        id: push
+        run: |
+          $(aws ecr get-login --no-include-email --region $AWS_REGION)
+          docker-compose -f deployment/docker-compose-base.yml push
+
+      # - name: Slack Notify
+      #   uses: rtCamp/action-slack-notify@v2
+      #   if: always()
+      #   env:
+      #       SLACK_CHANNEL: devops-alerts
+      #       SLACK_COLOR: ${{ steps.push.outcome }}
+      #       SLACK_ICON_EMOJI: ':m:'
+      #       SLACK_TITLE: 'Build Base Image'
+      #       SLACK_MESSAGE: 'package.json was changed, commit message: ${{ env.GITHUB_MESSAGE }}'
+      #       SLACK_USERNAME: 'CI/CD'
+      #       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      #       MSG_MINIMAL: 'commit,ref,actions url'
+      #       SLACK_FOOTER: 'Powered by GitHub Actions'
+
+      - name: Cleanup
+        if: always()
+        run: |
+          rm -f .env
+          rm -f .env_config
+          rm -f .env_secret
+          rm -f ~/.env_config
+          rm -f ~/.env_secret
+          rm -f ~/.aws/config
+          rm -f ~/.aws/credentials
+          rm -f ~/.kube/config
+          docker-compose -f deployment/docker-compose-base.yml down --remove-orphans
+
