@@ -7,5 +7,5 @@ services:
         context: ..
         args:
             - NEXT_TELEMETRY_DISABLED=1
-            - DATABASE_URL
+            - NODE_ENV
     restart: unless-stopped

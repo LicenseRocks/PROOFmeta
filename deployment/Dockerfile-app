@@ -1,6 +1,6 @@
 FROM "${DCR_HOST}/${DCR_PATH}/backend:base" as builder
 ENV NEXT_TELEMETRY_DISABLED 1
-ARG DATABASE_URL
+ENV NODE_ENV
 WORKDIR /app
 COPY . .
 RUN yarn build && yarn install --production --ignore-scripts --prefer-offline
