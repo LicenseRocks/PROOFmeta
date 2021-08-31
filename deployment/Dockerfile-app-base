@@ -1,0 +1,17 @@
+FROM node:14.17-alpine AS deps
+ENV NEXT_TELEMETRY_DISABLED 1
+RUN apk add --no-cache libc6-compat git python py-pip make g++
+RUN yarn add sqlite3
+WORKDIR /app
+COPY package.json yarn.lock .npmrc .babelrc ./
+
+RUN yarn set version 1.22.10
+RUN yarn install --frozen-lockfile
+
+
+FROM node:14.17-alpine AS builder
+ENV NEXT_TELEMETRY_DISABLED 1
+RUN apk add --no-cache git python py-pip make g++
+RUN yarn add sqlite3
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules

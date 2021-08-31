@@ -1,0 +1,196 @@
+name: Deployment
+on:
+  workflow_dispatch:
+    inputs:
+      environ:
+        description: "Preview, Production"
+        required: true
+        default: ""
+
+jobs:
+  build_main_publish:
+    name: Build App and Publish
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Set BRANCH
+        shell: bash
+        run: echo "BRANCH=$(echo ${GITHUB_REF##*/})" >> $GITHUB_ENV
+
+      - name: Inputs
+        shell: bash
+        run: |
+          echo "PROJECT_NAME=${{ github.event.inputs.environ }}" >> $GITHUB_ENV
+
+      - name: Inputs validate
+        if: ${{ !contains(github.event.inputs.environ, 'preview') && !contains(github.event.inputs.environ, 'production') }}
+        shell: bash
+        run: |
+          exit 1
+
+      - name: Cluster specific envs
+        shell: bash
+        run: |
+          echo "CLUSTER=prod_1" >> $GITHUB_ENV
+          echo "CLUSTER_LONG_NAME=prod_1-creators-hub" >> $GITHUB_ENV
+          echo "PRODUCTION=true" >> $GITHUB_ENV
+          echo "CD=1" >> $GITHUB_ENV
+          echo "CI_COMMIT_SHA=${GITHUB_SHA}$(openssl rand -hex 5)" >> $GITHUB_ENV
+
+      - name: Cluster specific envs
+        shell: bash
+        run: |
+          case $CLUSTER in
+            prod_1)
+              if [ ${{ env.PRODUCTION }}  = true ] ; then echo "NODE_ENV=production" >> $GITHUB_ENV; else echo "NODE_ENV=development" >> $GITHUB_ENV; fi
+              echo "DCR_HOST=245763787462.dkr.ecr.eu-central-1.amazonaws.com" >> $GITHUB_ENV
+              echo "DCR_PATH=meta-proof" >> $GITHUB_ENV
+              echo "HTTP_HOST=${{ format('{0}.creators-hub-cluster.license.rocks', env.PROJECT_NAME) }}" >> $GITHUB_ENV
+              echo "ALLOWED_HOSTS=${{ format('{0}.creators-hub-cluster.license.rocks', env.PROJECT_NAME) }}" >> $GITHUB_ENV
+              echo "NGINX_LISTEN=80" >> $GITHUB_ENV
+              echo "BACKEND_SERVICE_ACCOUNT_NAME=backend" >> $GITHUB_ENV
+              echo "K8S_BACKEND_REPLICAS=2" >> $GITHUB_ENV
+              echo "AWS_PROFILE=lr_prod_1_ci" >> $GITHUB_ENV
+              echo "ALB_GROUP=creatorshub-group" >> $GITHUB_ENV
+              echo "ALB_SUBNETS=subnet-081db14b418e8d91f,subnet-0e50fa44770ee55cb,subnet-04cdc330b28fc89bb" >> $GITHUB_ENV
+              ;;
+          esac
+
+      - name: Checkout Repo
+        uses: actions/checkout@v1
+        with:
+          path: ${{ github.event.inputs.environ }}
+
+      - name: Cluster specific AWS creds
+        shell: bash
+        run: |
+          echo "AWS_ACCESS_KEY_ID=${{ secrets[format('{0}_AWS_ACCESS_KEY_ID', env.CLUSTER)] }}" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets[format('{0}_AWS_SECRET_ACCESS_KEY', env.CLUSTER)] }}" >> $GITHUB_ENV
+          echo "AWS_REGION=eu-central-1" >> $GITHUB_ENV
+          echo "GITHUB_MESSAGE=$(git log -1 --pretty=format:'%s')" >> $GITHUB_ENV
+
+      - name: Create AWS & Kube Profile
+        run: |
+          mkdir -p ~/.aws
+
+          cat << EoF >> ~/.aws/config
+          [${AWS_PROFILE}]
+          region = ${AWS_REGION}
+          EoF
+
+          cat << EoF >> ~/.aws/credentials
+          [${AWS_PROFILE}]
+          aws_access_key_id=${AWS_ACCESS_KEY_ID}
+          aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}
+          EoF
+
+          mkdir -p ~/.kube && echo "${{ secrets[format('{0}_KUBE_CONFIG_CONTENT', env.CLUSTER)] }}" | base64 -d > ~/.kube/config
+          chmod 600 ~/.kube/config
+
+      - name: Get Project Params
+        run: |
+          mkdir -p ~/.$PROJECT_NAME
+          aws --region ${AWS_REGION} ssm get-parameter --name "/creators-hub/${{ env.PROJECT_NAME }}/envs" --with-decryption --output text --query Parameter.Value > ~/.$PROJECT_NAME/.env_config
+          aws --region ${AWS_REGION} ssm get-parameter --name "/creators-hub/${{ env.PROJECT_NAME }}/secrets" --with-decryption --output text --query Parameter.Value > ~/.$PROJECT_NAME/.env_secret
+          aws --region ${AWS_REGION} ssm get-parameter --name "/creators-hub/${{ env.PROJECT_NAME }}/params" --with-decryption --output text --query Parameter.Value > ~/.$PROJECT_NAME/.env_params
+          for i in $(cat ~/.$PROJECT_NAME/.env_params); do echo $i >> $GITHUB_ENV; done
+
+      - name: Get Cluster Namespace Params
+        run: |
+          if [ ${{ env.PRODUCTION }}  = true ] ; then echo "NAMESPACE=${{ format('{0}', env.PROJECT_NAME) }}-prod" >> $GITHUB_ENV; else echo "NAMESPACE=${{ format('{0}', env.PROJECT_NAME) }}" >> $GITHUB_ENV; fi
+
+      - name: Build App - Docker Compose
+        env:
+          DCR_HOST: ${{ env.DCR_HOST }}
+          DCR_PATH: ${{ env.DCR_PATH }}
+          AWS_PROFILE: ${{ env.AWS_PROFILE }}
+          AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ env.AWS_REGION }}
+          KUBE_CONFIG_CONTENT: ${{ env.KUBE_CONFIG_CONTENT }}
+          NODE_ENV: ${{ env.NODE_ENV }}
+        run: |
+          $(aws ecr get-login --no-include-email --region $AWS_REGION)
+          cat ~/.$PROJECT_NAME/.env_config ~/.$PROJECT_NAME/.env_secret > .env
+          export DOCKER_BUILDKIT=0
+          envsubst < deployment/Dockerfile-app > deployment/Dockerfile-next-app
+          docker-compose -f deployment/docker-compose.yml up -d db
+          docker-compose -f deployment/docker-compose.yml build
+          rm -f .env
+
+      - name: Push App containers to DCR
+        run: |
+          $(aws ecr get-login --no-include-email --region $AWS_REGION)
+          docker-compose -f deployment/docker-compose.yml push
+
+
+      - name: Deploy (feature branch) 🚀
+        id: deploy
+        env:
+          ALB_HOSTNAME: ${{ env.PROJECT_DOMAIN }}
+          ALB_GROUP: ${{ env.ALB_GROUP }}
+          ALB_SUBNETS: ${{ env.ALB_SUBNETS }}
+
+        if: env.CD == 1
+        run: |
+          echo $GITHUB_ENV
+          echo "create namespace"
+          kubectl create ns $NAMESPACE || true
+          kubectl get no
+
+          echo "setting env variables"
+          envsubst < deployment/helm/creators-hub-app/values.yaml > deployment/helm/creators-hub-app/values.yml
+          mv -f deployment/helm/creators-hub-app/values.yml deployment/helm/creators-hub-app/values.yaml
+          echo "app configmap and secrets"
+          cp ~/.$PROJECT_NAME/.env_config .env_config
+          cp ~/.$PROJECT_NAME/.env_secret .env_secret
+          kubectl create configmap backend-app-env --from-env-file=.env_config -n $NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
+          kubectl create secret generic backend-app-secret --from-env-file=.env_secret -n $NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
+          echo "app deployment"
+          envsubst < deployment/helm/helm-values.yaml | helm upgrade -i -f - $PROJECT_NAME deployment/helm/creators-hub-app -n $NAMESPACE
+          kubectl -n $NAMESPACE wait --for=condition=complete --timeout=90s job/migration || true
+          kubectl -n $NAMESPACE logs job/migration  || true
+          kubectl rollout status deployment/${PROJECT_NAME}-backend-nodejs --namespace=$NAMESPACE --watch=true
+          kubectl rollout status deployment/${PROJECT_NAME}-frontend --namespace=$NAMESPACE --watch=true
+          echo "DEPLOY_STATUS_1='$(kubectl get jobs migration --namespace $NAMESPACE -o jsonpath='{.status.conditions[0].type}')'" >> $GITHUB_ENV
+          echo "DEPLOY_STATUS_3='$(kubectl rollout status deployment/${PROJECT_NAME}-backend-nodejs --namespace=$NAMESPACE --watch=true)'" >> $GITHUB_ENV
+          echo "DEPLOY_STATUS_4='$(kubectl rollout status deployment/${PROJECT_NAME}-frontend --namespace=$NAMESPACE --watch=true)'" >> $GITHUB_ENV
+
+      - name: Slack Notify
+        uses: rtCamp/action-slack-notify@v2
+        if: always()
+        env:
+          SLACK_CHANNEL: devops-alerts
+          SLACK_COLOR: ${{ steps.deploy.outcome }}
+          SLACK_ICON_EMOJI: ":m:"
+          SLACK_TITLE: "Deployment to: ${{ env.PROJECT_NAME }}"
+          SLACK_MESSAGE: "Migration: ${{ env.DEPLOY_STATUS_1 }}, App Rollout: ${{ env.DEPLOY_STATUS_3 }}, ${{ env.DEPLOY_STATUS_4 }}, commit message: ${{ env.GITHUB_MESSAGE }}"
+          SLACK_USERNAME: "CI/CD"
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          MSG_MINIMAL: "commit,ref,actions url"
+          SLACK_FOOTER: "Powered by GitHub Actions"
+
+      - name: Cleanup
+        if: always()
+        run: |
+          rm -fr ~/.$PROJECT_NAME
+          rm -f .env
+          rm -f .env_config
+          rm -f .env_secret
+          rm -f ~/.env_config
+          rm -f ~/.env_secret
+          rm -f ~/.aws/config
+          rm -f ~/.aws/credentials
+          rm -f ~/.kube/config
+          docker-compose -f deployment/docker-compose.yml down --remove-orphans
+
+  semantic_release:
+    name: Semantic Release
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v1
+
+      - name: Run Semantic Release
+        run: yarn add @semantic-release/git && npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
