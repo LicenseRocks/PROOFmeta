@@ -6,6 +6,5 @@ services:
         dockerfile: deployment/Dockerfile-next-app
         context: ..
         args:
-            - NEXT_TELEMETRY_DISABLED=1
             - NODE_ENV
     restart: unless-stopped
