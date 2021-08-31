@@ -108,7 +108,7 @@ jobs:
           cat ~/.$PROJECT_NAME/.env_config > .env
           export DOCKER_BUILDKIT=0
           envsubst < deployment/Dockerfile-app > deployment/Dockerfile-next-app
-          docker-compose -f deployment/docker-compose.yml up
+          docker-compose -f deployment/docker-compose.yml up -d
           docker-compose -f deployment/docker-compose.yml build
           rm -f .env
 
