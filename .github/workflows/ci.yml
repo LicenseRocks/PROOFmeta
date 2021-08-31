@@ -128,7 +128,7 @@ jobs:
           kubectl get no
 
           echo "setting env variables"
-          envsubst < deployment/helm/meta-proof-hub-app/values.yaml > deployment/helm/meta-proof/values.yml
+          envsubst < deployment/helm/meta-proof/values.yaml > deployment/helm/meta-proof/values.yml
           mv -f deployment/helm/meta-proof/values.yml deployment/helm/meta-proof/values.yaml
           echo "app configmap"
           cp ~/.$PROJECT_NAME/.env_config .env_config
