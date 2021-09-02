@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       environ:
-        description: "preview, production"
+        description: "Env: preview, production"
         required: true
         default: "preview"
 
@@ -38,10 +38,7 @@ jobs:
         run: |
           case $CLUSTER in
             prod_1)
-              
-              # echo "HTTP_HOST=${{ format('{0}.creators-hub-cluster.license.rocks', env.PROJECT_NAME) }}" >> $GITHUB_ENV
-              # echo "ALLOWED_HOSTS=${{ format('{0}.creators-hub-cluster.license.rocks', env.PROJECT_NAME) }}" >> $GITHUB_ENV
-
+              echo "NGINX_LISTEN=80" >> $GITHUB_ENV
               echo "DCR_HOST=245763787462.dkr.ecr.eu-central-1.amazonaws.com" >> $GITHUB_ENV
               echo "DCR_PATH=meta-proof" >> $GITHUB_ENV
               echo "AWS_PROFILE=lr_prod_1_ci" >> $GITHUB_ENV
@@ -53,7 +50,7 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v1
         with:
-          path: ${{ github.event.inputs.environ }}
+          path: meta-proof-${{ github.event.inputs.environ }}
 
       - name: Cluster specific AWS creds
         shell: bash
@@ -84,8 +81,8 @@ jobs:
       - name: Get Project Params
         run: |
           mkdir -p ~/.$PROJECT_NAME
-          aws --region ${AWS_REGION} ssm get-parameter --name "/creators-hub/${{ env.PROJECT_NAME }}/envs" --with-decryption --output text --query Parameter.Value > ~/.$PROJECT_NAME/.env_config
-          aws --region ${AWS_REGION} ssm get-parameter --name "/creators-hub/${{ env.PROJECT_NAME }}/params" --with-decryption --output text --query Parameter.Value > ~/.$PROJECT_NAME/.env_params
+          aws --region ${AWS_REGION} ssm get-parameter --name "/meta-proof/${{ env.PROJECT_NAME }}/envs" --with-decryption --output text --query Parameter.Value > ~/.$PROJECT_NAME/.env_config
+          aws --region ${AWS_REGION} ssm get-parameter --name "/meta-proof/${{ env.PROJECT_NAME }}/params" --with-decryption --output text --query Parameter.Value > ~/.$PROJECT_NAME/.env_params
           for i in $(cat ~/.$PROJECT_NAME/.env_params); do echo $i >> $GITHUB_ENV; done
 
       - name: Get Cluster Namespace Params
@@ -108,7 +105,7 @@ jobs:
           cat ~/.$PROJECT_NAME/.env_config > .env
           export DOCKER_BUILDKIT=0
           envsubst < deployment/Dockerfile-app > deployment/Dockerfile-next-app
-          docker-compose -f deployment/docker-compose.yml up -d db
+          docker-compose -f deployment/docker-compose.yml up -d
           docker-compose -f deployment/docker-compose.yml build
           rm -f .env
 
@@ -124,8 +121,6 @@ jobs:
           ALB_HOSTNAME: ${{ env.PROJECT_DOMAIN }}
           ALB_GROUP: ${{ env.ALB_GROUP }}
           ALB_SUBNETS: ${{ env.ALB_SUBNETS }}
-
-        if: env.CD == 1
         run: |
           echo $GITHUB_ENV
           echo "create namespace"
@@ -133,35 +128,32 @@ jobs:
           kubectl get no
 
           echo "setting env variables"
-          envsubst < deployment/helm/creators-hub-app/values.yaml > deployment/helm/creators-hub-app/values.yml
-          mv -f deployment/helm/creators-hub-app/values.yml deployment/helm/creators-hub-app/values.yaml
-          echo "app configmap and secrets"
+          envsubst < deployment/helm/meta-proof/values.yaml > deployment/helm/meta-proof/values.yml
+          mv -f deployment/helm/meta-proof/values.yml deployment/helm/meta-proof/values.yaml
+          echo "app configmap"
           cp ~/.$PROJECT_NAME/.env_config .env_config
 
           kubectl create configmap backend-app-env --from-env-file=.env_config -n $NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
           echo "app deployment"
-          envsubst < deployment/helm/helm-values.yaml | helm upgrade -i -f - $PROJECT_NAME deployment/helm/creators-hub-app -n $NAMESPACE
-          kubectl -n $NAMESPACE wait --for=condition=complete --timeout=90s job/migration || true
-          kubectl -n $NAMESPACE logs job/migration  || true
-          kubectl rollout status deployment/${PROJECT_NAME}-backend-nodejs --namespace=$NAMESPACE --watch=true
-          kubectl rollout status deployment/${PROJECT_NAME}-frontend --namespace=$NAMESPACE --watch=true
-          echo "DEPLOY_STATUS_1='$(kubectl get jobs migration --namespace $NAMESPACE -o jsonpath='{.status.conditions[0].type}')'" >> $GITHUB_ENV
+          envsubst < deployment/helm/helm-values.yaml | helm upgrade -i -f - meta-proof deployment/helm/meta-proof -n $NAMESPACE
+          kubectl rollout status deployment/meta-proof-backend-nodejs --namespace=$NAMESPACE --watch=true
+          kubectl rollout status deployment/meta-proof-frontend --namespace=$NAMESPACE --watch=true
           echo "DEPLOY_STATUS_3='$(kubectl rollout status deployment/${PROJECT_NAME}-backend-nodejs --namespace=$NAMESPACE --watch=true)'" >> $GITHUB_ENV
           echo "DEPLOY_STATUS_4='$(kubectl rollout status deployment/${PROJECT_NAME}-frontend --namespace=$NAMESPACE --watch=true)'" >> $GITHUB_ENV
 
-      - name: Slack Notify
-        uses: rtCamp/action-slack-notify@v2
-        if: always()
-        env:
-          SLACK_CHANNEL: devops-alerts
-          SLACK_COLOR: ${{ steps.deploy.outcome }}
-          SLACK_ICON_EMOJI: ":m:"
-          SLACK_TITLE: "Deployment to: ${{ env.PROJECT_NAME }}"
-          SLACK_MESSAGE: "Migration: ${{ env.DEPLOY_STATUS_1 }}, App Rollout: ${{ env.DEPLOY_STATUS_3 }}, ${{ env.DEPLOY_STATUS_4 }}, commit message: ${{ env.GITHUB_MESSAGE }}"
-          SLACK_USERNAME: "CI/CD"
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          MSG_MINIMAL: "commit,ref,actions url"
-          SLACK_FOOTER: "Powered by GitHub Actions"
+      # - name: Slack Notify
+      #   uses: rtCamp/action-slack-notify@v2
+      #   if: always()
+      #   env:
+      #     SLACK_CHANNEL: devops-alerts
+      #     SLACK_COLOR: ${{ steps.deploy.outcome }}
+      #     SLACK_ICON_EMOJI: ":m:"
+      #     SLACK_TITLE: "Deployment to: ${{ env.PROJECT_NAME }}"
+      #     SLACK_MESSAGE: "Migration: ${{ env.DEPLOY_STATUS_1 }}, App Rollout: ${{ env.DEPLOY_STATUS_3 }}, ${{ env.DEPLOY_STATUS_4 }}, commit message: ${{ env.GITHUB_MESSAGE }}"
+      #     SLACK_USERNAME: "CI/CD"
+      #     SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      #     MSG_MINIMAL: "commit,ref,actions url"
+      #     SLACK_FOOTER: "Powered by GitHub Actions"
 
       - name: Cleanup
         if: always()
@@ -175,14 +167,14 @@ jobs:
           rm -f ~/.kube/config
           docker-compose -f deployment/docker-compose.yml down --remove-orphans
 
-  semantic_release:
-    name: Semantic Release
-    runs-on: ubuntu-18.04
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v1
+  # semantic_release:
+  #   name: Semantic Release
+  #   runs-on: ubuntu-18.04
+  #   steps:
+  #     - name: Checkout Repo
+  #       uses: actions/checkout@v1
 
-      - name: Run Semantic Release
-        run: yarn add @semantic-release/git && npx semantic-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+  #     - name: Run Semantic Release
+  #       run: yarn add @semantic-release/git && npx semantic-release
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}

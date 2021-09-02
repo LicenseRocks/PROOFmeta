@@ -1,0 +1,54 @@
+{{- if .Values.app.type.migration }}
+{{- $Val := . }}
+{{- range $key, $jobs := .Values.app.job }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ $jobs.name }}
+  annotations:
+    {{- range $key, $value := $jobs.annotations }}
+      {{ $key }}: {{ $value | quote }}
+    {{- end }}  
+spec:
+  ttlSecondsAfterFinished: {{ $jobs.ttlSecondsAfterFinished }}
+  parallelism: {{ $jobs.parallelism }}
+  completions: {{ $jobs.completions }}
+  template:
+    spec:    
+      {{- with $Val.Values.app.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ $Val.Values.serviceAccount.name }}
+      containers:
+      - name: {{ $jobs.name }}
+        image: {{ $jobs.image.repository }}:{{ $jobs.image.tag | default $Val.Chart.AppVersion }}
+        imagePullPolicy: {{ $jobs.image.pullPolicy }}
+        command: {{ $jobs.command }}
+        args: {{ $jobs.args }}
+        envFrom:
+        {{- with $jobs.environmentFromVariables.configMapRef }}
+        - configMapRef:
+          {{- toYaml . | nindent 12 }}
+        {{- end }}
+        {{- with $jobs.environmentFromVariables.secretRef }}
+        - secretRef:
+          {{- toYaml . | nindent 12 }}
+        {{- end }}
+        env:
+        {{- range $jobs.environmentVariables }}
+        - name: {{ .name }}
+          value: {{ quote .value }}
+        {{- end }}
+        {{- if $jobs.volumeMounts }}
+        volumeMounts:
+          {{- toYaml $jobs.volumeMounts| nindent 12 }}
+        {{- end }}
+      restartPolicy: {{ $jobs.restartPolicy }}
+      {{- with $jobs.volumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+---
+{{- end }}
+{{- end }}

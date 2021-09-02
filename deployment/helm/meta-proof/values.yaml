@@ -1,0 +1,237 @@
+namespace:
+# -- set true for create new namespace
+  create: false
+
+app:
+  type:
+    frontend: true
+    backend_nodejs: true
+    migration: false
+  imagePullSecrets:
+    - name: regcred
+  ######### ingress ########
+  ingress:
+  # -- set true for create new ingress
+    enabled: true
+    name: {}
+    labels: {}
+    # -- set aws or nginx ingress type
+    type: aws
+    annotations:
+      aws:
+        kubernetes.io/ingress.class: alb
+        alb.ingress.kubernetes.io/scheme: internet-facing
+        alb.ingress.kubernetes.io/target-type: ip
+        #alb.ingress.kubernetes.io/healthcheck-path: "/manifest.json"
+        alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80,"HTTPS": 443}]'
+        alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
+        alb.ingress.kubernetes.io/subnets: "${ALB_SUBNETS}"
+        alb.ingress.kubernetes.io/group.name: "${ALB_GROUP}"
+        external-dns.alpha.kubernetes.io/hostname: "${ALB_HOSTNAME}"
+      awscf:
+        kubernetes.io/ingress.class: alb
+        alb.ingress.kubernetes.io/scheme: internet-facing
+        alb.ingress.kubernetes.io/target-type: ip
+        #alb.ingress.kubernetes.io/healthcheck-path: "/manifest.json"
+        alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80,"HTTPS": 443}]'
+        alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
+        alb.ingress.kubernetes.io/subnets: "${ALB_SUBNETS}"
+        alb.ingress.kubernetes.io/group.name: "${ALB_GROUP}"
+    domain: $ALB_HOSTNAME
+    rulesHost: true
+    tls:
+      # -- set true for enable tls
+      enabled: true
+      tlsConfig: 
+        - hosts:
+          - $HTTP_HOST
+          secretName: $HTTP_HOST-cert
+    defaultBackend:
+      portNumber: {}
+  hpa:
+    backend:
+      enabled: false
+      minReplicas: 2
+      maxReplicas: 6
+      averageUtilization: 80
+    frontend:
+      enabled: false
+      minReplicas: 2
+      maxReplicas: 4
+      averageUtilization: 80
+  ######### jobs ########
+  # job:
+  #   - name: migration
+  #     annotations:
+  #       "helm.sh/hook": pre-install
+  #       "helm.sh/hook-weight": "1"
+  #       "helm.sh/hook-delete-policy": hook-succeeded
+  #     ttlSecondsAfterFinished: 3600
+  #     parallelism: 1
+  #     completions: 1
+  #     image:
+  #       repository: $DCR_HOST/$DCR_PATH/backend
+  #       tag: $CI_COMMIT_SHA
+  #     pullPolicy: Always
+  #     command: []
+  #     args: []
+  #     environmentVariables:
+  #       - name: RUN_SERVER
+  #         value: wsgi
+  #     environmentFromVariables:
+  #       configMapRef: 
+  #         name: {}
+  #       secretRef: 
+  #         name: {}
+  #     volumeMounts: []
+  #     volumes: {}
+  #     nodeSelector: {}
+  #     affinity: {}
+  #     tolerations: {}
+  #     restartPolicy: Never
+  ######### deployments ########
+  frontend:
+    deployment:
+      # -- set true for create new deployment
+      replicaCount: 1
+      revisionHistoryLimit: 1
+      autoscaling: 
+        enabled: false
+      podAnnotations: {}
+      serviceAccount:
+        name: default
+      podSecurityContext: {}
+      securityContext: {}
+      podLabels:
+        beat-log-label: "frontend-log"
+      image:
+        repository: $DCR_HOST/$DCR_PATH/frontend
+        tag: $CI_COMMIT_SHA
+        pullPolicy: Always
+      ports:
+        name: http
+        containerPort: 80
+        protocol: TCP
+      command: []
+      args: []
+      livenessProbe:
+        initialDelaySeconds: 10
+        periodSeconds: 30
+        timeoutSeconds: 20
+        failureThreshold: 2
+        path: /
+        port: $NGINX_LISTEN
+        scheme: HTTP
+        host: $HTTP_HOST
+      readinessProbe:
+        initialDelaySeconds: 10
+        periodSeconds: 30
+        timeoutSeconds: 20
+        failureThreshold: 2
+        path: /
+        port: $NGINX_LISTEN
+        scheme: HTTP
+        host: $HTTP_HOST
+      resources:
+        requests:
+          memory: 10Mi
+          cpu: 10m
+        limits:
+          memory: 1024Mi
+          cpu: 1000m
+      environmentFromVariables:
+        configMapRef: 
+          name: frontend-config
+      nodeSelector: {}
+      affinity: {}
+      tolerations: {}
+      # -- set table with parameters for create new volumes
+      volumes: []
+    service:
+    # -- set true for create new service
+      enabled: true
+      type: ClusterIP
+      port: 80
+      targetPort: 80
+      protocol: TCP
+
+  backend_nodejs:
+    deployment:
+      # -- set true for create new deployment
+      replicaCount: 1
+      revisionHistoryLimit: 1
+      autoscaling: 
+        enabled: false
+      podAnnotations: {}
+      serviceAccount: {}
+      podSecurityContext: {}
+      securityContext: {}
+      podLabels:
+        beat-log-label: "backend-log"
+      image:
+        repository: $DCR_HOST/$DCR_PATH/backend
+        tag: $CI_COMMIT_SHA
+        pullPolicy: Always
+      ports:
+        name: http
+        containerPort: 3000
+        protocol: TCP
+      command: []
+      args: []
+      livenessProbe:
+        initialDelaySeconds: 10
+        periodSeconds: 30
+        timeoutSeconds: 20
+        failureThreshold: 2
+        path: /manifest.json
+        port: $NGINX_LISTEN
+      readinessProbe:
+        initialDelaySeconds: 10
+        periodSeconds: 30
+        timeoutSeconds: 20
+        failureThreshold: 2
+        path: /manifest.json
+        port: $NGINX_LISTEN
+      resources:
+        requests:
+          memory: 50Mi
+          cpu: 50m
+        limits:
+          memory: 1024Mi
+          cpu: 1000m
+      environmentVariables:
+        - name: RUN_SERVER
+          value: wsgi
+      environmentFromVariables:
+        configMapRef: 
+          name: backend-config
+      volumeMounts: []
+      volumes: []
+      nodeSelector: {}
+      affinity: {}
+      tolerations: {}
+    service:
+    # -- set true for create new service
+      enabled: true
+      type: ClusterIP
+      port: 3000
+      targetPort: 3000
+
+  ######### configmap ########
+configmap:
+  enabled: true
+  configmaps:
+    - name: backend-config
+      data:
+    - name: frontend-config
+      data:
+  ######### secrets ########
+secret:
+  enabled: true
+  secrets:
+    - name: backend-secret
+      stringData: 
+    - name: regcred
+      type: kubernetes.io/dockerconfigjson
+      data:
+        .dockerconfigjson: $HELM_REPO_RO

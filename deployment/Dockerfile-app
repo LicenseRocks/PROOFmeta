@@ -1,6 +1,5 @@
 FROM "${DCR_HOST}/${DCR_PATH}/backend:base" as builder
 ENV NEXT_TELEMETRY_DISABLED 1
-ARG DATABASE_URL
 WORKDIR /app
 COPY . .
 RUN yarn build && yarn install --production --ignore-scripts --prefer-offline
@@ -9,16 +8,14 @@ RUN rm -f .env
 FROM node:14.17-alpine AS runner
 ENV NEXT_TELEMETRY_DISABLED 1
 ARG NODE_ENV
+ENV NODE_ENV $NODE_ENV
 
 WORKDIR /app
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
 
 COPY --from=builder /app/*config* ./
-COPY --from=builder /app/redoc-static.html ./
 COPY --from=builder /app/*.json ./
-COPY --from=builder /app/next.config.js ./
-RUN true
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules

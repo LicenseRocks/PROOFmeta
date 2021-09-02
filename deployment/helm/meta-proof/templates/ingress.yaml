@@ -1,0 +1,83 @@
+{{- if .Values.app.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Values.app.ingress.name  | default print (include "creators-hub-app.app.projectName" .) }}-ingress 
+  annotations:
+        {{- if eq .Values.app.ingress.type "aws" }}
+          {{- range $key, $value := .Values.app.ingress.annotations.aws }}
+            {{ $key }}: {{ $value | quote }}
+          {{- end }}
+        {{- else if eq .Values.app.ingress.type "awscf" }}
+          {{- range $key, $value := .Values.app.ingress.annotations.awscf }}
+            {{ $key }}: {{ $value | quote }}
+          {{- end }}  
+        {{- else if eq .Values.app.ingress.type "nginx" }}
+          {{- range $key, $value := .Values.app.ingress.annotations.nginx }}
+            {{ $key }}: {{ $value | quote }}
+          {{- end }}  
+        {{- end }} 
+{{- if .Values.app.ingress.labels }}
+  labels:
+  {{ toYaml .Values.app.ingress.labels | indent 8 }}
+{{- end }}
+spec:
+  {{- if .Values.app.ingress.defaultBackend.portNumber }}
+  defaultBackend: 
+    service:
+     name: {{ .Values.app.ingress.defaultBackend.serviceName }}
+     port:
+       number: {{ .Values.app.ingress.defaultBackend.serviceName }}
+  {{- end }} 
+  rules:
+  {{- if .Values.app.ingress.rulesHost }}
+    {{- if or (eq .Values.app.ingress.type "aws") (eq .Values.app.ingress.type "awscf") }}
+  - host: {{ .Values.app.ingress.domain }}
+    {{- else }}
+  - host: {{ include "creators-hub-app.app.projectName" . }}.{{ .Values.app.ingress.domain }}
+    {{- end }}
+    http:
+      paths:
+    {{- if or (eq .Values.app.ingress.type "aws") (eq .Values.app.ingress.type "awscf") }}
+      - backend:
+          service: 
+            name: ssl-redirect
+            port:
+              name: use-annotation
+        path: /*
+        pathType: ImplementationSpecific
+    {{- end }}
+      - backend:
+          service:
+            name: frontend-svc
+            port:
+              number: {{ .Values.app.frontend.deployment.ports.containerPort }}
+        path: /*
+        pathType: ImplementationSpecific
+  {{- else }}
+  - http:
+      paths:
+    {{- if or (eq .Values.app.ingress.type "aws") (eq .Values.app.ingress.type "awscf") }}
+      - backend:
+          service: 
+            name: ssl-redirect
+            port:
+              name: use-annotation
+        path: /*
+        pathType: ImplementationSpecific
+
+    {{- end }}
+      - backend:
+          service: 
+            name: frontend-svc
+            port:
+              number: {{ .Values.app.frontend.deployment.ports.containerPort }}
+        path: /*
+        pathType: ImplementationSpecific
+  {{- end }}
+  {{- if .Values.app.ingress.tls.enabled }}
+  tls:
+        {{- toYaml .Values.app.ingress.tls.tlsConfig| nindent 8 }}
+  {{- end }}
+{{- end }}
+---
