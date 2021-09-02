@@ -138,22 +138,22 @@ jobs:
           envsubst < deployment/helm/helm-values.yaml | helm upgrade -i -f - meta-proof deployment/helm/meta-proof -n $NAMESPACE
           kubectl rollout status deployment/meta-proof-backend-nodejs --namespace=$NAMESPACE --watch=true
           kubectl rollout status deployment/meta-proof-frontend --namespace=$NAMESPACE --watch=true
-          echo "DEPLOY_STATUS_3='$(kubectl rollout status deployment/${PROJECT_NAME}-backend-nodejs --namespace=$NAMESPACE --watch=true)'" >> $GITHUB_ENV
-          echo "DEPLOY_STATUS_4='$(kubectl rollout status deployment/${PROJECT_NAME}-frontend --namespace=$NAMESPACE --watch=true)'" >> $GITHUB_ENV
+          echo "DEPLOY_STATUS_3='$(kubectl rollout status deployment/meta-proof-backend-nodejs --namespace=$NAMESPACE --watch=true)'" >> $GITHUB_ENV
+          echo "DEPLOY_STATUS_4='$(kubectl rollout status deployment/meta-proof-frontend --namespace=$NAMESPACE --watch=true)'" >> $GITHUB_ENV
 
-      # - name: Slack Notify
-      #   uses: rtCamp/action-slack-notify@v2
-      #   if: always()
-      #   env:
-      #     SLACK_CHANNEL: devops-alerts
-      #     SLACK_COLOR: ${{ steps.deploy.outcome }}
-      #     SLACK_ICON_EMOJI: ":m:"
-      #     SLACK_TITLE: "Deployment to: ${{ env.PROJECT_NAME }}"
-      #     SLACK_MESSAGE: "Migration: ${{ env.DEPLOY_STATUS_1 }}, App Rollout: ${{ env.DEPLOY_STATUS_3 }}, ${{ env.DEPLOY_STATUS_4 }}, commit message: ${{ env.GITHUB_MESSAGE }}"
-      #     SLACK_USERNAME: "CI/CD"
-      #     SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-      #     MSG_MINIMAL: "commit,ref,actions url"
-      #     SLACK_FOOTER: "Powered by GitHub Actions"
+      - name: Slack Notify
+        uses: rtCamp/action-slack-notify@v2
+        if: always()
+        env:
+          SLACK_CHANNEL: devops-alerts
+          SLACK_COLOR: ${{ steps.deploy.outcome }}
+          SLACK_ICON_EMOJI: ":m:"
+          SLACK_TITLE: "Deployment to: ${{ env.PROJECT_NAME }}"
+          SLACK_MESSAGE: "App Rollout: ${{ env.DEPLOY_STATUS_3 }}, ${{ env.DEPLOY_STATUS_4 }}, commit message: ${{ env.GITHUB_MESSAGE }}"
+          SLACK_USERNAME: "CI/CD"
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          MSG_MINIMAL: "commit,ref,actions url"
+          SLACK_FOOTER: "Powered by GitHub Actions"
 
       - name: Cleanup
         if: always()
@@ -166,15 +166,3 @@ jobs:
           rm -f ~/.aws/credentials
           rm -f ~/.kube/config
           docker-compose -f deployment/docker-compose.yml down --remove-orphans
-
-  # semantic_release:
-  #   name: Semantic Release
-  #   runs-on: ubuntu-18.04
-  #   steps:
-  #     - name: Checkout Repo
-  #       uses: actions/checkout@v1
-
-  #     - name: Run Semantic Release
-  #       run: yarn add @semantic-release/git && npx semantic-release
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
