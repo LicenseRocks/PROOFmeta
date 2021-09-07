@@ -1,6 +1,6 @@
 const withImages = require("next-images");
 
-const { i18n } = require('./next-i18next.config')
+const { i18n } = require("./next-i18next.config");
 
 module.exports = withImages({
   i18n,
@@ -12,5 +12,8 @@ module.exports = withImages({
     }
 
     return config;
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
   },
 });
