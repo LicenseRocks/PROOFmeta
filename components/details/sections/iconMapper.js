@@ -1,4 +1,5 @@
 import stringSimilarity from "string-similarity";
+import { kebabCase } from "lodash";
 
 import { Icons } from "theme/icons";
 
@@ -23,7 +24,7 @@ const iconMapper = (property) => {
       if (bestMatch.startsWith("fab")) bestMatch = bestMatch.slice(3);
       if (bestMatch.startsWith("fa")) bestMatch = bestMatch.slice(2);
 
-      return bestMatch.charAt(0).toLowerCase() + bestMatch.slice(1);
+      return kebabCase(bestMatch).toLowerCase();
   }
 };
 
