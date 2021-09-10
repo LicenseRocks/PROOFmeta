@@ -5,6 +5,7 @@ import {
   TinyBadge,
   DetailsTable,
   Flex,
+  formatPrice,
   H1,
   H3,
   Text,
@@ -12,6 +13,7 @@ import {
   Image,
   ImageModal,
   HistoryTree,
+  Button,
 } from "@licenserocks/kit";
 import styled from "styled-components";
 import Link from "next/link";
@@ -21,6 +23,7 @@ import { HistoryPicker } from "components/details/historyPicker";
 import date from "utils/date";
 import { getTransaction } from "utils/ethereum";
 import iconMapper from "./iconMapper";
+import { camelCaseToSentence } from "utils/formatters";
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -82,6 +85,15 @@ const Row = styled.div`
   }
 `;
 
+const LinceseTypeBadge = styled(TinyBadge)`
+  background-color: ${({ theme }) => theme.palette.gray.black};
+
+  div {
+    text-transform: capitalize;
+    color: ${({ theme }) => theme.palette.common.white};
+  }
+`;
+
 const CryptoProof = ({ value, url }) => {
   return (
     <CryptoProofContainer>
@@ -100,28 +112,58 @@ CryptoProof.defaultProps = {
   url: "#",
 };
 
+const skipCases = ["terms", "owner", "currency", "startingPrice", "amountType"];
+
 const renderRest = (rest) => {
   if (typeof rest === "object") {
     const res = Object.keys(rest)
       .map((key) => {
+        // Specific Cases
+        if (skipCases.indexOf(key) > -1) return false;
+
+        if (key === "buyNowUrl")
+          return {
+            label: "Buy Now",
+            value: (
+              <Button
+                size="sm"
+                href={rest[key]}
+                content="Go to Marketplace"
+                target="_blank"
+              />
+            ),
+            icon: "shopping-cart",
+          };
+
+        if (key === "licenseType")
+          return {
+            label: "License Type",
+            value: <LinceseTypeBadge label={rest[key]} />,
+            icon: "id-badge",
+          };
+
         if (!rest[key]) return false; // null is also an object
         if (typeof rest[key] === "string" && date.isValid(rest[key]))
           return {
-            label: key,
+            label: camelCaseToSentence(key),
             value: date.format(rest[key]),
             icon: iconMapper(key),
           };
         if (typeof rest[key] === "string")
-          return { label: key, value: rest[key], icon: iconMapper(key) };
+          return {
+            label: camelCaseToSentence(key),
+            value: rest[key],
+            icon: iconMapper(key),
+          };
         if (rest[key]?.label)
           return {
-            label: rest[key].label,
+            label: camelCaseToSentence(rest[key].label),
             value: rest[key].value,
             icon: iconMapper(key),
           };
         if (typeof rest[key] === "object" && typeof rest[key][0] === "string")
           return {
-            label: rest[key].label,
+            label: camelCaseToSentence(rest[key].label),
             value: rest[key].join(", "),
             icon: iconMapper(key),
           };
@@ -130,7 +172,7 @@ const renderRest = (rest) => {
           typeof rest[key][0]?.label === "string"
         )
           return {
-            label: key,
+            label: camelCaseToSentence(key),
             value: rest[key].map((item) => item.label).join(", "),
             icon: iconMapper(key),
           };
@@ -195,7 +237,7 @@ export const DetailsContent = ({
         <HeaderContainer>
           <H1 content={title} />
           {exclusive && <TinyBadge label={t("exclusive")} color="warning" />}
-          {unique && <TinyBadge label={t("unique")} color="success" />}
+          <TinyBadge label={rest.amountType} color="warning" />
         </HeaderContainer>
         <Text color="textSecondary" mb={2}>
           {t("network")}:
@@ -243,16 +285,27 @@ export const DetailsContent = ({
           rows={[
             {
               label: t("status"),
-              value: <ChipBadge icon="check-circle" label="Verified" />,
+              value: (
+                <ChipBadge
+                  color="success"
+                  icon="check-circle"
+                  label="Verified"
+                />
+              ),
             },
             {
               label: t("amount"),
-              value: <H3 content={amount} />,
+              value: <H3 content={amount || "-"} />,
               icon: iconMapper("amount"),
             },
             {
               label: t("price"),
-              value: <H3 content={price} color="primary" />,
+              value: (
+                <H3
+                  content={formatPrice(Number(price || rest.startingPrice))}
+                  color="primary"
+                />
+              ),
               icon: iconMapper("price"),
             },
           ]
@@ -260,19 +313,19 @@ export const DetailsContent = ({
             .concat(
               activeHistory.txHash
                 ? [
-                  {
-                    label: t("creatorPublicKey"),
-                    value: <CryptoProof value={txInfo?.from} />,
-                    expandable: !isPdf,
-                    icon: iconMapper("creatorPublicKey"),
-                  },
-                  {
-                    label: t("transactionId"),
-                    value: <CryptoProof value={txInfo?.hash} />,
-                    expandable: !isPdf,
-                    icon: iconMapper("transactionId"),
-                  },
-                ]
+                    {
+                      label: t("creatorPublicKey"),
+                      value: <CryptoProof value={txInfo?.from} />,
+                      expandable: !isPdf,
+                      icon: iconMapper("creatorPublicKey"),
+                    },
+                    {
+                      label: t("transactionId"),
+                      value: <CryptoProof value={txInfo?.hash} />,
+                      expandable: !isPdf,
+                      icon: iconMapper("transactionId"),
+                    },
+                  ]
                 : []
             )}
         />
