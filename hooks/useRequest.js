@@ -10,13 +10,13 @@ export function useRequest(path, key) {
   useEffect(() => {
     dests.forEach(async (dest) => {
       await axios.get(`${dest}${path}`).then(({ data }) => {
-        setItems((prev) => {
-          if (Array.isArray(data[key])) return [...prev, ...data[key]];
-          return [...prev, data[key]];
+        setItems(() => {
+          if (Array.isArray(data[key])) return [...data[key]];
+          return [data[key]];
         });
       });
     });
-  }, []);
+  }, [path]);
 
   return { items };
 }
