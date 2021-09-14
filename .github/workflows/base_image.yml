@@ -1,8 +1,6 @@
 name: Build Image
 on:
   push:
-    branches:
-      - develop
     paths:
       - 'package.json'
 
@@ -46,6 +44,7 @@ jobs:
         env:
           DCR_HOST: ${{ env.DCR_HOST }}
           DCR_PATH: ${{ env.DCR_PATH }}
+          BRANCH: ${{ env.BRANCH }}
           AWS_PROFILE: ${{ env.AWS_PROFILE }}
           AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}

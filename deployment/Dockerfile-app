@@ -1,4 +1,4 @@
-FROM "${DCR_HOST}/${DCR_PATH}/backend:base" as builder
+FROM "${DCR_HOST}/${DCR_PATH}/backend:${BRANCH}" as builder
 ENV NEXT_TELEMETRY_DISABLED 1
 WORKDIR /app
 COPY . .
