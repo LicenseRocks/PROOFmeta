@@ -1,10 +1,8 @@
 import QRCode from "qrcode";
-import absoluteUrl from "utils/absoluteUrl";
 
 export default async function downloadQRCode(req, res) {
-  const { id } = req.query;
-  const url = absoluteUrl(req).fullPath;
-  QRCode.toBuffer(url, (err, buffer) => {
+  const { id, targetUrl } = req.query;
+  QRCode.toBuffer(targetUrl, (err, buffer) => {
     res.setHeader(
       "Content-disposition",
       `attachment; filename="nft-${id}.jpg"`

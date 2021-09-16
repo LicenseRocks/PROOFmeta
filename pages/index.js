@@ -97,6 +97,10 @@ const DetailsPage = ({
   const { i18n } = useTranslation("details");
   const [licenseData, setLicenseData] = useState(license);
   const pageTitle = `${license.title} | MetaProof`;
+  const nftUrl = encodeURIComponent(
+    `${process.env.NEXT_PUBLIC_APP_DOMAIN}/${generateUrl("", i18n)}`
+  );
+  const qrCodeUrl = `api/export/qrcode?id=${id}&targetUrl=${nftUrl}`;
 
   const {
     amountOfThisGood = 0,
@@ -150,7 +154,7 @@ const DetailsPage = ({
             createdWith,
             i18n.language
           ),
-          qrCodeUrl: generateUrl("api/export/qrcode", i18n),
+          qrCodeUrl,
           qrCodeValue: generateUrl(process.env.NEXT_PUBLIC_APP_DOMAIN, i18n),
         })}
         sidebar={DetailsSidebar({ url })}
