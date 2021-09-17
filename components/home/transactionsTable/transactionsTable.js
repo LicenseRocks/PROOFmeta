@@ -106,7 +106,9 @@ const getRows = ({ nfts = [], t }) =>
             <H4 content={transaction.title} />
           </RKLink>
         ),
-        creator: transaction.creator.name || transaction.creator.username,
+        creator:
+          transaction.creator.username ||
+          transaction.creator.ethereumPublicAddr,
         price,
         createdAt: (
           <Text
