@@ -145,13 +145,13 @@ jobs:
         uses: rtCamp/action-slack-notify@v2
         if: always()
         env:
-          SLACK_CHANNEL: devops-alerts
+          SLACK_CHANNEL: ci-alerts
           SLACK_COLOR: ${{ steps.deploy.outcome }}
           SLACK_ICON_EMOJI: ":m:"
           SLACK_TITLE: "Deployment to: ${{ env.PROJECT_NAME }}"
           SLACK_MESSAGE: "App Rollout: ${{ env.DEPLOY_STATUS_3 }}, ${{ env.DEPLOY_STATUS_4 }}, commit message: ${{ env.GITHUB_MESSAGE }}"
           SLACK_USERNAME: "CI/CD"
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_CI_ALERTS }}
           MSG_MINIMAL: "commit,ref,actions url"
           SLACK_FOOTER: "Powered by GitHub Actions"
 
