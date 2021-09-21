@@ -1,5 +1,6 @@
 name: Build Image
 on:
+  create:
   push:
     paths:
       - 'package.json'
