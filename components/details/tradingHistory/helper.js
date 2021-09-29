@@ -24,7 +24,18 @@ const renderUser = (user) => {
         <StyledImage src={user.avatar || "/images/user-placeholder.png"} />
       </Flex>
       <Flex item ml={2}>
-        <Text content={user.name} fontWeight="bold" fontSize="sm" noWrap />
+        <Text
+          content={
+            user.username ||
+            `${user.ethereumPublicAddr.slice(
+              0,
+              8
+            )}...${user.ethereumPublicAddr.slice(-2)}`
+          }
+          fontWeight="bold"
+          fontSize="sm"
+          noWrap
+        />
       </Flex>
     </Flex>
   );
@@ -51,6 +62,10 @@ const getEvents = (t) => ({
     icon: "folder-plus",
   },
   transfer: {
+    label: t("tradingHistory.events.transfer"),
+    icon: "shopping-cart",
+  },
+  manualTransfer: {
     label: t("tradingHistory.events.transfer"),
     icon: "shopping-cart",
   },
