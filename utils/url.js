@@ -14,6 +14,8 @@ export const getBaseUrl = (createdWith = "creatorshub") => {
       return `https://marketplace.twlvxtwlv.com/`;
     case "nftable":
       return `https://app.nftable.xyz`;
+    case "jmesworld":
+      return `https://jmesworld.creators-hub-cluster.license.rocks`;
     default:
       if (process.env.NODE_ENV === "development") {
         return `http://localhost:3000`;
