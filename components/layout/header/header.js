@@ -18,10 +18,10 @@ const StyledHeader = styled(Flex).attrs(() => ({
 
 const StyledLogo = styled(Image).attrs(() => ({
   alt: "Logo",
-  src: "/images/mp-logo.svg",
+  src: "/images/metaPROOF-Logo.svg",
 }))`
   width: auto;
-  height: 50px;
+  height: 70px;
 `;
 
 const LangWrapper = styled.div`
