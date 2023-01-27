@@ -141,7 +141,7 @@ export const renderFooter = (t) => {
   return (
     <Footer>
       <TopSection>
-        <Image src={branding?.logo} />
+        <Image src="/images/metaPROOF-Logo.svg" />
 
         <div className="contact-section">
           <StyledText content={t("footer.question")} dInline />

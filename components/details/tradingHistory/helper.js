@@ -61,6 +61,10 @@ const getEvents = (t) => ({
     label: t("tradingHistory.events.minted"),
     icon: "folder-plus",
   },
+  burn: {
+    label: t("tradingHistory.events.burn"),
+    icon: "trash",
+  },
   transfer: {
     label: t("tradingHistory.events.transfer"),
     icon: "shopping-cart",
