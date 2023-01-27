@@ -15,7 +15,8 @@
     "events": {
       "bid": "Offer",
       "minted": "Create",
-      "transfer": "Buy"
+      "transfer": "Buy",
+      "burn": "Burn"
     },
     "statuses": {
       "pending": "Pending",
