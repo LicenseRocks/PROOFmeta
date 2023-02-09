@@ -163,7 +163,7 @@ const renderRest = (rest) => {
           };
         if (typeof rest[key] === "object" && typeof rest[key][0] === "string")
           return {
-            label: camelCaseToSentence(rest[key].label),
+            label: camelCaseToSentence(rest[key]?.label ?? key),
             value: rest[key].join(", "),
             icon: iconMapper(key),
           };
@@ -214,7 +214,7 @@ export const DetailsContent = ({
       Date.parse(second.created_at || first.createdAt) -
       Date.parse(first.created_at || first.createdAt)
   );
-  const [activeHistory, setActiveHistory] = useState(orderedHistories[0]);
+  const [activeHistory, setActiveHistory] = useState(orderedHistories.length > 0 ?  orderedHistories[0] : null);
   const [txInfo, setTxInfo] = useState(null);
   const [txLoading, setTxLoading] = useState(false);
   const [coverPreviewOpen, setCoverPreviewOpen] = useState(false);
@@ -228,7 +228,7 @@ export const DetailsContent = ({
   };
 
   useEffect(() => {
-    if (activeHistory.txHash) getTransactionInfo();
+    if (activeHistory?.txHash) getTransactionInfo();
   }, []);
 
   return (
@@ -311,7 +311,7 @@ export const DetailsContent = ({
           ]
             .concat(renderRest(rest))
             .concat(
-              activeHistory.txHash
+              activeHistory?.txHash
                 ? [
                     {
                       label: t("creatorPublicKey"),
