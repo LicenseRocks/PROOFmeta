@@ -298,16 +298,6 @@ export const DetailsContent = ({
               value: <H3 content={amount || "-"} />,
               icon: iconMapper("amount"),
             },
-            {
-              label: t("price"),
-              value: (
-                <H3
-                  content={formatPrice(Number(price || rest.startingPrice))}
-                  color="primary"
-                />
-              ),
-              icon: iconMapper("price"),
-            },
           ]
             .concat(renderRest(rest))
             .concat(

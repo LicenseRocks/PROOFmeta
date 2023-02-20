@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-import { apiRoutes } from "routes";
 
 export function useRequest(path, key) {
   const [items, setItems] = useState([]);
