@@ -297,7 +297,7 @@ export const DetailsContent = ({
               label: t("amount"),
               value: <H3 content={amount || "-"} />,
               icon: iconMapper("amount"),
-            }
+            },
           ]
             .concat(renderRest(rest))
             .concat(

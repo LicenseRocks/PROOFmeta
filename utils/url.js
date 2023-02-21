@@ -1,5 +1,7 @@
 export const getBaseUrl = (createdWith = "creatorshub") => {
   switch (createdWith) {
+    case "africa":
+      return `https://paradiseontherocks.club`;
     case "demo":
       return `https://demo.licenserocks.de`;
     case "licensecore":
