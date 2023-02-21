@@ -64,10 +64,6 @@ const getColumns = ({ t }) => [
     label: t("table.creator"),
   },
   {
-    key: "price",
-    label: t("table.price"),
-  },
-  {
     key: "createdAt",
     label: t("table.createdAt"),
   },
@@ -109,7 +105,6 @@ const getRows = ({ nfts = [], t }) =>
         creator:
           transaction.creator.username ||
           transaction.creator.ethereumPublicAddr,
-        price,
         createdAt: (
           <Text
             content={date.format(transaction.createdAt)}
