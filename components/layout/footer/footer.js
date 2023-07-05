@@ -96,7 +96,13 @@ const ListItem = styled.li`
     opacity: 0.7;
   }
 `;
-
+const StyledLogo = styled(Image).attrs(() => ({
+  alt: "Logo",
+  src: "/images/PROOFmeta-Logo-2.1.svg",
+}))`
+  width: auto;
+  height: 70px;
+`;
 const Copyright = styled(H4).attrs(() => ({
   align: "center",
 }))`
@@ -141,8 +147,7 @@ export const renderFooter = (t) => {
   return (
     <Footer>
       <TopSection>
-        <Image src="/images/metaPROOF-Logo.svg" />
-
+        <StyledLogo />
         <div className="contact-section">
           <StyledText content={t("footer.question")} dInline />
 

@@ -18,7 +18,7 @@ const StyledHeader = styled(Flex).attrs(() => ({
 
 const StyledLogo = styled(Image).attrs(() => ({
   alt: "Logo",
-  src: "/images/metaPROOF-Logo.svg",
+  src: "/images/PROOFmeta-Logo-2.1.svg",
 }))`
   width: auto;
   height: 70px;
