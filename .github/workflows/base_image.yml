@@ -9,7 +9,7 @@ on:
 jobs:
   build_image:
     name: Build Base Image
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Set BRANCH
         shell: bash
