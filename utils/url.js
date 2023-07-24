@@ -1,5 +1,9 @@
 export const getBaseUrl = (createdWith = "creatorshub") => {
   switch (createdWith) {
+    case "nftVerse":
+      return "https://nftverse.club";
+    case "preview":
+      return "https://preview-creatorshub.license.rocks";
     case "demo":
       return `https://demo.licenserocks.de`;
     case "licensecore":
