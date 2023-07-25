@@ -55,8 +55,8 @@ const IndexNftPage = ({ nftId, platform, buyUrl }) => {
     metricsData?.highlightedCountries === "all"
       ? ["worldwide"]
       : geoCountriesNames?.length > ALLOWED_COUNTRY_NAMES_DISPLAY
-      ? [...geoCountriesNames.slice(0, ALLOWED_COUNTRY_NAMES_DISPLAY), "..."]
-      : geoCountriesNames;
+        ? [...geoCountriesNames.slice(0, ALLOWED_COUNTRY_NAMES_DISPLAY), "..."]
+        : geoCountriesNames;
 
   return (
     <Container>
@@ -275,6 +275,10 @@ const CreatorWrapper = styled.div`
   background: #f1f1f4;
   border-radius: 16px;
   display: flex;
+
+  ${({ theme }) => theme.breakpoints.down("md")} {
+    padding: 30px;
+  }
 `;
 
 const CreatorDescription = styled.div`
@@ -423,6 +427,10 @@ const NftWrapper = styled.div`
   margin-left: auto;
   margin-right: auto;
 
+  ${({ theme }) => theme.breakpoints.down("md")} {
+   padding: 30px;
+  }
+  
   h2 {
     width: 100%;
     text-align: start;
@@ -441,6 +449,11 @@ const InsightsContainer = styled.a`
   flex-direction: row;
   background: #fd9f2c;
   margin-top: 0;
+
+  ${({ theme }) => theme.breakpoints.down("md")} {
+    flex-direction: column;
+    height: 440px;
+  }
 
   h3 {
     color: white;

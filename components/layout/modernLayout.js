@@ -127,7 +127,7 @@ const Footer = styled.div`
   padding: ${({ theme }) => theme.spacing(0, 0, 8, 0)};
 
   ${({ theme }) => theme.breakpoints.down("md")} {
-    padding: ${({ theme }) => theme.spacing(0, 0, 8, 0)};
+  width: 100%;
   }
 
   ${(theme) => SPACER(theme)}
@@ -245,4 +245,12 @@ const LinksHalf = styled.div`
 
 const FooterLinks = styled(Flex)`
   justify-content: space-between;
+
+  ${({ theme }) => theme.breakpoints.down("md")} {
+    width: 100% !important;
+    flex-direction: column;
+    justify-content: center;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+  }
 `
