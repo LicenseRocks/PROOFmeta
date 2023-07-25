@@ -58,6 +58,8 @@ const IndexNftPage = ({ nftId, platform, buyUrl }) => {
         ? [...geoCountriesNames.slice(0, ALLOWED_COUNTRY_NAMES_DISPLAY), "..."]
         : geoCountriesNames;
 
+
+
   return (
     <Container>
       <NftWrapper>
@@ -69,7 +71,6 @@ const IndexNftPage = ({ nftId, platform, buyUrl }) => {
           </NftContent>
         </NftData>
       </NftWrapper>
-
       <CreatorWrapper>
         <CreatorsData>
           <Image src={nftData?.creator.avatarUrl} />
@@ -86,11 +87,9 @@ const IndexNftPage = ({ nftId, platform, buyUrl }) => {
           {nftData?.creator?.description || "no creator description provided"}
         </CreatorDescription>
       </CreatorWrapper>
-
       <BuyRow>
         <Button onClick={()=> router.push(buyUrl)}>Buy this NFT</Button>
       </BuyRow>
-
       <CardsContainer>
         <ModuleDivider>
           <H5 content="Commercial" />
@@ -113,7 +112,7 @@ const IndexNftPage = ({ nftId, platform, buyUrl }) => {
             )}
           </RightsRow>
           <ContentText mt={2} fontWeight="bold">
-            {metricsData?.commercialRights?.description}
+            {metricsData?.commercialRightsDescription}
           </ContentText>
         </ModuleDivider>
         <BorderLine />
@@ -123,7 +122,7 @@ const IndexNftPage = ({ nftId, platform, buyUrl }) => {
             <H1>{metricsData?.aiUsage ? "Yes" : "No"}</H1>
           </RightsRow>
           <ContentText mt={2} fontWeight="bold">
-            {metricsData?.aiUsage?.description}
+            {metricsData?.aiUsageDescription}
           </ContentText>
         </ModuleDivider>
         <BorderLine />
@@ -135,7 +134,7 @@ const IndexNftPage = ({ nftId, platform, buyUrl }) => {
                 <H1>licensemetrics.private.context</H1>
               </RightsRow>
               <ContentText mt={2} fontWeight="bold">
-                {metricsData?.privateRights?.description}
+                {metricsData?.privateRightsDescription}
               </ContentText>
             </ModuleDivider>
             <BorderLine />
@@ -146,7 +145,7 @@ const IndexNftPage = ({ nftId, platform, buyUrl }) => {
           <H4 content="Content" />
           <H1>{metricsData?.content}</H1>
           <ContentText mt={2} fontWeight="bold">
-            {metricsData?.content?.description}
+            {metricsData?.contentDescription}
           </ContentText>
         </ModuleDivider>
         <BorderLine />
@@ -158,7 +157,7 @@ const IndexNftPage = ({ nftId, platform, buyUrl }) => {
             <H1 content="No" />
           )}
           <ContentText mt={2} fontWeight="bold">
-            {metricsData?.transferable?.description}
+            {metricsData?.transferableDescription}
           </ContentText>
         </ModuleDivider>
         <BorderLine />
@@ -170,16 +169,16 @@ const IndexNftPage = ({ nftId, platform, buyUrl }) => {
             <H1 content="No" />
           )}
           <ContentText mt={2} fontWeight="bold">
-            {metricsData?.exclusiveRights?.description}
+            {metricsData?.exclusiveRightsDescription}
           </ContentText>
         </ModuleDivider>
         <BorderLine />
         <ModuleDivider>
           <H5 content="EffectiveDate" />
           <ContentText my={2} fontWeight="bold">
-            {metricsData?.effectiveDate?.description}
+            {metricsData?.effectiveDateDescription}
           </ContentText>
-          {metricsData?.effectiveDate ? (
+          {metricsData?.effectiveDate?.start && metricsData?.effectiveDate?.end ? (
             <EffectiveDateVisualization
               startDate={new Date(metricsData?.effectiveDate?.start)}
               endDate={new Date(metricsData?.effectiveDate?.end)}
@@ -200,7 +199,7 @@ const IndexNftPage = ({ nftId, platform, buyUrl }) => {
               ))}
             </GeoResponsiveContainer>
             <ContentText my={2} fontWeight="bold">
-              {metricsData?.territory?.description}
+              {metricsData?.territoryDescription}
             </ContentText>
             <GeoHighlight
               width={205}
