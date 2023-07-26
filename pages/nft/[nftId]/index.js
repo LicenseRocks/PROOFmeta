@@ -489,7 +489,7 @@ const InsightsContainer = styled.a`
 `;
 
 const ModuleDivider = styled.div`
-  width: 300px;
+  width: 500px;
   margin-left: auto;
   margin-right: auto;
   padding-top: 20px;
