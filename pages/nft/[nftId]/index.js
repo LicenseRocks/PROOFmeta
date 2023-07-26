@@ -1,41 +1,36 @@
 import React from "react";
 import PropTypes from "prop-types";
 import useSWR from "swr";
-import {
-  Button,
-  Flex,
-  H1,
-  H2,
-  H3,
-  H4,
-  H5,
-  Image,
-  Text,
-} from "@licenserocks/kit";
+import { Button, Flex, H1, H2, H3, H4, H5, Image, Text } from "@licenserocks/kit";
 import styled from "styled-components";
 import { getBaseUrl } from "../../../utils/url";
 import { ModernLayout } from "../../../components/layout/modernLayout";
-import {
-  GEO_VISUALIZATION_COUNTRY_CODES,
-  getGeoVisualizationCountryName,
-} from "../../../components/nft/geoDetails";
+import { GEO_VISUALIZATION_COUNTRY_CODES, getGeoVisualizationCountryName } from "../../../components/nft/geoDetails";
 import { GeoHighlight } from "../../../components/nft/geoHighlights";
 import { EffectiveDateVisualization } from "../../../components/nft/effectiveDate";
 import { useRouter } from "next/router";
 
 export const getServerSideProps = async ({ params, query }) => {
   const { nftId } = params;
-  const { platform, buyUrl } = query;
+  const { platform, redirectUrl } = query;
   return {
     props: {
       nftId,
       platform,
-      buyUrl,
-    },
+      redirectUrl
+    }
   };
 };
 
-const IndexNftPage = ({ nftId, platform, buyUrl }) => {
+function truncateString(str) {
+  if (str.length > 200) {
+    return str.substring(0, 200) + "...";
+  } else {
+    return str;
+  }
+}
+
+const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
   const { data } = useSWR(`${getBaseUrl(platform)}/api/public/nft/${nftId}`);
   const nftData = data?.nft;
   const metricsData = data?.licenseMetrics?.payload; // { highlightedCountries: "all" };
@@ -58,8 +53,6 @@ const IndexNftPage = ({ nftId, platform, buyUrl }) => {
         ? [...geoCountriesNames.slice(0, ALLOWED_COUNTRY_NAMES_DISPLAY), "..."]
         : geoCountriesNames;
 
-
-
   return (
     <Container>
       <NftWrapper>
@@ -67,7 +60,11 @@ const IndexNftPage = ({ nftId, platform, buyUrl }) => {
         <NftData>
           <Image src={nftData?.coverSrc} />
           <NftContent>
-            {nftData?.description || "no description provided"}
+            <Text
+              dangerouslySetInnerHTML={{
+                __html: truncateString(nftData?.description) || "no description provided"
+              }}
+            />
           </NftContent>
         </NftData>
       </NftWrapper>
@@ -84,11 +81,17 @@ const IndexNftPage = ({ nftId, platform, buyUrl }) => {
           />
         </CreatorsData>
         <CreatorDescription>
-          {nftData?.creator?.description || "no creator description provided"}
+          <Text
+            dangerouslySetInnerHTML={{
+              __html:
+                truncateString(nftData?.creator?.description) ||
+                "no creator description provided"
+            }}
+          />
         </CreatorDescription>
       </CreatorWrapper>
       <BuyRow>
-        <Button onClick={()=> router.push(buyUrl)}>Buy this NFT</Button>
+        <Button onClick={() => router.push(`${redirectUrl}/nfts/${nftId}`)}>Buy this NFT</Button>
       </BuyRow>
       <CardsContainer>
         <ModuleDivider>
@@ -233,7 +236,7 @@ IndexNftPage.Layout = ModernLayout;
 
 IndexNftPage.propTypes = {
   nftId: PropTypes.string.isRequired,
-  platform: PropTypes.string.isRequired,
+  platform: PropTypes.string.isRequired
 };
 
 IndexNftPage.defaultProps = {};
@@ -427,9 +430,9 @@ const NftWrapper = styled.div`
   margin-right: auto;
 
   ${({ theme }) => theme.breakpoints.down("md")} {
-   padding: 30px;
+    padding: 30px;
   }
-  
+
   h2 {
     width: 100%;
     text-align: start;
