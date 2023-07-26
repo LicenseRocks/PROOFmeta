@@ -38,10 +38,10 @@ app:
 
   hpa:
     backend:
-      enabled: true
+      enabled: false
       minReplicas: 2
     frontend:
-      enabled: true
+      enabled: false
 
   ######### configmap ########
 configmap:
