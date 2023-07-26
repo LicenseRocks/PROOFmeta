@@ -117,7 +117,7 @@ const IndexNftPage = ({ nftId, platform, buyUrl }) => {
 
       </CreatorWrapper>
       <BuyRow>
-        <Button onClick={() => router.push(`${redirectUrl}/nfts/${nftId}`)}>Buy this NFT</Button>
+        <Button onClick={() => router.push(`https://unitedbearsociety.nftverse.club/nfts/382`)}>Buy this NFT</Button>
       </BuyRow>
       <CardsContainer>
         <ModuleDivider>

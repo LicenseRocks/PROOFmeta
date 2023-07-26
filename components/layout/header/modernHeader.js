@@ -33,6 +33,7 @@ const StyledLogo = styled(Image).attrs(() => ({
 `;
 
 export const ModernHeader = ({ logoAction, ...props }) => {
+
   return (
     <StyledHeader {...props}>
       <Flex>
@@ -41,8 +42,11 @@ export const ModernHeader = ({ logoAction, ...props }) => {
         </Link>
       </Flex>
       <Flex container item justify="flex-end" lg={3} xs={6}>
-        <OutlineButton color={"secondary"} onCLick={() => {
-        }} content={"Buy this NFT"} />
+        <Link href={"https://unitedbearsociety.nftverse.club/nfts/382"}>
+          <OutlineButton color={"secondary"}
+           content={"Buy this NFT"} />
+        </Link>
+
       </Flex>
     </StyledHeader>
   );

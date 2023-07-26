@@ -69,7 +69,7 @@ export const ModernLayout = ({
               <ContactButton
                 color="subtle"
                 content={"Get in Touch"}
-                href={"https://nftverse.club"}
+                href={"https://unitedbearsociety.nftverse.club/contact"}
                 size="lg"
                 target="_blank"
               />
@@ -82,21 +82,21 @@ export const ModernLayout = ({
           <Footer>
             <FooterLinks container spacing={8}>
               <LinksHalf>
-                  <Link href={"https://nftverse.club/pages/Imprint"}>
+                  <Link href={"https://unitedbearsociety.nftverse.club/imprint"}>
                     <Text mr={2} content={"Imprint"} />
                   </Link>
 
-                  <Link href={"https://nftverse.club"}>
+                  <Link href={"https://unitedbearsociety.nftverse.club/support"}>
                     <Text content={"Support"} />
                   </Link>
               </LinksHalf>
 
               <LinksHalf>
-                  <Link href={"https://nftverse.club/pages/terms"}>
+                  <Link href={"https://unitedbearsociety.nftverse.club/terms"}>
                     <Text mr={2} content={"Terms of usage"} />
                   </Link>
 
-                  <Link href={"https://nftverse.club/pages/privacy"}>
+                  <Link href={"https://unitedbearsociety.nftverse.club/privacy"}>
                     <Text content={"Privacy"} />
                   </Link>
               </LinksHalf>
