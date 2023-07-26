@@ -1,5 +1,5 @@
 {{- if .Values.app.hpa.frontend.enabled }}
-apiVersion: autoscaling/v2beta2
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "creators-hub-app.app.projectName" . }}-frontend-hpa
