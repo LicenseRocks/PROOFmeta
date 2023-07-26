@@ -55,12 +55,11 @@ const metricsData = {
   commercialRightsDescription: ""
 };
 
-const IndexNftPage = ({ nftId, platform, buyUrl }) => {
+const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
   const { data } = useSWR(`${getBaseUrl(platform)}/api/public/nft/${nftId}`);
   const nftData = data?.nft;
   //const metricsData = data?.licenseMetrics?.payload; // { highlightedCountries: "all" };
   const router = useRouter();
-
   const finalHighlightedCountries =
     !Array.isArray(metricsData?.highlightedCountries) &&
     metricsData?.highlightedCountries === "all"
@@ -80,17 +79,17 @@ const IndexNftPage = ({ nftId, platform, buyUrl }) => {
 
   return (
     <Container>
-      <NftWrapper>
-        <H2 align="center" my={4} content={nftData?.title} />
-        <NftData>
-          <Image src={nftData?.coverSrc} />
-          {nftData?.description ?
-            <NftContent dangerouslySetInnerHTML={{ __html: nftData?.description?.slice(0, 200) + "..." }} />
-            :
-            <NftContent>No description provided.</NftContent>
-          }
-        </NftData>
-      </NftWrapper>
+        <NftWrapper>
+          <H2 align="center" my={4} content={nftData?.title} />
+          <NftData>
+            <Image src={nftData?.coverSrc} />
+            {nftData?.description ?
+              <NftContent dangerouslySetInnerHTML={{ __html: nftData?.description?.slice(0, 400) + "..." }} />
+              :
+              <NftContent>No description provided.</NftContent>
+            }
+          </NftData>
+        </NftWrapper>
       <CreatorWrapper>
         <CreatorsData>
           <Image src={nftData?.creator.avatarUrl} />
@@ -240,7 +239,7 @@ const IndexNftPage = ({ nftId, platform, buyUrl }) => {
         <BorderLine />
         <InsightsContainer
           target="_blank"
-          href="https://explorer.license.rocks/home"
+          href=" https://license.rocks/proofmeta"
         >
           <Flex>
             <H3>License Metrics</H3>

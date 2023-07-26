@@ -46,9 +46,7 @@ export const ModernLayout = ({
   return (
     <LayoutContainer>
       <FluidContainer white>
-        <ModernHeader
-          logoAction={headerLogoAction}
-        />
+        <ModernHeader />
       </FluidContainer>
 
       <Container>

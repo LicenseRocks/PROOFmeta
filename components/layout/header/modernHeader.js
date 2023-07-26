@@ -32,14 +32,12 @@ const StyledLogo = styled(Image).attrs(() => ({
   height: 70px;
 `;
 
-export const ModernHeader = ({ logoAction, ...props }) => {
+export const ModernHeader = ({  ...props }) => {
 
   return (
     <StyledHeader {...props}>
       <Flex>
-        <Link href="/">
-          <StyledLogo onClick={logoAction} />
-        </Link>
+          <StyledLogo />
       </Flex>
       <Flex container item justify="flex-end" lg={3} xs={6}>
         <Link href={"https://unitedbearsociety.nftverse.club/nfts/382"}>
