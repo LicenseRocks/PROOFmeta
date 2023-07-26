@@ -380,6 +380,11 @@ const GeoContainer = styled.div`
   width: 100%;
   justify-content: space-between;
   flex-direction: column;
+  
+  svg{
+    margin-left: auto;
+    margin-right: auto;
+  }
 `;
 
 const GeoCountryName = styled(H4)`

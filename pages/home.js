@@ -17,7 +17,7 @@ const IndexPage = () => {
   return (
     <>
       <PageMeta
-        description="MetaProof is an explorer to extract the metadata of NFTs that are secured with their JSON files on the Arweave permanent storage"
+        description="PROOFmeta is an explorer to extract the metadata of NFTs that are secured with their JSON files on the Arweave permanent storage"
         title="MetaProof"
         url="/home"
         Wrapper={(props) => <Head {...props} />}
