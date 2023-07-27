@@ -35,14 +35,14 @@ export const getServerSideProps = async ({ params, query }) => {
   };
 };
 const metricsData = {
-  content: "Digital MembershipNon Exclusive",
+  content: "Digital Membership",
   territory: "Territory",
   transferable: true,
   effectiveDate: { isUnlimited: true },
   privateRights: false,
   exclusiveRights: true,
   commercialFooter: "",
-  commercialRights: ["PfP"],
+  commercialRights: ["PfP", "Digital Membership"],
   aiUsageDescription: "The processing, utilization, or any form of use of the Non-Fungible Token (NFT) and its attached digital items, created by the creative, by artificial intelligence (AI) systems is strictly prohibited without explicit written consent from the copyright owner. No rights, explicit or implied, are granted to any party to employ the NFT and its associated digital items in conjunction with AI technologies unless authorized in writing by the copyright owner. Any unauthorized use of the NFT and its attached digital items with AI systems shall be deemed a violation of copyright and may result in legal action, including but not limited to injunctive relief, damages, and attorney's fees.",
   contentDescription: "Whale Protected - no more than 10 memberships per person is allowed.",
   highlightedCountries: "all",
@@ -52,7 +52,11 @@ const metricsData = {
   effectiveDateDescription: "",
   privateRightsDescription: "",
   exclusiveRightsDescription: "",
-  commercialRightsDescription: ""
+  commercialRightsDescription:
+    "Your PfP - NFT IP Rights\n" +
+    "<br>\n" +
+    "<br>\n" +
+    "When you purchase an NFT, you own the image. You are free to use the NFT for any purpose you wish. However, please be aware that certain names or trademarks associated with the NFT need the consent of the copyright holder to be used, for instance, United Labs Gmbh or United Bear Society, and their use may require express permission. We encourage all NFT holders to be mindful of their intellectual property (IP) rights. Additionally, if you choose to sell your NFT at any time, it's essential to understand that you may relinquish all rights associated with the NFT and may no longer have permission to use it."
 };
 
 const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
@@ -120,7 +124,7 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
       </BuyRow>
       <CardsContainer>
         <ModuleDivider>
-          <H5 content="Commercial" />
+          <H5 content="Private" />
           <RightsRow>
             {metricsData?.commercialRights?.map(
               (commercialRight, index, original) => {
@@ -140,7 +144,11 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
             )}
           </RightsRow>
           <ContentText mt={2} fontWeight="bold">
-            {metricsData?.commercialRightsDescription}
+            <div
+              dangerouslySetInnerHTML={{
+                __html: metricsData?.commercialRightsDescription,
+              }}
+            />{" "}
           </ContentText>
         </ModuleDivider>
         <BorderLine />
@@ -184,13 +192,13 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
           ) : (
             <H1 content="No" />
           )}
-          <ContentText mt={2} fontWeight="bold">
-            {metricsData?.transferableDescription}
-          </ContentText>
+          {/*<ContentText mt={2} fontWeight="bold">*/}
+          {/*  {metricsData?.transferableDescription}*/}
+          {/*</ContentText>*/}
         </ModuleDivider>
         <BorderLine />
         <ModuleDivider>
-          <H5 content="ExclusiveRights" />
+          <H5 content="Exclusive Rights" />
           {metricsData?.exclusiveRights ? (
             <H1 content="Yes" />
           ) : (
@@ -202,7 +210,7 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
         </ModuleDivider>
         <BorderLine />
         <ModuleDivider>
-          <H5 content="EffectiveDate" />
+          <H5 content="Effective Date" />
           <ContentText my={2} fontWeight="bold">
             {metricsData?.effectiveDateDescription}
           </ContentText>
