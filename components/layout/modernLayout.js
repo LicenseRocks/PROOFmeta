@@ -40,7 +40,8 @@ export const ModernLayout = ({
   loading
 }) => {
   const { t } = useTranslation("layout");
-
+  const { redirectUrl, nftId } = children?.props;
+  console.log('🚀 ',redirectUrl, nftId)
   if (loading) return <PageLoading fullScreen />;
 
   return (
@@ -67,7 +68,7 @@ export const ModernLayout = ({
               <ContactButton
                 color="subtle"
                 content={"Get in Touch"}
-                href={"https://unitedbearsociety.nftverse.club/contact"}
+                href={`${redirectUrl}/contact`}
                 size="lg"
                 target="_blank"
               />
@@ -80,23 +81,23 @@ export const ModernLayout = ({
           <Footer>
             <FooterLinks container spacing={8}>
               <LinksHalf>
-                  <Link href={"https://unitedbearsociety.nftverse.club/imprint"}>
-                    <Text mr={2} content={"Imprint"} />
-                  </Link>
+                <Link href={`${redirectUrl}/imprint`}>
+                  <Text mr={2} content={"Imprint"} />
+                </Link>
 
-                  <Link href={"https://unitedbearsociety.nftverse.club/support"}>
-                    <Text content={"Support"} />
-                  </Link>
+                <Link href={`${redirectUrl}/support`}>
+                  <Text content={"Support"} />
+                </Link>
               </LinksHalf>
 
               <LinksHalf>
-                  <Link href={"https://unitedbearsociety.nftverse.club/terms"}>
-                    <Text mr={2} content={"Terms of usage"} />
-                  </Link>
+                <Link href={`${redirectUrl}/terms`}>
+                  <Text mr={2} content={"Terms of usage"} />
+                </Link>
 
-                  <Link href={"https://unitedbearsociety.nftverse.club/privacy"}>
-                    <Text content={"Privacy"} />
-                  </Link>
+                <Link href={`${redirectUrl}/privacy`}>
+                  <Text content={"Privacy"} />
+                </Link>
               </LinksHalf>
             </FooterLinks>
 
@@ -125,7 +126,7 @@ const Footer = styled.div`
   padding: ${({ theme }) => theme.spacing(0, 0, 8, 0)};
 
   ${({ theme }) => theme.breakpoints.down("md")} {
-  width: 100%;
+    width: 100%;
   }
 
   ${(theme) => SPACER(theme)}
@@ -238,7 +239,7 @@ const LinksHalf = styled.div`
   margin-left: 16px;
   margin-right: 38px;
   margin-top: 20px;
-  cursor:pointer;
+  cursor: pointer;
 `;
 
 const FooterLinks = styled(Flex)`
@@ -251,4 +252,4 @@ const FooterLinks = styled(Flex)`
     margin-right: 0 !important;
     margin-left: 0 !important;
   }
-`
+`;
