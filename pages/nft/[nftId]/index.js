@@ -40,7 +40,7 @@ const metricsData = {
   transferable: true,
   effectiveDate: { isUnlimited: true },
   privateRights: false,
-  exclusiveRights: true,
+  exclusiveRights: false,
   commercialFooter: "",
   commercialRights: ["PfP", "Digital Membership"],
   aiUsageDescription: "The processing, utilization, or any form of use of the Non-Fungible Token (NFT) and its attached digital items, created by the creative, by artificial intelligence (AI) systems is strictly prohibited without explicit written consent from the copyright owner. No rights, explicit or implied, are granted to any party to employ the NFT and its associated digital items in conjunction with AI technologies unless authorized in writing by the copyright owner. Any unauthorized use of the NFT and its attached digital items with AI systems shall be deemed a violation of copyright and may result in legal action, including but not limited to injunctive relief, damages, and attorney's fees.",
