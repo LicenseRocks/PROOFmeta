@@ -32,17 +32,17 @@ const StyledLogo = styled(Image).attrs(() => ({
   height: 70px;
 `;
 
-export const ModernHeader = ({  ...props }) => {
-
+export const ModernHeader = ({ ...props }) => {
+  const { buyUrl } = props;
   return (
     <StyledHeader {...props}>
       <Flex>
-          <StyledLogo />
+        <StyledLogo />
       </Flex>
       <Flex container item justify="flex-end" lg={3} xs={6}>
-        <Link href={"https://unitedbearsociety.nftverse.club/nfts/382"}>
+        <Link href={buyUrl}>
           <OutlineButton color={"secondary"}
-           content={"Buy this NFT"} />
+                         content={"Buy this NFT"} />
         </Link>
 
       </Flex>

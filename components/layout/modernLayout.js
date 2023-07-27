@@ -47,7 +47,7 @@ export const ModernLayout = ({
   return (
     <LayoutContainer>
       <FluidContainer white>
-        <ModernHeader />
+        <ModernHeader buyUrl={`${redirectUrl}/nft/${nftId}` />
       </FluidContainer>
 
       <Container>
