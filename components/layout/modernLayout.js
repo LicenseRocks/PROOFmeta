@@ -41,7 +41,7 @@ export const ModernLayout = ({
 }) => {
   const { t } = useTranslation("layout");
   const { redirectUrl, nftId } = children?.props;
-  console.log('🚀 ',redirectUrl, nftId)
+
   if (loading) return <PageLoading fullScreen />;
 
   return (
