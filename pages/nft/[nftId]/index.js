@@ -94,31 +94,31 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
             }
           </NftData>
         </NftWrapper>
-      <CreatorWrapper>
-        <CreatorsData>
-          <Image src={nftData?.creator.avatarUrl} />
-          {nftData?.creator?.isCreator ? (
-            <Text mt={1} content="Creator" />
-          ) : null}
-          <CreatorName
-            mt={1}
-            fontWeight="bold"
-            content={nftData?.creator?.username}
-          />
-        </CreatorsData>
-        {nftData?.creator?.description ?
-          <CreatorDescription
-            dangerouslySetInnerHTML={{
-              __html:
-                nftData?.creator?.description?.slice(0, 200) + "..."
+      {/*<CreatorWrapper>*/}
+      {/*  <CreatorsData>*/}
+      {/*    <Image src={nftData?.creator.avatarUrl} />*/}
+      {/*    {nftData?.creator?.isCreator ? (*/}
+      {/*      <Text mt={1} content="Creator" />*/}
+      {/*    ) : null}*/}
+      {/*    <CreatorName*/}
+      {/*      mt={1}*/}
+      {/*      fontWeight="bold"*/}
+      {/*      content={nftData?.creator?.username}*/}
+      {/*    />*/}
+      {/*  </CreatorsData>*/}
+      {/*  {nftData?.creator?.description ?*/}
+      {/*    <CreatorDescription*/}
+      {/*      dangerouslySetInnerHTML={{*/}
+      {/*        __html:*/}
+      {/*          nftData?.creator?.description?.slice(0, 200) + "..."*/}
 
-            }}
-          />
-          :
-          <CreatorDescription>no creator description provided</CreatorDescription>
-        }
+      {/*      }}*/}
+      {/*    />*/}
+      {/*    :*/}
+      {/*    <CreatorDescription>no creator description provided</CreatorDescription>*/}
+      {/*  }*/}
 
-      </CreatorWrapper>
+      {/*</CreatorWrapper>*/}
       <BuyRow>
         <Button onClick={() => router.push(`https://unitedbearsociety.nftverse.club/nfts/382`)}>Buy this NFT</Button>
       </BuyRow>
