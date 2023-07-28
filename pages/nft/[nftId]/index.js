@@ -53,7 +53,6 @@ const metricsDataBackup = {
     "Your PfP - NFT IP Rights\n" +
     "<br>\n" +
     "<br>\n" +
-    "<a href='google.com' target='_blank'>Link Xd</a> " +
     "When you purchase an NFT, you own the image. You are free to use the NFT for any purpose you wish. However, please be aware that certain names or trademarks associated with the NFT need the consent of the copyright holder to be used, for instance, United Labs Gmbh or United Bear Society, and their use may require express permission. We encourage all NFT holders to be mindful of their intellectual property (IP) rights. Additionally, if you choose to sell your NFT at any time, it's essential to understand that you may relinquish all rights associated with the NFT and may no longer have permission to use it."
 };
 
