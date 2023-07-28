@@ -53,19 +53,37 @@ const metricsDataBackup = {
     "Your PfP - NFT IP Rights\n" +
     "<br>\n" +
     "<br>\n" +
+    "<a href='google.com' target='_blank'>Link Xd</a> " +
     "When you purchase an NFT, you own the image. You are free to use the NFT for any purpose you wish. However, please be aware that certain names or trademarks associated with the NFT need the consent of the copyright holder to be used, for instance, United Labs Gmbh or United Bear Society, and their use may require express permission. We encourage all NFT holders to be mindful of their intellectual property (IP) rights. Additionally, if you choose to sell your NFT at any time, it's essential to understand that you may relinquish all rights associated with the NFT and may no longer have permission to use it."
 };
+
+function filterURL(url) {
+  // Use a regular expression to extract the base URL
+  const regex = /^(https?:\/\/[^/]+)/;
+  const match = url.match(regex);
+
+  if (match && match.length > 0) {
+    return match[1];
+  }
+
+  // Return the original URL if no match found
+  return url;
+}
 
 const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
   const { data } = useSWR(`${getBaseUrl(platform)}/api/public/nft/${nftId}`);
   const nftData = data?.nft;
-  const metricsData = data?.licenseMetrics?.payload || metricsDataBackup; // { highlightedCountries: "all" };
+  const metricsData = metricsDataBackup; // { highlightedCountries: "all" };
   const router = useRouter();
   const finalHighlightedCountries =
     !Array.isArray(metricsData?.highlightedCountries) &&
     metricsData?.highlightedCountries === "all"
       ? GEO_VISUALIZATION_COUNTRY_CODES
       : metricsData?.highlightedCountries;
+
+
+
+  const filteredURL = filterURL(redirectUrl);
 
   const geoCountriesNames = finalHighlightedCountries?.map(
     (highlightedCountry) => getGeoVisualizationCountryName(highlightedCountry)
@@ -117,7 +135,7 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
 
       {/*</CreatorWrapper>*/}
       <BuyRow>
-        <Button onClick={() => router.push(`${redirectUrl}/nfts/${nftId}`)}>Buy this NFT</Button>
+        <Button onClick={() => router.push(`${filteredURL}/nfts/${nftId}`)}>Buy this NFT</Button>
       </BuyRow>
       <CardsContainer>
         <ModuleDivider>
@@ -190,9 +208,9 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
           ) : (
             <H1 content="No" />
           )}
-          {/*<ContentText mt={2} fontWeight="bold">*/}
-          {/*  {metricsData?.transferableDescription}*/}
-          {/*</ContentText>*/}
+          <ContentText mt={2} fontWeight="bold">
+            {metricsData?.transferableDescription}
+          </ContentText>
         </ModuleDivider>
         <BorderLine />
         <ModuleDivider>
