@@ -13,6 +13,15 @@ import { useRouter } from "next/router";
 export const getServerSideProps = async ({ params, query }) => {
   const { nftId } = params;
   const { platform, redirectUrl } = query;
+
+  if (!platform || !redirectUrl) {
+    return {
+      redirect: {
+        destination: `/404`
+      }
+    };
+  }
+
   return {
     props: {
       nftId,
@@ -231,7 +240,7 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
 
 IndexNftPage.Layout = (props) => {
 
-  return (<ModernLayout {...props}/>);
+  return (<ModernLayout {...props} />);
 
 };
 
