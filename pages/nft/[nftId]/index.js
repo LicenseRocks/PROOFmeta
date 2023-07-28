@@ -31,10 +31,35 @@ export const getServerSideProps = async ({ params, query }) => {
   };
 };
 
+const metricsDataBackup = {
+  content: "Digital Membership",
+  territory: "Territory",
+  transferable: true,
+  effectiveDate: { isUnlimited: true },
+  privateRights: false,
+  exclusiveRights: false,
+  commercialFooter: "",
+  commercialRights: ["PfP", "Digital Membership"],
+  aiUsageDescription: "The processing, utilization, or any form of use of the Non-Fungible Token (NFT) and its attached digital items, created by the creative, by artificial intelligence (AI) systems is strictly prohibited without explicit written consent from the copyright owner. No rights, explicit or implied, are granted to any party to employ the NFT and its associated digital items in conjunction with AI technologies unless authorized in writing by the copyright owner. Any unauthorized use of the NFT and its attached digital items with AI systems shall be deemed a violation of copyright and may result in legal action, including but not limited to injunctive relief, damages, and attorney's fees.",
+  contentDescription: "Whale Protected - no more than 10 memberships per person is allowed.",
+  highlightedCountries: "all",
+  territoryDescription: "",
+  commercialDescription: "Right to use the IP - When you purchase the membership, you get onchain fairly distributed one of our rare digital membership represented by a unique PfP. You are free to use the NFT for any purpose you wish. However, the UnitedBearSociety name is a registered trademark ofUnited Labs GmbH, and cannot be used without express permission. We encourage all members of UnitedBearSociety to take full advantage of your IP rights and explore with us in a collaborative way new ways to think, work and live together. Own the Future. Please note if at anytime you would sell your UnitedBearSociety NFT you relinquish all rights and do not have permissions to use any longer.",
+  transferableDescription: "The initial founder's tokens issued herewith are strictly non-transferable and represent personalized memberships. These tokens are uniquely associated with the individual founders and are not permitted to be transferred, assigned, or conveyed to any third party, in whole or in part, without explicit written consent from the issuer. Furthermore, the issuer retains the right to modify, amend, or alter the terms of transferability and membership status associated with these tokens, including but not limited to granting transferability or expanding membership privileges, at their sole discretion and without prior notice. Any such changes shall be communicated to the token holders upon the public reveal of the Mintpass. Any attempt to transfer or assign the founder's tokens without proper authorization, or any violation of the terms and conditions pertaining to these tokens, may result in immediate revocation of membership privileges and potential legal consequences. By holding and retaining these initial founder's tokens, the token holder acknowledges and agrees to abide by the terms and conditions set forth herein, as well as any future changes introduced by the issuer.",
+  effectiveDateDescription: "",
+  privateRightsDescription: "",
+  exclusiveRightsDescription: "",
+  commercialRightsDescription:
+    "Your PfP - NFT IP Rights\n" +
+    "<br>\n" +
+    "<br>\n" +
+    "When you purchase an NFT, you own the image. You are free to use the NFT for any purpose you wish. However, please be aware that certain names or trademarks associated with the NFT need the consent of the copyright holder to be used, for instance, United Labs Gmbh or United Bear Society, and their use may require express permission. We encourage all NFT holders to be mindful of their intellectual property (IP) rights. Additionally, if you choose to sell your NFT at any time, it's essential to understand that you may relinquish all rights associated with the NFT and may no longer have permission to use it."
+};
+
 const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
   const { data } = useSWR(`${getBaseUrl(platform)}/api/public/nft/${nftId}`);
   const nftData = data?.nft;
-  const metricsData = data?.licenseMetrics?.payload; // { highlightedCountries: "all" };
+  const metricsData = data?.licenseMetrics?.payload || metricsDataBackup; // { highlightedCountries: "all" };
   const router = useRouter();
   const finalHighlightedCountries =
     !Array.isArray(metricsData?.highlightedCountries) &&
