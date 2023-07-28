@@ -73,7 +73,7 @@ function filterURL(url) {
 const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
   const { data } = useSWR(`${getBaseUrl(platform)}/api/public/nft/${nftId}`);
   const nftData = data?.nft;
-  const metricsData = metricsDataBackup; // { highlightedCountries: "all" };
+  const metricsData = data?.licenseMetrics?.payload || metricsDataBackup; // { highlightedCountries: "all" };
   const router = useRouter();
   const finalHighlightedCountries =
     !Array.isArray(metricsData?.highlightedCountries) &&
