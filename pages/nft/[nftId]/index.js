@@ -22,20 +22,11 @@ export const getServerSideProps = async ({ params, query }) => {
   };
 };
 
-function truncateString(str) {
-  if (str.length > 200) {
-    return str.substring(0, 200) + "...";
-  } else {
-    return str;
-  }
-}
-
 const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
   const { data } = useSWR(`${getBaseUrl(platform)}/api/public/nft/${nftId}`);
   const nftData = data?.nft;
   const metricsData = data?.licenseMetrics?.payload; // { highlightedCountries: "all" };
   const router = useRouter();
-
   const finalHighlightedCountries =
     !Array.isArray(metricsData?.highlightedCountries) &&
     metricsData?.highlightedCountries === "all"
@@ -59,43 +50,44 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
         <H2 align="center" my={4} content={nftData?.title} />
         <NftData>
           <Image src={nftData?.coverSrc} />
-          <NftContent>
-            <Text
-              dangerouslySetInnerHTML={{
-                __html: truncateString(nftData?.description) || "no description provided"
-              }}
-            />
-          </NftContent>
+          {nftData?.description ?
+            <NftContent dangerouslySetInnerHTML={{ __html: nftData?.description?.slice(0, 400) + "..." }} />
+            :
+            <NftContent>No description provided.</NftContent>
+          }
         </NftData>
       </NftWrapper>
-      <CreatorWrapper>
-        <CreatorsData>
-          <Image src={nftData?.creator.avatarUrl} />
-          {nftData?.creator?.isCreator ? (
-            <Text mt={1} content="Creator" />
-          ) : null}
-          <CreatorName
-            mt={1}
-            fontWeight="bold"
-            content={nftData?.creator?.username}
-          />
-        </CreatorsData>
-        <CreatorDescription>
-          <Text
-            dangerouslySetInnerHTML={{
-              __html:
-                truncateString(nftData?.creator?.description) ||
-                "no creator description provided"
-            }}
-          />
-        </CreatorDescription>
-      </CreatorWrapper>
+      {/*<CreatorWrapper>*/}
+      {/*  <CreatorsData>*/}
+      {/*    <Image src={nftData?.creator.avatarUrl} />*/}
+      {/*    {nftData?.creator?.isCreator ? (*/}
+      {/*      <Text mt={1} content="Creator" />*/}
+      {/*    ) : null}*/}
+      {/*    <CreatorName*/}
+      {/*      mt={1}*/}
+      {/*      fontWeight="bold"*/}
+      {/*      content={nftData?.creator?.username}*/}
+      {/*    />*/}
+      {/*  </CreatorsData>*/}
+      {/*  {nftData?.creator?.description ?*/}
+      {/*    <CreatorDescription*/}
+      {/*      dangerouslySetInnerHTML={{*/}
+      {/*        __html:*/}
+      {/*          nftData?.creator?.description?.slice(0, 200) + "..."*/}
+
+      {/*      }}*/}
+      {/*    />*/}
+      {/*    :*/}
+      {/*    <CreatorDescription>no creator description provided</CreatorDescription>*/}
+      {/*  }*/}
+
+      {/*</CreatorWrapper>*/}
       <BuyRow>
         <Button onClick={() => router.push(`${redirectUrl}/nfts/${nftId}`)}>Buy this NFT</Button>
       </BuyRow>
       <CardsContainer>
         <ModuleDivider>
-          <H5 content="Commercial" />
+          <H5 content="Private" />
           <RightsRow>
             {metricsData?.commercialRights?.map(
               (commercialRight, index, original) => {
@@ -115,7 +107,12 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
             )}
           </RightsRow>
           <ContentText mt={2} fontWeight="bold">
-            {metricsData?.commercialRightsDescription}
+            <div
+              dangerouslySetInnerHTML={{
+                __html: metricsData?.commercialRightsDescription
+              }}
+            />
+            {" "}
           </ContentText>
         </ModuleDivider>
         <BorderLine />
@@ -159,13 +156,13 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
           ) : (
             <H1 content="No" />
           )}
-          <ContentText mt={2} fontWeight="bold">
-            {metricsData?.transferableDescription}
-          </ContentText>
+          {/*<ContentText mt={2} fontWeight="bold">*/}
+          {/*  {metricsData?.transferableDescription}*/}
+          {/*</ContentText>*/}
         </ModuleDivider>
         <BorderLine />
         <ModuleDivider>
-          <H5 content="ExclusiveRights" />
+          <H5 content="Exclusive Rights" />
           {metricsData?.exclusiveRights ? (
             <H1 content="Yes" />
           ) : (
@@ -177,7 +174,7 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
         </ModuleDivider>
         <BorderLine />
         <ModuleDivider>
-          <H5 content="EffectiveDate" />
+          <H5 content="Effective Date" />
           <ContentText my={2} fontWeight="bold">
             {metricsData?.effectiveDateDescription}
           </ContentText>
@@ -214,7 +211,7 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
         <BorderLine />
         <InsightsContainer
           target="_blank"
-          href="https://explorer.license.rocks/home"
+          href=" https://license.rocks/proofmeta"
         >
           <Flex>
             <H3>License Metrics</H3>
@@ -232,11 +229,16 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
   );
 };
 
-IndexNftPage.Layout = ModernLayout;
+IndexNftPage.Layout = (props) => {
+
+  return (<ModernLayout {...props}/>);
+
+};
 
 IndexNftPage.propTypes = {
   nftId: PropTypes.string.isRequired,
-  platform: PropTypes.string.isRequired
+  platform: PropTypes.string.isRequired,
+  redirectUrl: PropTypes.string.isRequired
 };
 
 IndexNftPage.defaultProps = {};
@@ -355,6 +357,11 @@ const GeoContainer = styled.div`
   width: 100%;
   justify-content: space-between;
   flex-direction: column;
+
+  svg {
+    margin-left: auto;
+    margin-right: auto;
+  }
 `;
 
 const GeoCountryName = styled(H4)`
@@ -463,7 +470,7 @@ const InsightsContainer = styled.a`
 `;
 
 const ModuleDivider = styled.div`
-  width: 300px;
+  width: 500px;
   margin-left: auto;
   margin-right: auto;
   padding-top: 20px;
