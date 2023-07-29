@@ -20,9 +20,10 @@ const FluidContainer = styled(MuiContainer).attrs(() => ({}))`
     `}
 `;
 
-const Container = styled(MuiContainer).attrs(() => ({}))` min-width: 100vw !important;
+const Container = styled(MuiContainer).attrs(() => ({}))`
   padding: 0 !important;
   margin: 0 !important;
+  min-width: 100% !important;
 `;
 
 const Content = styled(Grid).attrs(() => ({}))`
@@ -131,6 +132,14 @@ const Footer = styled.div`
 
   ${(theme) => SPACER(theme)}
   ${(theme) => DISPLAY(theme)}
+
+  @media(max-width: 767px) {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    overflow-x: hidden !important;
+  }
 `;
 
 const BottomSection = styled.div`
