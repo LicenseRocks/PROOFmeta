@@ -3,7 +3,7 @@ import { RocksKitTheme } from "@licenserocks/kit";
 const { NEXT_PUBLIC_APP_DOMAIN } = process.env;
 
 export const config = {
-  appTitle: "Metaproof",
+  appTitle: "ProofMeta",
   branding: {
     logo: `${NEXT_PUBLIC_APP_DOMAIN}/images/metaPROOF-Logo.svg`,
     logoType: `${NEXT_PUBLIC_APP_DOMAIN}/images/logo-type.png`,

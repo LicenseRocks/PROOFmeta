@@ -96,7 +96,7 @@ const DetailsPage = ({
 }) => {
   const { i18n } = useTranslation("details");
   const [licenseData, setLicenseData] = useState(license);
-  const pageTitle = `${license.title} | MetaProof`;
+  const pageTitle = `${license.title} | ProofMeta`;
   const nftUrl = encodeURIComponent(
     `${process.env.NEXT_PUBLIC_APP_DOMAIN}/${generateUrl("", i18n)}`
   );
@@ -119,7 +119,7 @@ const DetailsPage = ({
   return (
     <>
       <PageMeta
-        description="MetaProof is an explorer to extract the metadata of NFTs that are secured with their JSON files on the Arweave permanent storage"
+        description="ProofMeta is an explorer to extract the metadata of NFTs that are secured with their JSON files on the Arweave permanent storage"
         imgSrc={coverSrc}
         title={pageTitle}
         url={url}
