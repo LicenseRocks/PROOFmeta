@@ -31,7 +31,11 @@ const StyledLogo = styled(Image).attrs(() => ({
   width: auto;
   height: 70px;
 `;
-
+const BuyButton = styled(OutlineButton)`
+@media(max-width: 767px){
+  font-size: 0.8rem !important;
+}
+`
 export const ModernHeader = ({ ...props }) => {
   const { buyUrl } = props;
   return (
@@ -41,8 +45,8 @@ export const ModernHeader = ({ ...props }) => {
       </Flex>
       <Flex container item justify="flex-end" lg={3} xs={6}>
         <Link href={buyUrl}>
-          <OutlineButton color={"secondary"}
-                         content={"Buy this NFT"} />
+          <BuyButton color={"secondary"}
+                         content={"Buy this NFT"}/>
         </Link>
 
       </Flex>

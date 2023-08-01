@@ -307,6 +307,11 @@ const NftData = styled.div`
   max-height: 200px;
   justify-content: center;
 
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    max-height: 100%;
+  }
   img {
     border-radius: 32px !important;
     object-fit: cover;
@@ -319,6 +324,9 @@ const NftData = styled.div`
 const NftContent = styled.div`
   flex: 1;
   margin-left: 24px;
+  @media(max-width: 767px){
+    margin: 0;
+  }
 `;
 
 const CreatorWrapper = styled.div`
@@ -490,10 +498,16 @@ const NftWrapper = styled.div`
   ${({ theme }) => theme.breakpoints.down("md")} {
     padding: 30px;
   }
-
+  @media(max-width: 767px){
+  padding: 1rem;
+  }
   h2 {
     width: 100%;
     text-align: start;
+
+    @media(max-width: 767px){
+      text-align: center;
+    }
   }
 `;
 
@@ -518,6 +532,11 @@ const InsightsContainer = styled.a`
   h3 {
     color: white;
   }
+
+  @media(max-width: 767px){
+    padding: 1.5rem 1rem;
+    margin: 0;
+  }
 `;
 
 const ModuleDivider = styled.div`
@@ -529,6 +548,11 @@ const ModuleDivider = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+
+  @media(max-width: 767px){
+    width: 100%;
+    padding: 1rem 1.5rem;
+  }
 `;
 
 const BorderLine = styled.div`
