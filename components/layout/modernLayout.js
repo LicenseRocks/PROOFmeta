@@ -34,6 +34,19 @@ const Content = styled(Grid).attrs(() => ({}))`
   }
 `;
 
+function filterURL(url) {
+  // Use a regular expression to extract the base URL
+  const regex = /^(https?:\/\/[^/]+)/;
+  const match = url.match(regex);
+
+  if (match && match.length > 0) {
+    return match[1];
+  }
+
+  // Return the original URL if no match found
+  return url;
+}
+
 export const ModernLayout = ({
   children,
   headerLogoAction,
@@ -41,13 +54,13 @@ export const ModernLayout = ({
 }) => {
   const { t } = useTranslation("layout");
   const { redirectUrl, nftId } = children?.props;
-
+  const filteredURL = filterURL(redirectUrl);
   if (loading) return <PageLoading fullScreen />;
 
   return (
     <LayoutContainer>
       <FluidContainer white>
-        <ModernHeader buyUrl={`${redirectUrl}/nft/${nftId}`} />
+        <ModernHeader buyUrl={`${filteredURL}`} />
       </FluidContainer>
 
       <Container>
@@ -68,7 +81,7 @@ export const ModernLayout = ({
               <ContactButton
                 color="subtle"
                 content={"Get in Touch"}
-                href={`${redirectUrl}/contact`}
+                href={`${filteredURL}/contact`}
                 size="lg"
                 target="_blank"
               />
@@ -81,21 +94,21 @@ export const ModernLayout = ({
           <Footer>
             <FooterLinks container spacing={8}>
               <LinksHalf>
-                <Link href={`${redirectUrl}/imprint`}>
+                <Link href={`${filteredURL}/imprint`}>
                   <Text mr={2} content={"Imprint"} />
                 </Link>
 
-                <Link href={`${redirectUrl}/support`}>
+                <Link href={`${filteredURL}/support`}>
                   <Text content={"Support"} />
                 </Link>
               </LinksHalf>
 
               <LinksHalf>
-                <Link href={`${redirectUrl}/terms`}>
+                <Link href={`${filteredURL}/terms`}>
                   <Text mr={2} content={"Terms of usage"} />
                 </Link>
 
-                <Link href={`${redirectUrl}/privacy`}>
+                <Link href={`${filteredURL}/privacy`}>
                   <Text content={"Privacy"} />
                 </Link>
               </LinksHalf>
