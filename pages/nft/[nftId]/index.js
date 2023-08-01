@@ -134,7 +134,7 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
 
       {/*</CreatorWrapper>*/}
       <BuyRow>
-        <Button onClick={() => router.push(`${filteredURL}/nft/${nftId}`)}>Buy this NFT</Button>
+        <Button onClick={() => router.push(`${filteredURL}/nfts/${nftId}`)}>Buy this NFT</Button>
       </BuyRow>
       <CardsContainer>
         <ModuleDivider>
