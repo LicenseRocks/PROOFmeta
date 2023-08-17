@@ -80,8 +80,6 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
       ? GEO_VISUALIZATION_COUNTRY_CODES
       : metricsData?.highlightedCountries;
 
-
-
   const filteredURL = filterURL(redirectUrl);
 
   const geoCountriesNames = finalHighlightedCountries?.map(
@@ -259,6 +257,34 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
             />
           </GeoContainer>
         </ModuleDivider>
+        {metricsData?.printLicensingAgreement ? (
+          <>
+            <BorderLine />
+            <ModuleDivider>
+              <H5 content="Print Licensing Agreement" />
+              {metricsData?.printLicensingAgreement ? (
+                <H1 content="Active" />
+              ) : (
+                <H1 content="Non active" />
+              )}
+              <ContentText mt={2} fontWeight="bold">
+                {metricsData?.printLicensingDescription}
+              </ContentText>
+            </ModuleDivider>
+          </>
+        ) : null}
+        {metricsData?.publicationRight ? (
+          <>
+            <BorderLine />
+            <ModuleDivider>
+              <H5 content="Print Licensing Agreement" />
+              <H1 content={metricsData?.publicationRight} />
+              <ContentText mt={2} fontWeight="bold">
+                {metricsData?.publicationRightDescription}
+              </ContentText>
+            </ModuleDivider>
+          </>
+        ) : null}
         <BorderLine />
         <InsightsContainer
           target="_blank"
@@ -312,6 +338,7 @@ const NftData = styled.div`
     align-items: center;
     max-height: 100%;
   }
+
   img {
     border-radius: 32px !important;
     object-fit: cover;
@@ -324,7 +351,7 @@ const NftData = styled.div`
 const NftContent = styled.div`
   flex: 1;
   margin-left: 24px;
-  @media(max-width: 767px){
+  @media (max-width: 767px) {
     margin: 0;
   }
 `;
@@ -498,14 +525,16 @@ const NftWrapper = styled.div`
   ${({ theme }) => theme.breakpoints.down("md")} {
     padding: 30px;
   }
-  @media(max-width: 767px){
-  padding: 1rem;
+
+  @media (max-width: 767px) {
+    padding: 1rem;
   }
+
   h2 {
     width: 100%;
     text-align: start;
 
-    @media(max-width: 767px){
+    @media (max-width: 767px) {
       text-align: center;
     }
   }
@@ -533,7 +562,7 @@ const InsightsContainer = styled.a`
     color: white;
   }
 
-  @media(max-width: 767px){
+  @media (max-width: 767px) {
     padding: 1.5rem 1rem;
     margin: 0;
   }
@@ -549,7 +578,7 @@ const ModuleDivider = styled.div`
   flex-direction: column;
   align-items: flex-start;
 
-  @media(max-width: 767px){
+  @media (max-width: 767px) {
     width: 100%;
     padding: 1rem 1.5rem;
   }
