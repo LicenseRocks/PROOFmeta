@@ -75,10 +75,10 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
   const metricsData = data?.licenseMetrics?.payload || metricsDataBackup; // { highlightedCountries: "all" };
   const router = useRouter();
   const finalHighlightedCountries =
-    !Array.isArray(metricsData?.highlightedCountries) &&
-    metricsData?.highlightedCountries === "all"
+    !Array.isArray(metricsData?.territory.highlightedCountries) &&
+    metricsData?.territory.isWorldwide
       ? GEO_VISUALIZATION_COUNTRY_CODES
-      : metricsData?.highlightedCountries;
+      : metricsData.territory.highlightedCountries;
 
   const filteredURL = filterURL(redirectUrl);
 
@@ -87,12 +87,20 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
   );
   const ALLOWED_COUNTRY_NAMES_DISPLAY = 4;
   const legibleGeoCountries =
-    metricsData?.highlightedCountries === "all"
-      ? ["worldwide"]
+    metricsData?.territory.isWorldWide
+      ? ["Worldwide License"]
       : geoCountriesNames?.length > ALLOWED_COUNTRY_NAMES_DISPLAY
         ? [...geoCountriesNames.slice(0, ALLOWED_COUNTRY_NAMES_DISPLAY), "..."]
         : geoCountriesNames;
 
+  const commercialRightsData = Object?.keys(metricsData?.commercialRights)
+    .filter(key => metricsData?.commercialRights[key].isActive)
+    .map(key => key);
+
+  const contentData = Object?.keys(metricsData.content)
+    .filter(key => metricsData.content[key].isActive)
+    .map(key => key);
+console.log('🚀 ',filteredURL)
   return (
     <Container>
       <NftWrapper>
@@ -132,21 +140,19 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
 
       {/*</CreatorWrapper>*/}
       <BuyRow>
-        <Button onClick={() => router.push(`https://${filteredURL}/nfts/${nftId}`)}>Buy this NFT</Button>
+        <Button onClick={() => router.push(`${filteredURL}/nft/${nftId}`)}>Buy this NFT</Button>
       </BuyRow>
       <CardsContainer>
         <ModuleDivider>
           <H5 content="Private" />
           <RightsRow>
-            {metricsData?.commercialRights?.map(
+            {commercialRightsData?.map(
               (commercialRight, index, original) => {
                 const isLastItem = index == original.length - 1;
-                if (!commercialRight) {
-                  return null;
-                }
+
                 return (
                   <>
-                    <H1 key={index}>{`${commercialRight}`}</H1>
+                    <H4 key={index}>{`${commercialRight}`}</H4>
                     {!isLastItem ? (
                       <CommercialRightsComma>,</CommercialRightsComma>
                     ) : null}
@@ -192,9 +198,22 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
 
         <ModuleDivider>
           <H4 content="Content" />
-          <H1>{metricsData?.content}</H1>
+          {contentData?.map(
+            (contentItem, index, original) => {
+              const isLastItem = index == original.length - 1;
+
+              return (
+                <>
+                  <H4 key={index}>{`${contentItem}`}</H4>
+                  {!isLastItem ? (
+                    <CommercialRightsComma>,</CommercialRightsComma>
+                  ) : null}
+                </>
+              );
+            }
+          )}
           <ContentText mt={2} fontWeight="bold">
-            {metricsData?.contentDescription}
+            {metricsData?.content?.description}
           </ContentText>
         </ModuleDivider>
         <BorderLine />
@@ -218,7 +237,7 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
             <H1 content="No" />
           )}
           <ContentText mt={2} fontWeight="bold">
-            {metricsData?.exclusiveRightsDescription}
+            {metricsData?.exclusiveRights?.description}
           </ContentText>
         </ModuleDivider>
         <BorderLine />
@@ -227,12 +246,12 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
           <ContentText my={2} fontWeight="bold">
             {metricsData?.effectiveDateDescription}
           </ContentText>
-          {metricsData?.effectiveDate?.start && metricsData?.effectiveDate?.end ? (
+          {metricsData?.effectiveDate?.dateRange?.start && metricsData?.effectiveDate?.dateRange?.end ? (
             <EffectiveDateVisualization
               startDate={new Date(metricsData?.effectiveDate?.start)}
               endDate={new Date(metricsData?.effectiveDate?.end)}
             />
-          ) : metricsData?.effectiveDate?.isUnlimited ? (
+          ) : metricsData?.effectiveDate?.isNolimited ? (
             <EffectiveDateVisualization isUnlimited />
           ) : null}
         </ModuleDivider>
@@ -241,14 +260,17 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
           <GeoContainer>
             <GeoResponsiveContainer>
               <GeoResponsiveHeader>Territory</GeoResponsiveHeader>
-              {legibleGeoCountries?.map((legibleGeoCountry) => (
-                <GeoCountryName key={legibleGeoCountry} id={legibleGeoCountry}>
-                  {legibleGeoCountry}
-                </GeoCountryName>
-              ))}
+              {metricsData?.territory?.isWorldwide ? <GeoCountryName>Worldwide License</GeoCountryName> :
+                <>
+                  {legibleGeoCountries?.map((legibleGeoCountry) => (
+                    <GeoCountryName key={legibleGeoCountry} id={legibleGeoCountry}>
+                      {legibleGeoCountry}
+                    </GeoCountryName>
+                  ))}
+                </>}
             </GeoResponsiveContainer>
             <ContentText my={2} fontWeight="bold">
-              {metricsData?.territoryDescription}
+              {metricsData?.territory?.description}
             </ContentText>
             <GeoHighlight
               width={205}
@@ -268,19 +290,19 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
                 <H1 content="Non active" />
               )}
               <ContentText mt={2} fontWeight="bold">
-                {metricsData?.printLicensingDescription}
+                {metricsData?.printLicensingAgreement?.description}
               </ContentText>
             </ModuleDivider>
           </>
         ) : null}
-        {metricsData?.publicationRight ? (
+        {metricsData?.publicationRightLicense ? (
           <>
             <BorderLine />
             <ModuleDivider>
               <H5 content="Print Licensing Agreement" />
-              <H1 content={metricsData?.publicationRight} />
+              <H1 content={metricsData?.publicationRightLicense?.title} />
               <ContentText mt={2} fontWeight="bold">
-                {metricsData?.publicationRightDescription}
+                {metricsData?.publicationRightLicense?.description}
               </ContentText>
             </ModuleDivider>
           </>
