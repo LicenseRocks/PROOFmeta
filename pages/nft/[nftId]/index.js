@@ -251,8 +251,8 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
           </ContentText>
           {metricsData?.effectiveDate?.dateRange?.start && metricsData?.effectiveDate?.dateRange?.end ? (
             <EffectiveDateVisualization
-              startDate={new Date(metricsData?.effectiveDate?.start)}
-              endDate={new Date(metricsData?.effectiveDate?.end)}
+              startDate={new Date(metricsData?.effectiveDate?.dateRange?.start)}
+              endDate={new Date(metricsData?.effectiveDate?.dateRange?.end)}
             />
           ) : metricsData?.effectiveDate?.isNolimited ? (
             <EffectiveDateVisualization isUnlimited />
