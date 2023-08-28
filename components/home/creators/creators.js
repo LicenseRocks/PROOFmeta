@@ -70,7 +70,7 @@ export const HomeCreators = () => {
             <Slide key={c.id}>
               <StyledSlide>
                 <Image
-                  src={c.profile.avatar || "/images/user-placeholder.png"}
+                  src={c.profile?.avatar || "/images/user-placeholder.png"}
                 />
 
                 <div className="card">

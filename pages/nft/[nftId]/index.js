@@ -14,6 +14,8 @@ export const getServerSideProps = async ({ params, query }) => {
   const { nftId } = params;
   const { platform, redirectUrl } = query;
 
+
+
   if (!platform || !redirectUrl) {
     return {
       redirect: {
@@ -72,13 +74,13 @@ function filterURL(url) {
 const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
   const { data } = useSWR(`${getBaseUrl(platform)}/api/public/nft/${nftId}`);
   const nftData = data?.nft;
-  const metricsData = data?.licenseMetrics?.payload || metricsDataBackup; // { highlightedCountries: "all" };
+  const metricsData = data?.licenseMetrics?.payload; // { highlightedCountries: "all" };
   const router = useRouter();
   const finalHighlightedCountries =
     !Array.isArray(metricsData?.territory.highlightedCountries) &&
     metricsData?.territory.isWorldwide
       ? GEO_VISUALIZATION_COUNTRY_CODES
-      : metricsData.territory.highlightedCountries;
+      : metricsData?.territory?.highlightedCountries;
 
   const filteredURL = filterURL(redirectUrl);
 
@@ -100,7 +102,8 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
   const contentData = Object?.keys(metricsData.content)
     .filter(key => metricsData.content[key].isActive)
     .map(key => key);
-console.log('🚀 ',filteredURL)
+
+
   return (
     <Container>
       <NftWrapper>
@@ -174,10 +177,10 @@ console.log('🚀 ',filteredURL)
         <ModuleDivider>
           <H5 content="AI usage" />
           <RightsRow>
-            <H1>{metricsData?.aiUsage ? "Yes" : "No"}</H1>
+            <H1>{metricsData?.aiusage?.isActive ? "Yes" : "No"}</H1>
           </RightsRow>
           <ContentText mt={2} fontWeight="bold">
-            {metricsData?.aiUsageDescription}
+            {metricsData?.aiusage?.description}
           </ContentText>
         </ModuleDivider>
         <BorderLine />
@@ -219,13 +222,13 @@ console.log('🚀 ',filteredURL)
         <BorderLine />
         <ModuleDivider>
           <H5 content="Transferable" />
-          {metricsData?.transferable ? (
+          {metricsData?.transferable?.isActive ? (
             <H1 content="Yes" />
           ) : (
             <H1 content="No" />
           )}
           <ContentText mt={2} fontWeight="bold">
-            {metricsData?.transferableDescription}
+            {metricsData?.transferable?.description}
           </ContentText>
         </ModuleDivider>
         <BorderLine />
@@ -284,7 +287,7 @@ console.log('🚀 ',filteredURL)
             <BorderLine />
             <ModuleDivider>
               <H5 content="Print Licensing Agreement" />
-              {metricsData?.printLicensingAgreement ? (
+              {metricsData?.printLicensingAgreement?.isActive ? (
                 <H1 content="Active" />
               ) : (
                 <H1 content="Non active" />
@@ -295,7 +298,7 @@ console.log('🚀 ',filteredURL)
             </ModuleDivider>
           </>
         ) : null}
-        {metricsData?.publicationRightLicense ? (
+        {metricsData?.publicationRightLicense?.isActive ? (
           <>
             <BorderLine />
             <ModuleDivider>
