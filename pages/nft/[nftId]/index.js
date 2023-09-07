@@ -3,16 +3,27 @@ import PropTypes from "prop-types";
 import useSWR from "swr";
 import { Button, Flex, H1, H2, H3, H4, H5, Image, Text } from "@licenserocks/kit";
 import styled from "styled-components";
-import { getBaseUrl } from "../../../utils/url";
 import { ModernLayout } from "../../../components/layout/modernLayout";
 import { GEO_VISUALIZATION_COUNTRY_CODES, getGeoVisualizationCountryName } from "../../../components/nft/geoDetails";
 import { GeoHighlight } from "../../../components/nft/geoHighlights";
 import { EffectiveDateVisualization } from "../../../components/nft/effectiveDate";
 import { useRouter } from "next/router";
+import { isEmpty } from "lodash/lang";
+
+function getCoreUrl(urlString) {
+  try {
+    const url = new URL(urlString);
+    return `${url.protocol}//${url.host}`;
+  } catch (error) {
+    console.error("Invalid URL", error);
+    return null;
+  }
+}
 
 export const getServerSideProps = async ({ params, query }) => {
   const { nftId } = params;
-  const { platform, redirectUrl } = query;
+  const { redirectUrl } = query;
+  const platform = getCoreUrl(redirectUrl);
 
   if (!platform || !redirectUrl) {
     return {
@@ -44,11 +55,11 @@ function filterURL(url) {
   return url;
 }
 
-const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
-  const { data } = useSWR(`${getBaseUrl(platform)}/api/public/nft/${nftId}`);
+const IndexNftPage = ({ nftId, redirectUrl, platform }) => {
+  const { data,isValidating } = useSWR(`${platform}/api/public/nft/${nftId}`);
   const nftData = data?.nft;
-  const metricsData = data?.licenseMetrics?.payload; // { highlightedCountries: "all" };
-
+  const metricsData = data?.licenseMetrics?.payload;
+  const isVisible = data?.licenseMetrics?.isVisible;
   const router = useRouter();
   const finalHighlightedCountries =
     !Array.isArray(metricsData?.territory.highlightedCountries) &&
@@ -69,14 +80,16 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
         ? [...geoCountriesNames.slice(0, ALLOWED_COUNTRY_NAMES_DISPLAY), "..."]
         : geoCountriesNames;
 
-  const commercialRightsData = metricsData?.commercialRights ? Object?.keys(metricsData?.commercialRights)
-    .filter(key => metricsData?.commercialRights[key].isActive)
-    .map(key => key) : null;
-  //
-  const contentData = metricsData?.content ? Object?.keys(metricsData.content)
-    .filter(key => metricsData.content[key].isActive)
-    .map(key => key) : null;
-
+  if (!isVisible && !isValidating){
+    return (
+      <HiddenContainer>
+        <div>
+          <H1 align={"center"} content={"Metric is set to be hidden."} />
+          <Text mt={4} align={"center"} fontWeight={"bold"} content={"Please contact the creator for more information."} />
+        </div>
+      </HiddenContainer>
+    );
+  }
 
   return (
     <Container>
@@ -123,25 +136,16 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
         <ModuleDivider>
           <H5 content="Private" />
           <RightsRow>
-            {commercialRightsData?.map(
-              (commercialRight, index, original) => {
-                const isLastItem = index == original.length - 1;
 
-                return (
-                  <>
-                    <H4 key={index}>{`${commercialRight}`}</H4>
-                    {!isLastItem ? (
-                      <CommercialRightsComma>,</CommercialRightsComma>
-                    ) : null}
-                  </>
-                );
-              }
-            )}
+            {metricsData?.commercialRights?.category?.label ?
+              <H4>{`${metricsData?.commercialRights?.category?.label}`}</H4>
+              : <Text fontWeight={"bold"} content="Not specified" />
+            }
           </RightsRow>
           <ContentText mt={2} fontWeight="bold">
             <div
               dangerouslySetInnerHTML={{
-                __html: metricsData?.commercialRightsDescription
+                __html: metricsData?.commercialRights?.description
               }}
             />
             {" "}
@@ -175,20 +179,10 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
 
         <ModuleDivider>
           <H4 content="Content" />
-          {contentData?.map(
-            (contentItem, index, original) => {
-              const isLastItem = index == original.length - 1;
-
-              return (
-                <>
-                  <H4 key={index}>{`${contentItem}`}</H4>
-                  {!isLastItem ? (
-                    <CommercialRightsComma>,</CommercialRightsComma>
-                  ) : null}
-                </>
-              );
-            }
-          )}
+          {metricsData?.content?.category?.label ?
+            <H4>{metricsData?.content?.category?.label}</H4>
+            : <Text fontWeight={"bold"} content="Not specified" />
+          }
           <ContentText mt={2} fontWeight="bold">
             {metricsData?.content?.description}
           </ContentText>
@@ -223,14 +217,14 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
           <ContentText my={2} fontWeight="bold">
             {metricsData?.effectiveDateDescription}
           </ContentText>
-          {metricsData?.effectiveDate?.dateRange?.start && metricsData?.effectiveDate?.dateRange?.end ? (
+          {!isEmpty(metricsData?.effectiveDate?.dateRange) ? (
             <EffectiveDateVisualization
               startDate={new Date(metricsData?.effectiveDate?.dateRange?.start)}
               endDate={new Date(metricsData?.effectiveDate?.dateRange?.end)}
             />
           ) : metricsData?.effectiveDate?.isNolimited ? (
             <EffectiveDateVisualization isUnlimited />
-          ) : null}
+          ) : <Text mt={2} fontWeight={"bold"} content="Not specified" />}
         </ModuleDivider>
         <BorderLine />
         <ModuleDivider>
@@ -238,13 +232,16 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
             <GeoResponsiveContainer>
               <GeoResponsiveHeader>Territory</GeoResponsiveHeader>
               {metricsData?.territory?.isWorldwide ? <GeoCountryName>Worldwide License</GeoCountryName> :
-                <>
-                  {legibleGeoCountries?.map((legibleGeoCountry) => (
-                    <GeoCountryName key={legibleGeoCountry} id={legibleGeoCountry}>
-                      {legibleGeoCountry}
-                    </GeoCountryName>
-                  ))}
-                </>}
+                !isEmpty(legibleGeoCountries) ?
+                  <>
+                    {legibleGeoCountries?.map((legibleGeoCountry) => (
+                      <GeoCountryName key={legibleGeoCountry} id={legibleGeoCountry}>
+                        {legibleGeoCountry}
+                      </GeoCountryName>
+                    ))}
+                  </> :
+                  <Text mt={2} fontWeight={"bold"} content="Not specified" />
+              }
             </GeoResponsiveContainer>
             <ContentText my={2} fontWeight="bold">
               {metricsData?.territory?.description}
@@ -326,6 +323,12 @@ const Container = styled.div`
   height: 100%;
 `;
 
+const HiddenContainer = styled.div`
+  height: calc(100vh - 478px);
+  display: grid;
+  place-items: center;
+`;
+
 const NftData = styled.div`
   width: 100%;
   display: flex;
@@ -368,6 +371,7 @@ const CreatorWrapper = styled.div`
   ${({ theme }) => theme.breakpoints.down("md")} {
     padding: 30px;
   }
+
 `;
 
 const CreatorDescription = styled.div`
