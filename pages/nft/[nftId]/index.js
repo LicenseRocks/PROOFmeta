@@ -56,7 +56,7 @@ function filterURL(url) {
 }
 
 const IndexNftPage = ({ nftId, redirectUrl, platform }) => {
-  const { data,isValidating } = useSWR(`${platform}/api/public/nft/${nftId}`);
+  const { data, isValidating } = useSWR(`${platform}/api/public/nft/${nftId}`);
   const nftData = data?.nft;
   const metricsData = data?.licenseMetrics?.payload;
   const isVisible = data?.licenseMetrics?.isVisible;
@@ -80,7 +80,7 @@ const IndexNftPage = ({ nftId, redirectUrl, platform }) => {
         ? [...geoCountriesNames.slice(0, ALLOWED_COUNTRY_NAMES_DISPLAY), "..."]
         : geoCountriesNames;
 
-  if (!isVisible && !isValidating){
+  if (!isVisible && !isValidating) {
     return (
       <HiddenContainer>
         <div>
@@ -138,7 +138,7 @@ const IndexNftPage = ({ nftId, redirectUrl, platform }) => {
           <RightsRow>
 
             {metricsData?.commercialRights?.category?.label ?
-              <H4>{`${metricsData?.commercialRights?.category?.label}`}</H4>
+              <H1>{`${metricsData?.commercialRights?.category?.label}`}</H1>
               : <Text fontWeight={"bold"} content="Not specified" />
             }
           </RightsRow>
@@ -180,7 +180,7 @@ const IndexNftPage = ({ nftId, redirectUrl, platform }) => {
         <ModuleDivider>
           <H4 content="Content" />
           {metricsData?.content?.category?.label ?
-            <H4>{metricsData?.content?.category?.label}</H4>
+            <H1>{metricsData?.content?.category?.label}</H1>
             : <Text fontWeight={"bold"} content="Not specified" />
           }
           <ContentText mt={2} fontWeight="bold">
@@ -258,8 +258,8 @@ const IndexNftPage = ({ nftId, redirectUrl, platform }) => {
             <BorderLine />
             <ModuleDivider>
               <H5 content="Print Licensing Agreement" />
-              {metricsData?.printLicensingAgreement?.isActive ? (
-                <H1 content="Active" />
+              {metricsData?.printLicensingAgreement?.title ? (
+                <H1 content={metricsData?.printLicensingAgreement?.title} />
               ) : (
                 <H1 content="Non active" />
               )}
@@ -269,12 +269,14 @@ const IndexNftPage = ({ nftId, redirectUrl, platform }) => {
             </ModuleDivider>
           </>
         ) : null}
-        {metricsData?.publicationRightLicense?.isActive ? (
+        {metricsData?.publicationRightLicense ? (
           <>
             <BorderLine />
             <ModuleDivider>
               <H5 content="Print Licensing Agreement" />
-              <H1 content={metricsData?.publicationRightLicense?.title} />
+              {metricsData?.publicationRightLicense?.title ? (<H1 content={metricsData?.publicationRightLicense?.title} />) : (
+                <H1 content="Non active" />)}
+
               <ContentText mt={2} fontWeight="bold">
                 {metricsData?.publicationRightLicense?.description}
               </ContentText>
