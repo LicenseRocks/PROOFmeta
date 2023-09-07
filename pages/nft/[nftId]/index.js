@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import useSWR from "swr";
-import { Button, Flex, H1, H2, H3, H4, H5, Image, Text } from "@licenserocks/kit";
+import { Button, Flex, H1, H2, H3, H4, H5, Image, RocksSpinner, Text } from "@licenserocks/kit";
 import styled from "styled-components";
 import { ModernLayout } from "../../../components/layout/modernLayout";
 import { GEO_VISUALIZATION_COUNTRY_CODES, getGeoVisualizationCountryName } from "../../../components/nft/geoDetails";
@@ -80,6 +80,14 @@ const IndexNftPage = ({ nftId, redirectUrl, platform }) => {
         ? [...geoCountriesNames.slice(0, ALLOWED_COUNTRY_NAMES_DISPLAY), "..."]
         : geoCountriesNames;
 
+  if(isValidating) {
+    return (
+      <HiddenContainer>
+        <RocksSpinner/>
+      </HiddenContainer>
+    )
+  }
+
   if (!isVisible && !isValidating) {
     return (
       <HiddenContainer>
@@ -90,6 +98,8 @@ const IndexNftPage = ({ nftId, redirectUrl, platform }) => {
       </HiddenContainer>
     );
   }
+
+
 
   return (
     <Container>
