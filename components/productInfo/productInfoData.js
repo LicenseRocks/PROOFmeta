@@ -10,22 +10,22 @@ export const productInfoData = {
         },
       water: {
         title: "Water Usage",
-        description: "High amount of watrer saved in the production.",
+        description: "High amount of water saved in the production.",
         savedWaterFactor: "high"
       }
       ,
       material:
         {
           title: "Material",
-          description: "Eco friendly material."
+          description: "Eco-friendly material."
         },
       distance:
         {
-          title: "Distance of prouduction",
+          title: "Distance of the prouduction",
           description: "Produced near to you"
         }
     },
-    metricsToShow: ["120 grams of CO2 saved per product.", "Made with 98% recycled materials.", "Factory in Berlin"]
+    metricsToShow: ["120 grams of CO2 saved per product,", "Made with 98% recycled materials,", "Factory in Berlin."]
   },
   socialResponsibility:
     {
@@ -44,7 +44,7 @@ export const productInfoData = {
         }
 
       },
-      metricsToShow: ["Crafted by artisans paid a fair wage.", "20% of proceeds support local communities."]
+      metricsToShow: ["Crafted by artisans paid a fair wage,", "20% of proceeds support local communities."]
     },
   governance: {
     title: "Governance",
@@ -59,6 +59,6 @@ export const productInfoData = {
           description: "Nice Way of running the company."
         }
       },
-    metricsToShow: ["Adheres to ethical sourcing practices.", "Governed by inclusive and equitable policies."]
+    metricsToShow: ["Adheres to ethical sourcing practices,", "Governed by inclusive and equitable policies."]
   }
 }
