@@ -1,18 +1,29 @@
 import React from "react";
 import PropTypes from "prop-types";
 import useSWR from "swr";
-import { Button, Flex, H1, H2, H3, H4, H5, Image, Text } from "@licenserocks/kit";
+import { Button, Flex, H1, H2, H3, H4, H5, Image, RocksSpinner, Text } from "@licenserocks/kit";
 import styled from "styled-components";
-import { getBaseUrl } from "../../../utils/url";
 import { ModernLayout } from "../../../components/layout/modernLayout";
 import { GEO_VISUALIZATION_COUNTRY_CODES, getGeoVisualizationCountryName } from "../../../components/nft/geoDetails";
 import { GeoHighlight } from "../../../components/nft/geoHighlights";
 import { EffectiveDateVisualization } from "../../../components/nft/effectiveDate";
 import { useRouter } from "next/router";
+import { isEmpty } from "lodash/lang";
+
+function getCoreUrl(urlString) {
+  try {
+    const url = new URL(urlString);
+    return `${url.protocol}//${url.host}`;
+  } catch (error) {
+    console.error("Invalid URL", error);
+    return null;
+  }
+}
 
 export const getServerSideProps = async ({ params, query }) => {
   const { nftId } = params;
-  const { platform, redirectUrl } = query;
+  const { redirectUrl } = query;
+  const platform = getCoreUrl(redirectUrl);
 
   if (!platform || !redirectUrl) {
     return {
@@ -31,31 +42,6 @@ export const getServerSideProps = async ({ params, query }) => {
   };
 };
 
-const metricsDataBackup = {
-  content: "Digital Membership",
-  territory: "Territory",
-  transferable: true,
-  effectiveDate: { isUnlimited: true },
-  privateRights: false,
-  exclusiveRights: false,
-  commercialFooter: "",
-  commercialRights: ["PfP", "Digital Membership"],
-  aiUsageDescription: "The processing, utilization, or any form of use of the Non-Fungible Token (NFT) and its attached digital items, created by the creative, by artificial intelligence (AI) systems is strictly prohibited without explicit written consent from the copyright owner. No rights, explicit or implied, are granted to any party to employ the NFT and its associated digital items in conjunction with AI technologies unless authorized in writing by the copyright owner. Any unauthorized use of the NFT and its attached digital items with AI systems shall be deemed a violation of copyright and may result in legal action, including but not limited to injunctive relief, damages, and attorney's fees.",
-  contentDescription: "Whale Protected - no more than 10 memberships per person is allowed.",
-  highlightedCountries: "all",
-  territoryDescription: "",
-  commercialDescription: "Right to use the IP - When you purchase the membership, you get onchain fairly distributed one of our rare digital membership represented by a unique PfP. You are free to use the NFT for any purpose you wish. However, the UnitedBearSociety name is a registered trademark ofUnited Labs GmbH, and cannot be used without express permission. We encourage all members of UnitedBearSociety to take full advantage of your IP rights and explore with us in a collaborative way new ways to think, work and live together. Own the Future. Please note if at anytime you would sell your UnitedBearSociety NFT you relinquish all rights and do not have permissions to use any longer.",
-  transferableDescription: "The initial founder's tokens issued herewith are strictly non-transferable and represent personalized memberships. These tokens are uniquely associated with the individual founders and are not permitted to be transferred, assigned, or conveyed to any third party, in whole or in part, without explicit written consent from the issuer. Furthermore, the issuer retains the right to modify, amend, or alter the terms of transferability and membership status associated with these tokens, including but not limited to granting transferability or expanding membership privileges, at their sole discretion and without prior notice. Any such changes shall be communicated to the token holders upon the public reveal of the Mintpass. Any attempt to transfer or assign the founder's tokens without proper authorization, or any violation of the terms and conditions pertaining to these tokens, may result in immediate revocation of membership privileges and potential legal consequences. By holding and retaining these initial founder's tokens, the token holder acknowledges and agrees to abide by the terms and conditions set forth herein, as well as any future changes introduced by the issuer.",
-  effectiveDateDescription: "",
-  privateRightsDescription: "",
-  exclusiveRightsDescription: "",
-  commercialRightsDescription:
-    "Your PfP - NFT IP Rights\n" +
-    "<br>\n" +
-    "<br>\n" +
-    "When you purchase an NFT, you own the image. You are free to use the NFT for any purpose you wish. However, please be aware that certain names or trademarks associated with the NFT need the consent of the copyright holder to be used, for instance, United Labs Gmbh or United Bear Society, and their use may require express permission. We encourage all NFT holders to be mindful of their intellectual property (IP) rights. Additionally, if you choose to sell your NFT at any time, it's essential to understand that you may relinquish all rights associated with the NFT and may no longer have permission to use it."
-};
-
 function filterURL(url) {
   // Use a regular expression to extract the base URL
   const regex = /^(https?:\/\/[^/]+)/;
@@ -69,16 +55,17 @@ function filterURL(url) {
   return url;
 }
 
-const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
-  const { data } = useSWR(`${getBaseUrl(platform)}/api/public/nft/${nftId}`);
+const IndexNftPage = ({ nftId, redirectUrl, platform }) => {
+  const { data, isValidating } = useSWR(`${platform}/api/public/nft/${nftId}`);
   const nftData = data?.nft;
-  const metricsData = data?.licenseMetrics?.payload || metricsDataBackup; // { highlightedCountries: "all" };
+  const metricsData = data?.licenseMetrics?.payload;
+  const isVisible = data?.licenseMetrics?.isVisible;
   const router = useRouter();
   const finalHighlightedCountries =
-    !Array.isArray(metricsData?.highlightedCountries) &&
-    metricsData?.highlightedCountries === "all"
+    !Array.isArray(metricsData?.territory.highlightedCountries) &&
+    metricsData?.territory.isWorldwide
       ? GEO_VISUALIZATION_COUNTRY_CODES
-      : metricsData?.highlightedCountries;
+      : metricsData?.territory?.highlightedCountries;
 
   const filteredURL = filterURL(redirectUrl);
 
@@ -87,11 +74,32 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
   );
   const ALLOWED_COUNTRY_NAMES_DISPLAY = 4;
   const legibleGeoCountries =
-    metricsData?.highlightedCountries === "all"
-      ? ["worldwide"]
+    metricsData?.territory.isWorldWide
+      ? ["Worldwide License"]
       : geoCountriesNames?.length > ALLOWED_COUNTRY_NAMES_DISPLAY
         ? [...geoCountriesNames.slice(0, ALLOWED_COUNTRY_NAMES_DISPLAY), "..."]
         : geoCountriesNames;
+
+  if(isValidating) {
+    return (
+      <HiddenContainer>
+        <RocksSpinner/>
+      </HiddenContainer>
+    )
+  }
+
+  if (!isVisible && !isValidating) {
+    return (
+      <HiddenContainer>
+        <div>
+          <H1 align={"center"} content={"Metric is set to be hidden."} />
+          <Text mt={4} align={"center"} fontWeight={"bold"} content={"Please contact the creator for more information."} />
+        </div>
+      </HiddenContainer>
+    );
+  }
+
+
 
   return (
     <Container>
@@ -132,33 +140,22 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
 
       {/*</CreatorWrapper>*/}
       <BuyRow>
-        <Button onClick={() => router.push(`https://${filteredURL}/nfts/${nftId}`)}>Buy this NFT</Button>
+        <Button onClick={() => router.push(`${filteredURL}/nft/${nftId}`)}>Buy this NFT</Button>
       </BuyRow>
       <CardsContainer>
         <ModuleDivider>
           <H5 content="Private" />
           <RightsRow>
-            {metricsData?.commercialRights?.map(
-              (commercialRight, index, original) => {
-                const isLastItem = index == original.length - 1;
-                if (!commercialRight) {
-                  return null;
-                }
-                return (
-                  <>
-                    <H1 key={index}>{`${commercialRight}`}</H1>
-                    {!isLastItem ? (
-                      <CommercialRightsComma>,</CommercialRightsComma>
-                    ) : null}
-                  </>
-                );
-              }
-            )}
+
+            {metricsData?.commercialRights?.category?.label ?
+              <H1>{`${metricsData?.commercialRights?.category?.label}`}</H1>
+              : <Text fontWeight={"bold"} content="Not specified" />
+            }
           </RightsRow>
           <ContentText mt={2} fontWeight="bold">
             <div
               dangerouslySetInnerHTML={{
-                __html: metricsData?.commercialRightsDescription
+                __html: metricsData?.commercialRights?.description
               }}
             />
             {" "}
@@ -168,10 +165,10 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
         <ModuleDivider>
           <H5 content="AI usage" />
           <RightsRow>
-            <H1>{metricsData?.aiUsage ? "Yes" : "No"}</H1>
+            <H1>{metricsData?.aiusage?.isActive ? "Yes" : "No"}</H1>
           </RightsRow>
           <ContentText mt={2} fontWeight="bold">
-            {metricsData?.aiUsageDescription}
+            {metricsData?.aiusage?.description}
           </ContentText>
         </ModuleDivider>
         <BorderLine />
@@ -192,21 +189,24 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
 
         <ModuleDivider>
           <H4 content="Content" />
-          <H1>{metricsData?.content}</H1>
+          {metricsData?.content?.category?.label ?
+            <H1>{metricsData?.content?.category?.label}</H1>
+            : <Text fontWeight={"bold"} content="Not specified" />
+          }
           <ContentText mt={2} fontWeight="bold">
-            {metricsData?.contentDescription}
+            {metricsData?.content?.description}
           </ContentText>
         </ModuleDivider>
         <BorderLine />
         <ModuleDivider>
           <H5 content="Transferable" />
-          {metricsData?.transferable ? (
+          {metricsData?.transferable?.isActive ? (
             <H1 content="Yes" />
           ) : (
             <H1 content="No" />
           )}
           <ContentText mt={2} fontWeight="bold">
-            {metricsData?.transferableDescription}
+            {metricsData?.transferable?.description}
           </ContentText>
         </ModuleDivider>
         <BorderLine />
@@ -218,7 +218,7 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
             <H1 content="No" />
           )}
           <ContentText mt={2} fontWeight="bold">
-            {metricsData?.exclusiveRightsDescription}
+            {metricsData?.exclusiveRights?.description}
           </ContentText>
         </ModuleDivider>
         <BorderLine />
@@ -227,28 +227,34 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
           <ContentText my={2} fontWeight="bold">
             {metricsData?.effectiveDateDescription}
           </ContentText>
-          {metricsData?.effectiveDate?.start && metricsData?.effectiveDate?.end ? (
+          {!isEmpty(metricsData?.effectiveDate?.dateRange) ? (
             <EffectiveDateVisualization
-              startDate={new Date(metricsData?.effectiveDate?.start)}
-              endDate={new Date(metricsData?.effectiveDate?.end)}
+              startDate={new Date(metricsData?.effectiveDate?.dateRange?.start)}
+              endDate={new Date(metricsData?.effectiveDate?.dateRange?.end)}
             />
-          ) : metricsData?.effectiveDate?.isUnlimited ? (
+          ) : metricsData?.effectiveDate?.isNolimited ? (
             <EffectiveDateVisualization isUnlimited />
-          ) : null}
+          ) : <Text mt={2} fontWeight={"bold"} content="Not specified" />}
         </ModuleDivider>
         <BorderLine />
         <ModuleDivider>
           <GeoContainer>
             <GeoResponsiveContainer>
               <GeoResponsiveHeader>Territory</GeoResponsiveHeader>
-              {legibleGeoCountries?.map((legibleGeoCountry) => (
-                <GeoCountryName key={legibleGeoCountry} id={legibleGeoCountry}>
-                  {legibleGeoCountry}
-                </GeoCountryName>
-              ))}
+              {metricsData?.territory?.isWorldwide ? <GeoCountryName>Worldwide License</GeoCountryName> :
+                !isEmpty(legibleGeoCountries) ?
+                  <>
+                    {legibleGeoCountries?.map((legibleGeoCountry) => (
+                      <GeoCountryName key={legibleGeoCountry} id={legibleGeoCountry}>
+                        {legibleGeoCountry}
+                      </GeoCountryName>
+                    ))}
+                  </> :
+                  <Text mt={2} fontWeight={"bold"} content="Not specified" />
+              }
             </GeoResponsiveContainer>
             <ContentText my={2} fontWeight="bold">
-              {metricsData?.territoryDescription}
+              {metricsData?.territory?.description}
             </ContentText>
             <GeoHighlight
               width={205}
@@ -262,25 +268,27 @@ const IndexNftPage = ({ nftId, platform, redirectUrl }) => {
             <BorderLine />
             <ModuleDivider>
               <H5 content="Print Licensing Agreement" />
-              {metricsData?.printLicensingAgreement ? (
-                <H1 content="Active" />
+              {metricsData?.printLicensingAgreement?.title ? (
+                <H1 content={metricsData?.printLicensingAgreement?.title} />
               ) : (
                 <H1 content="Non active" />
               )}
               <ContentText mt={2} fontWeight="bold">
-                {metricsData?.printLicensingDescription}
+                {metricsData?.printLicensingAgreement?.description}
               </ContentText>
             </ModuleDivider>
           </>
         ) : null}
-        {metricsData?.publicationRight ? (
+        {metricsData?.publicationRightLicense ? (
           <>
             <BorderLine />
             <ModuleDivider>
               <H5 content="Print Licensing Agreement" />
-              <H1 content={metricsData?.publicationRight} />
+              {metricsData?.publicationRightLicense?.title ? (<H1 content={metricsData?.publicationRightLicense?.title} />) : (
+                <H1 content="Non active" />)}
+
               <ContentText mt={2} fontWeight="bold">
-                {metricsData?.publicationRightDescription}
+                {metricsData?.publicationRightLicense?.description}
               </ContentText>
             </ModuleDivider>
           </>
@@ -327,6 +335,12 @@ const Container = styled.div`
   height: 100%;
 `;
 
+const HiddenContainer = styled.div`
+  height: calc(100vh - 478px);
+  display: grid;
+  place-items: center;
+`;
+
 const NftData = styled.div`
   width: 100%;
   display: flex;
@@ -369,6 +383,7 @@ const CreatorWrapper = styled.div`
   ${({ theme }) => theme.breakpoints.down("md")} {
     padding: 30px;
   }
+
 `;
 
 const CreatorDescription = styled.div`
