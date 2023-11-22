@@ -74,15 +74,15 @@ const getRows = ({ nfts = [], t }) =>
     .sort((n1, n2) => n1.createdAt - n2.createdAt)
     .map((transaction) => {
       const price =
-        transaction.priceType === "FIXED" ? (
-          <H4 content={centsToPrice(transaction.price)} />
+        transaction?.priceType === "FIXED" ? (
+          <H4 content={centsToPrice(transaction?.price)} />
         ) : (
           t("table.custom")
         );
 
       return {
         image: (
-          <StyledImage alt={transaction.title} src={transaction.coverSrc} />
+          <StyledImage alt={transaction?.title} src={transaction?.coverSrc} />
         ),
         title: (
           <RKLink
@@ -90,24 +90,24 @@ const getRows = ({ nfts = [], t }) =>
             href={{
               pathname: "/",
               query: {
-                id: transaction.id,
+                id: transaction?.id,
                 network: transaction?.contractNetwork || "maticTestnet",
-                contractName: transaction.contractName || "CustomERC1155",
+                contractName: transaction?.contractName || "CustomERC1155",
                 contractAddr: transaction?.contractAddr,
                 createdWith: transaction?.createdWith || "creatorshub",
               },
             }}
             passHref
           >
-            <H4 content={transaction.title} />
+            <H4 content={transaction?.title} />
           </RKLink>
         ),
         creator:
-          transaction.creator.username ||
-          transaction.creator.ethereumPublicAddr,
+          transaction?.creator?.username ||
+          transaction?.creator?.ethereumPublicAddr,
         createdAt: (
           <Text
-            content={date.format(transaction.createdAt)}
+            content={date.format(transaction?.createdAt)}
             color="textSecondary"
           />
         ),
@@ -120,9 +120,8 @@ export const TransactionsTable = () => {
   const debouncedQ = useDebounce(q, 1000);
   const { items } = useRequest(
     apiRoutes.creatorshub.getNfts(debouncedQ),
-    "nfts"
+    "allNfts"
   );
-
   return (
     <StyledBox
       headerRenderTitle={() => (

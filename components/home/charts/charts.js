@@ -57,8 +57,8 @@ const renderPieLabel = (label, color) => {
 export const HomeCharts = () => {
   const { t } = useTranslation("home");
   const theme = useTheme();
-  const { items = [] } = useRequest(apiRoutes.creatorshub.getStats(), "stats");
-
+  // const { items = [] } = useRequest(apiRoutes.creatorshub.getStats(), "stats");
+  const items = [];
   const stats = items?.[0]?.nfts || {};
   items.forEach((item, idx) => {
     if (idx === 0) return;

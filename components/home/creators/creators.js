@@ -43,10 +43,7 @@ const StyledSlide = styled.div`
 
 export const HomeCreators = () => {
   const { t } = useTranslation("home");
-  const { items = [] } = useRequest(
-    apiRoutes.creatorshub.getCreators(),
-    "creators"
-  );
+  const { items } = useRequest(apiRoutes.creatorshub.getCreators(), "creators");
   const theme = useTheme();
 
   let visibleSlides = 8;
@@ -61,21 +58,23 @@ export const HomeCreators = () => {
         isPlaying
         interval={2000}
         visibleSlides={visibleSlides}
-        totalSlides={items.length}
+        totalSlides={items?.length}
         naturalSlideWidth={205}
         naturalSlideHeight={205}
       >
         <Slider>
-          {items.map((c) => (
-            <Slide key={c.id}>
+          {items?.map((c) => (
+            <Slide key={c?.creator.id}>
               <StyledSlide>
                 <Image
-                  src={c.profile?.avatar || "/images/user-placeholder.png"}
+                  src={
+                    c?.creator.profile?.avatar || "/images/user-placeholder.png"
+                  }
                 />
 
                 <div className="card">
                   <Text
-                    content={c.name || c.ethereumPublicAddr}
+                    content={c?.creator.name || c?.creator.ethereumPublicAddr}
                     fontWeight="bold"
                     fontSize="lg"
                     mb={1}
@@ -83,7 +82,9 @@ export const HomeCreators = () => {
                   />
 
                   <Text
-                    content={c.profile.description || t("creators.creator")}
+                    content={
+                      c?.creator.profile?.description || t("creators.creator")
+                    }
                     color="textSecondary"
                     fontSize="sm"
                     noWrap
@@ -91,7 +92,7 @@ export const HomeCreators = () => {
 
                   <Text color="textSecondary" fontSize="sm" mt={10}>
                     <H4
-                      content={c.nfts.length || "0"}
+                      content={c?.creator.nfts?.length || "0"}
                       color="textPrimary"
                       dInline
                     />{" "}
