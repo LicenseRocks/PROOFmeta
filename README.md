@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://license.rocks/wp-content/uploads/2020/10/MetaProof.jpg" width="250">
+  <img src="https://explorer.license.rocks/images/PROOFmeta-Logo-2.1.svg" width="250">
 </p>
 
 <h1 align="center">PROFFmeta</h1>
