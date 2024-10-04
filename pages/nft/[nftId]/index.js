@@ -58,6 +58,7 @@ function filterURL(url) {
 const IndexNftPage = ({ nftId, redirectUrl, platform }) => {
   const { data, isValidating } = useSWR(`${platform}/api/public/nft/${nftId}`);
   const nftData = data?.nft;
+  const isrcData = nftData?.payload?.ISRC;
   const metricsData = data?.licenseMetrics?.payload;
   const isVisible = data?.licenseMetrics?.isVisible;
   const router = useRouter();
@@ -143,6 +144,22 @@ const IndexNftPage = ({ nftId, redirectUrl, platform }) => {
         <Button onClick={() => router.push(`${filteredURL}/nft/${nftId}`)}>Buy this NFT</Button>
       </BuyRow>
       <CardsContainer>
+        {isrcData ?
+          <>
+            <ModuleDivider>
+              <H5 content="ISRC" />
+              <RightsRow>
+                <H1>{isrcData}</H1>
+              </RightsRow>
+              <ContentText mt={2} fontWeight="bold">
+                {"International Standard Recording Code"}
+              </ContentText>
+            </ModuleDivider>
+            <BorderLine />
+          </>
+          :
+          null}
+
         <ModuleDivider>
           <H5 content="Private" />
           <RightsRow>
